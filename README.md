@@ -1,1 +1,1 @@
-# CED-web
+# CED-app
