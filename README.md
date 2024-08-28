@@ -1,5 +1,4 @@
 # EnergyMeter
-
 ## Proyecto CAPSTONE 002D
 ## Integrantes
 * Jorge Parra
