@@ -1,0 +1,3 @@
+[submodule "frontend/energymeter"]
+	path = frontend/energymeter
+	url = https://github.com/notGabo/energymeter.git
