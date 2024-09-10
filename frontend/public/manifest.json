@@ -1,0 +1,22 @@
+{
+    "name": "Energy Meter",
+    "short_name": "EnergyMeter",
+    "icons": [
+      {
+        "src": "/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/icon-384x384.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "theme_color": "#ed6004",
+    "background_color": "#1b2b64",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait"
+  }
