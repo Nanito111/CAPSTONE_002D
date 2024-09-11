@@ -32,3 +32,9 @@ frontend/.vercel
 frontend/# [FRONTEND] typescript
 frontend/*.tsbuildinfo
 frontend/next-env.d.ts
+
+# [FRONTEND] service-worker files for PWA building
+frontend/public/sw.js
+frontend/public/sw.js.map
+frontend/public/workbox-*.js
+frontend/public/workbox-*.js.map
