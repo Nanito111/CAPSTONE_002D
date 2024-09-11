@@ -10,20 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { signIn } from "@/auth";
 import GoogleIcon from "@/components/ui/svg/google-icon";
 
 export function RegisterForm() {
   return (
     <>
       <Card className="w-full max-w-sm">
-      <form
-            action={async () => {
-              "use server";
-              await signIn("google");
-            }}
-            className="w-full"
-          >
         <CardHeader>
           <CardTitle className="text-2xl">Registrarse</CardTitle>
           <CardDescription>
@@ -76,7 +68,6 @@ export function RegisterForm() {
               <p className="ml-2">Iniciar sesión con Google</p>
             </Button>
         </CardFooter>
-          </form>
       </Card>
     </>
   );

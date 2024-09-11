@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { signIn } from "@/auth";
 import GoogleIcon from "@/components/ui/svg/google-icon";
 
 export function LoginForm() {
@@ -46,18 +45,10 @@ export function LoginForm() {
         <CardFooter>
           <Button className="w-full">Iniciar sesión</Button>
           <Separator />
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google");
-            }}
-            className="w-full"
-          >
             <Button className="flex w-full">
               <GoogleIcon />
               <p className="ml-2">Iniciar sesión con Google</p>
             </Button>
-          </form>
         </CardFooter>
       </Card>
     </>
