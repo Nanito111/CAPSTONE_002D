@@ -65,6 +65,7 @@ export default function GraficoConsumoDiario() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              angle={-90}
               tickFormatter={(value) => value.slice(0, 6)}
             />
             <YAxis
