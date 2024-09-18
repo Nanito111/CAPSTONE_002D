@@ -40,9 +40,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function GraficoConsumoDiario() {
+export default function GraficoConsumoDiario( {className}: {className?: string} ) {
+  const classNameProps = {
+    term: className // Assuming 'className' is the intended prop
+  }
   return (
-    <Card>
+    <Card  className={className}>
       <CardHeader>
         <CardTitle>Consumo ultimas 24 horas</CardTitle>
         <CardDescription>
@@ -59,7 +62,7 @@ export default function GraficoConsumoDiario() {
               right: 12,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false}/>
             <XAxis
               dataKey="hora"
               tickLine={false}
@@ -91,6 +94,9 @@ export default function GraficoConsumoDiario() {
           <div className="grid gap-2">
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
               Ultimas 24 horas del dia {new Date().toLocaleDateString()}
+            </div>
+            <div>
+              Ultima lectura: {chartData[0].dispositivo} kWh
             </div>
           </div>
         </div>

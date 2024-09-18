@@ -14,7 +14,7 @@ export default function PlaceholderContent() {
       <CardContent className="p-6">
         <div className="min-h-[calc(100vh-56px-64px-20px-24px-56px-48px)]">
             <h1 className="m-3 font-bold">Resumen Consumo general</h1>
-            <div className="m-5 grid grid-cols-1 gap-5  2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+            <div className="m-5 grid grid-cols-1 gap-5 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
               <ConsumoActual/>
               <BarrasApiladas />
               <GraficoAreaGradiente />
@@ -23,44 +23,46 @@ export default function PlaceholderContent() {
 
           <div>
             <h1 className="m-3 font-bold">Dispositivo 1</h1>
-            <div className="m-5 grid grid-cols-1 gap-5  2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+            <div className="m-5 grid grid-cols-1 gap-5 2xl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
               <MedidorGauge />
               <GraficoAreaGradiente />
-              <div className="col-span-2">
-              <GraficoConsumoDiario />
-              </div>
+              <GraficoConsumoDiario className="2xl:col-span-1 md:col-span-2 sm:col-span-1"/>
             </div>
           </div>
 
           <div>
             <h1 className="m-3 font-bold">Dispositivo 2</h1>
-            <div className="m-5 grid grid-cols-1 gap-5  2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-            <MedidorGauge />
+            <div className="m-5 grid grid-cols-1 gap-5 2xl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+              <MedidorGauge />
               <GraficoAreaGradiente />
+              <GraficoConsumoDiario className="2xl:col-span-1 md:col-span-2 sm:col-span-1"/>
             </div>
           </div>
 
           <div>
             <h1 className="m-3 font-bold">Dispositivo 3</h1>
-            <div className="m-5 grid grid-cols-1 gap-5  2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-            <MedidorGauge />
+            <div className="m-5 grid grid-cols-1 gap-5 2xl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+              <MedidorGauge />
               <GraficoAreaGradiente />
+              <GraficoConsumoDiario className="2xl:col-span-1 md:col-span-2 sm:col-span-1"/>
             </div>
           </div>
 
           <div>
             <h1 className="m-3 font-bold">Dispositivo 4</h1>
-            <div className="m-5 grid grid-cols-1 gap-5  2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-            <MedidorGauge />
+            <div className="m-5 grid grid-cols-1 gap-5 2xl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+              <MedidorGauge />
               <GraficoAreaGradiente />
+              <GraficoConsumoDiario className="2xl:col-span-1 md:col-span-2 sm:col-span-1"/>
             </div>
           </div>
 
           <div>
             <h1 className="m-3 font-bold">Dispositivo 5</h1>
-            <div className="m-5 grid grid-cols-1 gap-5  2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-            <MedidorGauge />
+            <div className="m-5 grid grid-cols-1 gap-5 2xl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+              <MedidorGauge />
               <GraficoAreaGradiente />
+              <GraficoConsumoDiario className="2xl:col-span-1 md:col-span-2 sm:col-span-1"/>
             </div>
           </div>
 
