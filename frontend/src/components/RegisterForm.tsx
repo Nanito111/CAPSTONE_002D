@@ -11,11 +11,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import GoogleIcon from "@/components/ui/svg/google-icon";
+import Image from "next/image";
 
 export function RegisterForm() {
   return (
     <>
       <Card className="w-full max-w-sm">
+      <Image
+        src="/icon-128x128.png"
+        alt="Logo"
+        width={64}
+        height={64}
+        className="mx-auto mt-5 hover:scale-110 transform transition-transform duration-500"
+      />
         <CardHeader>
           <CardTitle className="text-2xl">Registrarse</CardTitle>
           <CardDescription>
