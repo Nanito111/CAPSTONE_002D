@@ -1,9 +1,7 @@
 import {
-  Tag,
-  Users,
-  Settings,
-  Bookmark,
-  SquarePen,
+  Computer,
+  UserPen,
+  Bell,
   LayoutGrid,
   LucideIcon
 } from "lucide-react";
@@ -42,57 +40,58 @@ export function getMenuList(pathname: string): Group[] {
       ]
     },
     {
-      groupLabel: "Contents",
+      groupLabel: "Contenido",
       menus: [
         {
           href: "",
-          label: "Posts",
-          active: pathname.includes("/posts"),
-          icon: SquarePen,
+          label: "Dispositivos",
+          active: pathname.includes("/dispositivos"),
+          icon: Computer,
           submenus: [
             {
-              href: "/posts",
-              label: "All Posts",
-              active: pathname === "/posts"
+              href: "/dispositivos/1",
+              label: "Dispositivo 1",
+              active: pathname === "/dispositivos/1"
             },
             {
-              href: "/posts/new",
-              label: "New Post",
-              active: pathname === "/posts/new"
-            }
+              href: "/dispositivos/2",
+              label: "Dispositivo 2",
+              active: pathname === "/dispositivos/2"
+            },
+            {
+              href: "/dispositivos/3",
+              label: "Dispositivo 3",
+              active: pathname === "/dispositivos/3"
+            },
+            {
+              href: "/dispositivos/4",
+              label: "Dispositivo 4",
+              active: pathname === "/dispositivos/4"
+            },
+            {
+              href: "/dispositivos/5",
+              label: "Dispositivo 5",
+              active: pathname === "/dispositivos/5"
+            },
           ]
         },
-        {
-          href: "/categories",
-          label: "Categories",
-          active: pathname.includes("/categories"),
-          icon: Bookmark,
-          submenus: []
-        },
-        {
-          href: "/tags",
-          label: "Tags",
-          active: pathname.includes("/tags"),
-          icon: Tag,
-          submenus: []
-        }
       ]
     },
     {
-      groupLabel: "Settings",
+      groupLabel: "Configuración",
       menus: [
         {
-          href: "/users",
-          label: "Users",
-          active: pathname.includes("/users"),
-          icon: Users,
+          href: "/cuenta",
+          label: "Cuenta",
+          active: pathname.includes("/cuenta"),
+          icon: UserPen,
           submenus: []
         },
         {
-          href: "/account",
-          label: "Account",
-          active: pathname.includes("/account"),
-          icon: Settings,
+          href: "/notificaciones",
+          label: "Notificaciones",
+          active: pathname.includes("/tags"),
+          icon: Bell,
           submenus: []
         }
       ]
