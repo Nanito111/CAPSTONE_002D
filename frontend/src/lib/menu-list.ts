@@ -43,11 +43,16 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Contenido",
       menus: [
         {
-          href: "",
+          href: "/dispositivos",
           label: "Dispositivos",
           active: pathname.includes("/dispositivos"),
           icon: Computer,
           submenus: [
+            {
+              href: "/dispositivos/",
+              label: "Todos los dispositivos",
+              active: pathname === "/dispositivos/"
+            },
             {
               href: "/dispositivos/1",
               label: "Dispositivo 1",
