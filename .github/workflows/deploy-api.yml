@@ -20,7 +20,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - user: actions/checkout@v4
+      - uses: actions/checkout@v4
       # - name: Create Dotenv File
       #   uses: actually-colab/github-action-create-env-file@v2.3
       #   with:
