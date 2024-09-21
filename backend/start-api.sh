@@ -23,7 +23,7 @@ echo "Entorno: "${ENVIRONMENT}
 echo ""
 
 # Creación de la screen y ejecución de comandos
-tmux new -s ${API_SCREEN_NAME}
+tmux new-session -d -s ${API_SCREEN_NAME}
 
 # ejecutar estos comandos dentro de screen
 tmux send-keys -t ${API_SCREEN_NAME} "git fetch --all" C-m
