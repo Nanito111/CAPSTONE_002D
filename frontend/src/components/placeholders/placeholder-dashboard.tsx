@@ -5,7 +5,6 @@ import ConsumoActual from "@/components/charts/CardConsumoActual";
 import MedidorGauge from "@/components/charts/MedidorGauge";
 import GraficoConsumoDiario from "@/components/charts/GraficoConsumoDia";
 import { Command } from "@/components/ui/command";
-
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function PlaceholderContent() {
