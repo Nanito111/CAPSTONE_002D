@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 export default function FormCuenta() {
   const [editando, setEditando] = useState(false)
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('$3cR3tP@$$w0rd')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(true)
@@ -59,20 +59,20 @@ export default function FormCuenta() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="first-name">Nombre</Label>
-            <Input id="first-name" type="text" disabled={!editando} className="mt-1" />
+            <Input id="first-name" type="text" disabled={!editando} className="mt-1" value="John"/>
           </div>
           <div>
             <Label htmlFor="last-name">Apellidos</Label>
-            <Input id="last-name" type="text" disabled={!editando} className="mt-1" />
+            <Input id="last-name" type="text" disabled={!editando} className="mt-1" value="Titor"/>
           </div>
         </div>
         <div>
           <Label htmlFor="email">Correo</Label>
-          <Input id="email" type="email" disabled={!editando} className="mt-1" />
+          <Input id="email" type="email" disabled={!editando} className="mt-1" value="johntitor@enerymeter.com"/>
         </div>
         <div>
           <Label htmlFor="phone">Número de teléfono</Label>
-          <Input id="phone" type="tel" disabled={!editando} className="mt-1" />
+          <Input id="phone" type="tel" disabled={!editando} className="mt-1" value="+56 9 3432 6143"/>
         </div>
         <div>
           <Label htmlFor="password">Contraseña</Label>
@@ -100,7 +100,7 @@ export default function FormCuenta() {
         </div>
         <div>
           <Label htmlFor="address">Dirección</Label>
-          <Textarea id="address" disabled={!editando} className="mt-1" />
+          <Textarea id="address" disabled={!editando} className="mt-1" value="Calle falsa 123"/>
         </div>
         <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
           <Button type="button" variant="outline" onClick={() => setEditando(!editando)}>
