@@ -4,31 +4,34 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function FormCuenta() {
   const [editando, setEditando] = useState(false)
   const [password, setPassword] = useState('$3cR3tP@$$w0rd')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [confirmarPassword, setConfirmarPassword] = useState('')
   const [passwordError, setPasswordError] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(true)
+  const [mostrarPassword, setMostrarPassword] = useState(false)
+  const [mostrarConfirmarPassword, setMostrarConfirmarPassword] = useState(false)
 
   const validarClave = (pass: string) => {
-    const minLength = 8
-    const hasUpperCase = /[A-Z]/.test(pass)
-    const hasLowerCase = /[a-z]/.test(pass)
-    const hasNumbers = /\d/.test(pass)
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(pass)
+    const LongitudMinima = 8
+    const tieneUppercase = /[A-Z]/.test(pass)
+    const tieneLowerCase = /[a-z]/.test(pass)
+    const tieneNumeros = /\d/.test(pass)
+    const tieneCaracterEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(pass)
 
-    if (pass.length < minLength) {
+    if (pass.length < LongitudMinima) {
       return "La contraseña debe tener al menos 8 caracteres"
     }
-    if (!hasUpperCase || !hasLowerCase) {
+    if (!tieneUppercase || !tieneLowerCase) {
       return "La contraseña debe contener mayúsculas y minúsculas"
     }
-    if (!hasNumbers) {
+    if (!tieneNumeros) {
       return "La contraseña debe contener al menos un número"
     }
-    if (!hasSpecialChar) {
+    if (!tieneCaracterEspecial) {
       return "La contraseña debe contener al menos un carácter especial"
     }
     return ""
@@ -37,9 +40,9 @@ export default function FormCuenta() {
   useEffect(() => {
     if (editando) {
       setPasswordError(validarClave(password))
-      setPasswordMatch(password === confirmPassword)
+      setPasswordMatch(password === confirmarPassword)
     }
-  }, [password, confirmPassword, editando])
+  }, [password, confirmarPassword, editando])
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -47,7 +50,7 @@ export default function FormCuenta() {
     setEditando(false)
   }
 
-  const isFormValid = !passwordError && passwordMatch && editando
+  const esFormularioValido = !passwordError && passwordMatch && editando
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -76,26 +79,46 @@ export default function FormCuenta() {
         </div>
         <div>
           <Label htmlFor="password">Contraseña</Label>
-          <Input
-            id="password"
-            type="password"
-            disabled={!editando}
-            className="mt-1"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              id="password"
+              type={mostrarPassword ? "text" : "password"}
+              disabled={!editando}
+              className="mt-1 pr-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              onClick={() => setMostrarPassword(!mostrarPassword)}
+              disabled={!editando}
+            >
+              {mostrarPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className="h-4 w-4 text-gray-500" />}
+            </button>
+          </div>
           {editando && passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
         </div>
         <div>
           <Label htmlFor="confirm-password">Confirmar contraseña</Label>
-          <Input
-            id="confirm-password"
-            type="password"
-            disabled={!editando}
-            className="mt-1"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
+          <div className="relative">
+            <Input
+              id="confirm-password"
+              type={mostrarConfirmarPassword ? "text" : "password"}
+              disabled={!editando}
+              className="mt-1 pr-10"
+              value={confirmarPassword}
+              onChange={(e) => setConfirmarPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              onClick={() => setMostrarConfirmarPassword(!mostrarConfirmarPassword)}
+              disabled={!editando}
+            >
+              {mostrarConfirmarPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className="h-4 w-4 text-gray-500" />}
+            </button>
+          </div>
           {editando && !passwordMatch && <p className="text-red-500 text-sm mt-1">Las contraseñas no coinciden</p>}
         </div>
         <div>
@@ -106,7 +129,7 @@ export default function FormCuenta() {
           <Button type="button" variant="outline" onClick={() => setEditando(!editando)}>
             {editando ? 'Cancelar' : 'Modificar'}
           </Button>
-          <Button type="submit" disabled={!isFormValid}>
+          <Button type="submit" disabled={!esFormularioValido}>
             Guardar cambios
           </Button>
         </div>
