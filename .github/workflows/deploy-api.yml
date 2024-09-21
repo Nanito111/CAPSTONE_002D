@@ -63,4 +63,6 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_DIRECTORY }}
             git checkout ${{ github.event.inputs.branch }}
+            git fetch --all
+            git pull
             bash ./start-api.sh
