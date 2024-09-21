@@ -63,8 +63,4 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_DIRECTORY }}
             git checkout ${{ github.event.inputs.branch }}
-            git fetch --all
-            source venv/bin/activate
-            pip install -r requirements
-            cd src/
-            gunicorn main:app -c config.py
+            bash ./start-api.sh
