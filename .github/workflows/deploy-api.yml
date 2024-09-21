@@ -1,0 +1,70 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deploy API to Server
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "production" branch
+  push:
+    branches: [ "production", "backend" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - user: actions/checkout@v4
+      # - name: Create Dotenv File
+      #   uses: actually-colab/github-action-create-env-file@v2.3
+      #   with:
+      #     envkey_ENVIRONMENT: ${{ variables.ENVIRONMENT }}
+      #
+      #     # Project info
+      #     envkey_PROJECT_NAME: ${{ variables.PROJECT_NAME }}
+      #     envkey_PROJECT_VERSION: ${{ variables.PROJECT_VERSION }}
+      #
+      #     # API variables
+      #     envkey_API_PROTOCOL: ${{ variables.API_PROTOCOL }}
+      #     envkey_API_HOST_IP: ${{ variables.API_HOST_IP }}
+      #     envkey_API_BIND_IP: ${{ variables.API_BIND_IP }}
+      #     envkey_API_PORT: ${{ variables.API_PORT }}
+      #     envkey_API_WORKERS: ${{ variables.API_WORKERS }}
+      #     envkey_API_ENCRYPTION_KEY: ${{ variables.API_ENCRYPTION_KEY}}
+      #
+      #     # Database variables
+      #     envkey_DB_HOST: ${{ variables.DB_HOST }}
+      #     envkey_DB_PORT: ${{ variables.DB_PORT }}
+      #     envkey_DB_DSN_ALIAS: ${{ variables.DB_DSN_ALIAS }}
+      #     envkey_DB_TNS_FILE_NAME: ${{ variables.DB_TNS_FILE_NAME }}
+      #     envkey_DB_USER: ${{ secrets.DB_USER }}
+      #     envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      #     envkey_DB_WALLET_DIR_NAME: ${{ variables.DB_WALLET_DIR_NAME }}
+      #     envkey_DB_PEM_FILE_NAME: ${{ variables.DB_PEM_FILE_NAME }}
+      #     envkey_DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
+      #
+      #     # other variables
+      #     LOGS_DIR_NAME: ${{ variables.LOGS_DIR_NAME }}
+
+      - name: Deploy with github
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          passphrase: ${{ secrets.SERVER_KEY_PASS }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd ${{ secrets.DEPLOY_DIRECTORY }}
+            git checkout ${{ github.event.inputs.branch }}
+            git fetch --all
+            source venv/bin/activate
+            pip install -r requirements
+            cd src/
+            gunicorn main:app -c config.py
