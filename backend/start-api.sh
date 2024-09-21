@@ -26,7 +26,6 @@ echo ""
 tmux new-session -d -s ${API_SCREEN_NAME}
 
 # ejecutar estos comandos dentro de screen
-tmux send-keys -t ${API_SCREEN_NAME} "git fetch --all" C-m
 tmux send-keys -t ${API_SCREEN_NAME} "source venv/bin/activate" C-m
 tmux send-keys -t ${API_SCREEN_NAME} "pip install -r requirements" C-m
 tmux send-keys -t ${API_SCREEN_NAME} "cd src/" C-m
