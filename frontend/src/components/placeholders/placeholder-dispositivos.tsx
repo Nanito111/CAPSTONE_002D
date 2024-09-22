@@ -63,17 +63,17 @@ const Dispositivos = [
     color: "--device-5",
     svg: Microchip,
   },
-  {
-    idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
-    nombreDispositivo: "Dispositivo 6",
-    descriptionDispositivo: "Descripcion del dispositivo 6",
-    statusDispositivo: "Activo",
-    ultimaConexion: new Date().toLocaleDateString(),
-    fechaCreacion: "12/12/2021",
-    ultimaMedicion: Math.trunc(Math.random() * (999-10) + 10) + "KWh",
-    color: "--device-6",
-    svg: Microchip,
-  },
+  // {
+  //   idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+  //   nombreDispositivo: "Dispositivo 6",
+  //   descriptionDispositivo: "Descripcion del dispositivo 6",
+  //   statusDispositivo: "Activo",
+  //   ultimaConexion: new Date().toLocaleDateString(),
+  //   fechaCreacion: "12/12/2021",
+  //   ultimaMedicion: Math.trunc(Math.random() * (999-10) + 10) + "KWh",
+  //   color: "--device-6",
+  //   svg: Microchip,
+  // },
 ]
 
 
