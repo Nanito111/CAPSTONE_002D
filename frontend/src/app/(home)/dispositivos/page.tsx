@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import PlaceholderContent from "@/components/placeholders/placeholder-cuenta";
+import PlaceholderContent from "@/components/placeholders/placeholder-dispositivos";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
 import {
   Breadcrumb,
@@ -11,9 +11,9 @@ import {
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 
-export default function CuentaPage() {
+export default function DispositivosPage() {
   return (
-    <ContentLayout title="Cuenta">
+    <ContentLayout title="Dispositivos">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -23,7 +23,7 @@ export default function CuentaPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Cuenta</BreadcrumbPage>
+            <BreadcrumbPage>Dispositivos</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
