@@ -11,7 +11,7 @@ const Dispositivos = [
   {
     idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
     nombreDispositivo: "Dispositivo 1",
-    descriptionDispositivo: "Descripcion del dispositivo 3",
+    descriptionDispositivo: "Descripcion del dispositivo 1",
     statusDispositivo: "Inactivo",
     ultimaConexion: new Date().toLocaleDateString(),
     fechaCreacion: "12/12/2021",
@@ -22,7 +22,7 @@ const Dispositivos = [
   {
     idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
     nombreDispositivo: "Dispositivo 2",
-    descriptionDispositivo: "Descripcion del dispositivo 4",
+    descriptionDispositivo: "Descripcion del dispositivo 2",
     statusDispositivo: "Activo",
     ultimaConexion: new Date().toLocaleDateString(),
     fechaCreacion: "12/12/2021",
@@ -33,7 +33,7 @@ const Dispositivos = [
   {
     idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
     nombreDispositivo: "Dispositivo 3",
-    descriptionDispositivo: "Descripcion del dispositivo 5",
+    descriptionDispositivo: "Descripcion del dispositivo 3",
     statusDispositivo: "Inactivo",
     ultimaConexion: new Date().toLocaleDateString(),
     fechaCreacion: "12/12/2021",
@@ -44,7 +44,7 @@ const Dispositivos = [
   {
     idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
     nombreDispositivo: "Dispositivo 4",
-    descriptionDispositivo: "Descripcion del dispositivo 6",
+    descriptionDispositivo: "Descripcion del dispositivo 4",
     statusDispositivo: "Activo",
     ultimaConexion: new Date().toLocaleDateString(),
     fechaCreacion: "12/12/2021",
@@ -55,7 +55,7 @@ const Dispositivos = [
   {
     idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
     nombreDispositivo: "Dispositivo 5",
-    descriptionDispositivo: "Descripcion del dispositivo 6",
+    descriptionDispositivo: "Descripcion del dispositivo 5",
     statusDispositivo: "Activo",
     ultimaConexion: new Date().toLocaleDateString(),
     fechaCreacion: "12/12/2021",
