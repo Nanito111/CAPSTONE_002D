@@ -1,0 +1,15 @@
+python-dotenv
+
+# API
+fastapi
+uvicorn[standard]
+gunicorn
+pytz
+
+# utils
+psutil
+furl
+
+# Base de Datos
+sqlalchemy
+oracledb
