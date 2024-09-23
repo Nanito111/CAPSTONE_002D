@@ -32,13 +32,15 @@ export default function MedidorGaugeID({
   color: string;
   fecha: string;
 }) {
-  const chartData = [{ day: fecha, medicion: consumo, limiteDado: limite }];
 
-  const invertirColorRGB = (color: string) => {
-    const rgb = color.match(/\d+/g);
-    return rgb ? rgb.map((c) => 255 - parseInt(c)).join(", ") : "";
-  }
-
+  const total = consumo + limite;
+  const chartData = [
+    {
+      day: fecha,
+      limiteDadoGrafico:  (limite / (limite + consumo)) * total,
+      medicionGrafico: (consumo / (limite + consumo)) * total,
+    },
+  ];
 
   const chartConfig = {
     medicion: {
@@ -51,7 +53,6 @@ export default function MedidorGaugeID({
     },
   } satisfies ChartConfig;
 
-  console.log(consumo);
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
@@ -67,7 +68,8 @@ export default function MedidorGaugeID({
         >
           <RadialBarChart
             data={chartData}
-            endAngle={180}
+            startAngle={180}
+            endAngle={0}
             innerRadius={80}
             outerRadius={130}
           >
@@ -86,7 +88,7 @@ export default function MedidorGaugeID({
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold"
                         >
-                          {chartData[0].medicion.toLocaleString()}
+                          {consumo.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -102,15 +104,15 @@ export default function MedidorGaugeID({
               />
             </PolarRadiusAxis>
             <RadialBar
-              dataKey="limiteDado"
+              dataKey="limiteDadoGrafico"
               fill="hsl(0, 0%, 50%)"
               stackId="a"
               cornerRadius={5}
               className="stroke-transparent stroke-2"
             />
             <RadialBar
-              dataKey="medicion"
-              stackId="a"
+              dataKey="medicionGrafico"
+              stackId="b"
               cornerRadius={5}
               fill={`var(${color})`}
               className="stroke-transparent stroke-2"
@@ -124,7 +126,7 @@ export default function MedidorGaugeID({
             limite > 0 ? (
               <>
                 <div className="w-4 h-4 rounded-full" style={{ backgroundColor: color }} />
-                <span>Limite de consumo: {limite} KWh</span>
+                <span>Limite de consumo: {limite} Wh</span>
               </>
             ) : (
               <span>Limite de consumo no esta definido</span>
