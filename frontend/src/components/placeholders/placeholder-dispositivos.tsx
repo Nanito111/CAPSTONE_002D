@@ -9,7 +9,8 @@ import { Microchip } from "lucide-react";
 const Dispositivos = [
   // Ejemplo de datos
   {
-    idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    // idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    idDispositivo: 1,
     nombreDispositivo: "Dispositivo 1",
     descriptionDispositivo: "Descripcion del dispositivo 1",
     statusDispositivo: "Inactivo",
@@ -20,7 +21,8 @@ const Dispositivos = [
     svg: Microchip,
   },
   {
-    idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    // idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    idDispositivo: 2,
     nombreDispositivo: "Dispositivo 2",
     descriptionDispositivo: "Descripcion del dispositivo 2",
     statusDispositivo: "Activo",
@@ -31,7 +33,8 @@ const Dispositivos = [
     svg: Microchip,
   },
   {
-    idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    // idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    idDispositivo: 3,
     nombreDispositivo: "Dispositivo 3",
     descriptionDispositivo: "Descripcion del dispositivo 3",
     statusDispositivo: "Inactivo",
@@ -42,7 +45,8 @@ const Dispositivos = [
     svg: Microchip,
   },
   {
-    idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    // idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    idDispositivo: 4,
     nombreDispositivo: "Dispositivo 4",
     descriptionDispositivo: "Descripcion del dispositivo 4",
     statusDispositivo: "Activo",
@@ -53,7 +57,8 @@ const Dispositivos = [
     svg: Microchip,
   },
   {
-    idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    // idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    idDispositivo: 5,
     nombreDispositivo: "Dispositivo 5",
     descriptionDispositivo: "Descripcion del dispositivo 5",
     statusDispositivo: "Activo",
@@ -64,7 +69,7 @@ const Dispositivos = [
     svg: Microchip,
   },
   // {
-  //   idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
+    // idDispositivo: Math.trunc(Math.random() * (5000-1000) + 1000),
   //   nombreDispositivo: "Dispositivo 6",
   //   descriptionDispositivo: "Descripcion del dispositivo 6",
   //   statusDispositivo: "Activo",

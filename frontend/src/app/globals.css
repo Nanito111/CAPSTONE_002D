@@ -41,12 +41,24 @@
       --chart-5: 27 87% 67%;
       --chart-6: 0 0% 100%;
 
-      --device-1: rgba(255, 0, 0, 1);
-      --device-2: rgba(255, 128, 0, 1);
-      --device-3: rgba(255, 255, 0, 1);
-      --device-4: rgba(128, 255, 0, 1);
-      --device-5: rgba(0, 255, 0, 1);
-      --device-6: rgba(0, 255, 128, 1);
+      /* --device-1: 255, 0, 0 ; */
+      /* --device-2: 255, 128, 0; */
+      /* --device-3: 255, 255, 0; */
+      /* --device-4: 128, 255, 0; */
+      /* --device-5: 0, 255, 0; */
+      /* --device-6: 0, 255, 128; */
+      --device-1: rgb(255, 0, 0 );
+      --device-2: rgb(255, 128, 0);
+      --device-3: rgb(255, 255, 0);
+      --device-4: rgb(128, 255, 0);
+      --device-5: rgb(0, 255, 0);
+      --device-6: rgb(0, 255, 128);
+      /* --device-1: #ff0000; */
+      /* --device-2: #ff8000; */
+      /* --device-3: #ffff00; */
+      /* --device-4: #80ff00; */
+      /* --device-5: #00ff00; */
+      /* --device-6: #00ff80; */
     }
 
     .dark {
@@ -84,12 +96,25 @@
       --chart-4: 280 65% 60%;
       --chart-5: 340 75% 55%;
 
-      --device-1: rgba(0, 255, 255, 1);
-      --device-2: rgba(0, 128, 255, 1);
-      --device-3: rgba(0, 0, 255, 1);
-      --device-4: rgba(128, 0, 255, 1);
-      --device-5: rgba(255, 0, 255, 1);
-      --device-6: rgba(255, 0, 128, 1);
+
+      /* --device-1: 0, 255, 255; */
+      /* --device-2: 0, 128, 255; */
+      /* --device-3: 0, 0, 255; */
+      /* --device-4: 128, 0, 255; */
+      /* --device-5: 255, 0, 255; */
+      /* --device-6: 255, 0, 128; */
+      --device-1: rgb(0, 255, 255);
+      --device-2: rgb(0, 128, 255);
+      --device-3: rgb(0, 0, 255);
+      --device-4: rgb(128, 0, 255);
+      --device-5: rgb(255, 0, 255);
+      --device-6: rgb(255, 0, 128);
+      /* --device-1: #00ffff; */
+      /* --device-2: #0080ff; */
+      /* --device-3: #0000ff; */
+      /* --device-4: #8000ff; */
+      /* --device-5: #ff00ff; */
+      /* --device-6: #ff0080; */
     }
   }
 
