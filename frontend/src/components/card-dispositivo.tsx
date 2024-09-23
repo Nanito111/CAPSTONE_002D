@@ -1,4 +1,6 @@
-import {  Card,
+import Link from "next/link";
+import {
+  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -50,12 +52,15 @@ export default function CardDispositivo({ Dispositivos }: CardDispositivoProps) 
         {Dispositivos.map((dispositivo) => (
           <Card
             key={dispositivo.idDispositivo}
-            className={`transition hover:shadow-[${dispositivo.color}] hover:shadow-lg`}
           >
             <CardHeader className="flex items-center justify-between">
+            <Link
+              href={`/dispositivos/${dispositivo.idDispositivo}`}
+            >
               <CardTitle className="text-xl font-bold">
                 {dispositivo.nombreDispositivo}
               </CardTitle>
+            </Link>
               <CardDescription className="text-sm">
                 ID del dispositivo: {dispositivo.idDispositivo}
               </CardDescription>
@@ -64,7 +69,7 @@ export default function CardDispositivo({ Dispositivos }: CardDispositivoProps) 
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
-              <dispositivo.svg className="w-10 h-10 mx-auto mb-3" />
+              <dispositivo.svg className="w-10 h-10 mx-auto mb-3" style={{ color: `var(${dispositivo.color})` }} />
               <CardDescription className="text-sm">
                 {dispositivo.descriptionDispositivo}
               </CardDescription>
@@ -97,7 +102,7 @@ export default function CardDispositivo({ Dispositivos }: CardDispositivoProps) 
     )
   }
 
-  // !TODO: Fixear colores de sombra al momento de hace rhover, solamente se activan en el primer y segundo dispositivo. (no se porque no funciona)
+  // !TODO: Fixear colores de sombra al momento de hace hover, solamente se activan en el primer y segundo dispositivo. (no se porque no funciona)
   return (
     <>
       {Dispositivos.map((dispositivo) => (
@@ -117,7 +122,7 @@ export default function CardDispositivo({ Dispositivos }: CardDispositivoProps) 
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
-            <dispositivo.svg className="w-10 h-10 mx-auto mb-3" />
+            <dispositivo.svg className="w-10 h-10 mx-auto mb-3" style={{ color: `var(${dispositivo.color})`}}/>
             <CardDescription className="text-sm">
               {dispositivo.descriptionDispositivo}
             </CardDescription>
