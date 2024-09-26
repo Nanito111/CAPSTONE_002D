@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, CircleDollarSign } from 'lucide-react'
 
 export default function FormCuenta() {
   const [editando, setEditando] = useState(false)
@@ -14,6 +14,7 @@ export default function FormCuenta() {
   const [passwordMatch, setPasswordMatch] = useState(true)
   const [mostrarPassword, setMostrarPassword] = useState(false)
   const [mostrarConfirmarPassword, setMostrarConfirmarPassword] = useState(false)
+  const [valorKWh,setValorKWh] = useState("0")
 
   const validarClave = (pass: string) => {
     const LongitudMinima = 8
@@ -121,6 +122,22 @@ export default function FormCuenta() {
           </div>
           {editando && !passwordMatch && <p className="text-red-500 text-sm mt-1">Las contraseñas no coinciden</p>}
         </div>
+        <div>
+  <Label htmlFor="first-name">Valor $ KW/h </Label>
+  <div className="relative mt-1">
+    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+      <CircleDollarSign />
+    </span>
+    <Input
+      id="KWh-value"
+      type="text"
+      disabled={!editando}
+      className="pl-10"
+      value={valorKWh}
+      onChange={(e) => setValorKWh(e.target.value)}
+    />
+  </div>
+</div>
         <div>
           <Label htmlFor="address">Dirección</Label>
           <Textarea id="address" disabled={!editando} className="mt-1" value="Calle falsa 123"/>
