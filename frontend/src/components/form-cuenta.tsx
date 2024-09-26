@@ -8,6 +8,12 @@ import { Eye, EyeOff, CircleDollarSign } from 'lucide-react'
 
 export default function FormCuenta() {
   const [editando, setEditando] = useState(false)
+  const [nombre, setNombre] = useState('John')
+  const [apellidos, setApellidos] = useState('Titor')
+  const [correo, setCorreo] = useState('johntitor@enerymeter.com')
+  const [correoError, setCorreoError] = useState('')
+  const [telefono, setTelefono] = useState('+56 9 3432 6143')
+  const [direccion, setDireccion] = useState('Calle falsa 123')
   const [password, setPassword] = useState('$3cR3tP@$$w0rd')
   const [confirmarPassword, setConfirmarPassword] = useState('')
   const [passwordError, setPasswordError] = useState('')
@@ -38,12 +44,18 @@ export default function FormCuenta() {
     return ""
   }
 
+  const validarCorreo = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return regex.test(email) ? "" : "El formato del correo es inválido"
+  }
+
   useEffect(() => {
     if (editando) {
       setPasswordError(validarClave(password))
       setPasswordMatch(password === confirmarPassword)
+      setCorreoError(validarCorreo(correo))
     }
-  }, [password, confirmarPassword, editando])
+  }, [password, confirmarPassword, correo, editando])
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -58,32 +70,29 @@ export default function FormCuenta() {
     }
   };
 
-  const esFormularioValido = !passwordError && passwordMatch && editando
+  const esFormularioValido = !passwordError && passwordMatch && !correoError && editando
 
   return (
     <div className="w-full max-w-2xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label htmlFor="profile-photo">Foto de perfil</Label>
-          <Input id="profile-photo" type="file" accept="image/*" disabled={!editando} className="mt-1" />
-        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="first-name">Nombre</Label>
-            <Input id="first-name" type="text" disabled={!editando} className="mt-1" value="John"/>
+            <Input id="first-name" type="text" disabled={!editando} className="mt-1" value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="last-name">Apellidos</Label>
-            <Input id="last-name" type="text" disabled={!editando} className="mt-1" value="Titor"/>
+            <Input id="last-name" type="text" disabled={!editando} className="mt-1" value={apellidos} onChange={(e) => setApellidos(e.target.value)} />
           </div>
         </div>
         <div>
           <Label htmlFor="email">Correo</Label>
-          <Input id="email" type="email" disabled={!editando} className="mt-1" value="johntitor@enerymeter.com"/>
+          <Input id="email" type="email" disabled={!editando} className="mt-1" value={correo} onChange={(e) => setCorreo(e.target.value)} />
+          {editando && correoError && <p className="text-red-500 text-sm mt-1">{correoError}</p>}
         </div>
         <div>
           <Label htmlFor="phone">Número de teléfono</Label>
-          <Input id="phone" type="tel" disabled={!editando} className="mt-1" value="+56 9 3432 6143"/>
+          <Input id="phone" type="tel" disabled={!editando} className="mt-1" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
         </div>
         <div>
           <Label htmlFor="password">Contraseña</Label>
@@ -147,7 +156,7 @@ export default function FormCuenta() {
       </div>
         <div>
           <Label htmlFor="address">Dirección</Label>
-          <Textarea id="address" disabled={!editando} className="mt-1" value="Calle falsa 123"/>
+          <Textarea id="address" disabled={!editando} className="mt-1" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
         </div>
         <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
           <Button type="button" variant="outline" onClick={() => setEditando(!editando)}>

@@ -1,19 +1,17 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import GoogleIcon from "@/components/ui/svg/google-icon";
 import Image from "next/image";
+import FooterButtons from "@/components/auth/FooterButtons";
 
-export function RegisterForm() {
+export function RegisterForm(
+) {
   return (
     <>
       <Card className="w-full max-w-sm">
@@ -68,14 +66,8 @@ export function RegisterForm() {
             />
           </div>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full">Registarse</Button>
-          <Separator />
-            <Button className="flex w-full">
-              <GoogleIcon />
-              <p className="ml-2">Iniciar sesión con Google</p>
-            </Button>
-        </CardFooter>
+        <FooterButtons textoBotonPrincipal="Registrarse" />
+
       </Card>
     </>
   );
