@@ -51,6 +51,13 @@ export default function FormCuenta() {
     setEditando(false)
   }
 
+  const handleKWhChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*\.?\d*$/.test(value)) {
+      setValorKWh(value);
+    }
+  };
+
   const esFormularioValido = !passwordError && passwordMatch && editando
 
   return (
@@ -123,21 +130,21 @@ export default function FormCuenta() {
           {editando && !passwordMatch && <p className="text-red-500 text-sm mt-1">Las contraseñas no coinciden</p>}
         </div>
         <div>
-  <Label htmlFor="first-name">Valor $ KW/h </Label>
-  <div className="relative mt-1">
-    <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
-      <CircleDollarSign />
-    </span>
-    <Input
-      id="KWh-value"
-      type="text"
-      disabled={!editando}
-      className="pl-10"
-      value={valorKWh}
-      onChange={(e) => setValorKWh(e.target.value)}
-    />
-  </div>
-</div>
+        <Label htmlFor="KWh-value">Valor $ KW/h </Label>
+        <div className="relative mt-1">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+            <CircleDollarSign />
+          </span>
+          <Input
+            id="KWh-value"
+            type="text"
+            disabled={!editando}
+            className="pl-10"
+            value={valorKWh}
+            onChange={handleKWhChange}
+          />
+        </div>
+      </div>
         <div>
           <Label htmlFor="address">Dirección</Label>
           <Textarea id="address" disabled={!editando} className="mt-1" value="Calle falsa 123"/>
