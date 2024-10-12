@@ -1,0 +1,33 @@
+-- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
+--   en:        2024-10-12 19:20:28 CLST
+--   sitio:      Oracle Database 21c
+--   tipo:      Oracle Database 21c
+
+
+
+DROP TABLE address CASCADE CONSTRAINTS;
+
+DROP TABLE chargetype CASCADE CONSTRAINTS;
+
+DROP TABLE comuna CASCADE CONSTRAINTS;
+
+DROP TABLE contract CASCADE CONSTRAINTS;
+
+DROP TABLE country CASCADE CONSTRAINTS;
+
+DROP TABLE device CASCADE CONSTRAINTS;
+
+DROP TABLE electricitycompany CASCADE CONSTRAINTS;
+
+DROP TABLE region CASCADE CONSTRAINTS;
+
+DROP TABLE result CASCADE CONSTRAINTS;
+
+DROP TABLE "User" CASCADE CONSTRAINTS;
+
+DROP TABLE userdevice CASCADE CONSTRAINTS;
+
+-- predefined type, no DDL - MDSYS.SDO_GEOMETRY
+
+-- predefined type, no DDL - XMLTYPE
+
