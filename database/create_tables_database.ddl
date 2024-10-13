@@ -1,7 +1,7 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-12 19:15:33 CLST
---   sitio:      Oracle Database 21c
---   tipo:      Oracle Database 21c
+--   en:        2024-10-12 23:30:53 CLST
+--   sitio:      Oracle Database 11g
+--   tipo:      Oracle Database 11g
 
 
 
@@ -21,10 +21,35 @@ CREATE TABLE address (
 
 ALTER TABLE address ADD CONSTRAINT address_pk PRIMARY KEY ( id );
 
+CREATE TABLE appuser (
+    id             NUMBER(20) NOT NULL,
+    firstname      VARCHAR2(20),
+    middlename     VARCHAR2(20),
+    lastname       VARCHAR2(12),
+    secondlastname VARCHAR2(12),
+    countrycode    VARCHAR2(3),
+    numberphone    NUMBER(9),
+    email          VARCHAR2(500) NOT NULL,
+    password       RAW(255) NOT NULL,
+    idaddress      NUMBER(20) NOT NULL,
+    idcontract     NUMBER(20) NOT NULL
+);
+
+ALTER TABLE appuser ADD CONSTRAINT appuser_pk PRIMARY KEY ( id );
+
 CREATE TABLE chargetype (
     id   NUMBER(2) NOT NULL,
     name VARCHAR2(10) NOT NULL
 );
+
+COMMENT ON COLUMN chargetype.name IS
+    'Ejemplo:
+BT1
+BT2
+BT1-T3
+AT2
+AT3
+';
 
 ALTER TABLE chargetype ADD CONSTRAINT chargetype_pk PRIMARY KEY ( id );
 
@@ -43,6 +68,15 @@ CREATE TABLE contract (
     idelectricitycompany NUMBER(20) NOT NULL,
     idchargetype         NUMBER(2) NOT NULL
 );
+
+COMMENT ON COLUMN contract.fixedcost IS
+    'Costo Fijo';
+
+COMMENT ON COLUMN contract.variablecost IS
+    'Costo Variable';
+
+COMMENT ON COLUMN contract.idchargetype IS
+    'Tipo de tarifa';
 
 ALTER TABLE contract ADD CONSTRAINT contract_pk PRIMARY KEY ( id );
 
@@ -89,30 +123,14 @@ CREATE TABLE result (
 
 ALTER TABLE result ADD CONSTRAINT result_pk PRIMARY KEY ( id );
 
-CREATE TABLE "User" (
-    id             NUMBER(20) NOT NULL,
-    firstname      VARCHAR2(20),
-    middlename     VARCHAR2(20),
-    lastname       VARCHAR2(12),
-    secondlastname VARCHAR2(12),
-    countrycode    VARCHAR2(3),
-    numberphone    NUMBER(9),
-    email          VARCHAR2(500) NOT NULL,
-    password       RAW(255) NOT NULL,
-    idaddress      NUMBER(20) NOT NULL,
-    idcontract     NUMBER(20) NOT NULL
-);
-
-ALTER TABLE "User" ADD CONSTRAINT user_pk PRIMARY KEY ( id );
-
 CREATE TABLE userdevice (
     id            NUMBER(20) NOT NULL,
     alias         VARCHAR2(20),
-    status        NUMBER NOT NULL,
+    status        CHAR(1) NOT NULL,
     creationdate  DATE NOT NULL,
     lastconection DATE NOT NULL,
     description   VARCHAR2(30),
-    user_iduser   NUMBER(20) NOT NULL,
+    idappuser     NUMBER(20) NOT NULL,
     iddevice      NUMBER(20) NOT NULL
 );
 
@@ -142,21 +160,21 @@ ALTER TABLE result
     ADD CONSTRAINT result_userdevice_fk FOREIGN KEY ( iduserdevice )
         REFERENCES userdevice ( id );
 
-ALTER TABLE "User"
+ALTER TABLE appuser
     ADD CONSTRAINT user_address_fk FOREIGN KEY ( idaddress )
         REFERENCES address ( id );
 
-ALTER TABLE "User"
+ALTER TABLE appuser
     ADD CONSTRAINT user_contract_fk FOREIGN KEY ( idcontract )
         REFERENCES contract ( id );
 
 ALTER TABLE userdevice
-    ADD CONSTRAINT userdevice_device_fk FOREIGN KEY ( iddevice )
-        REFERENCES device ( id );
+    ADD CONSTRAINT userdevice_appuser_fk FOREIGN KEY ( idappuser )
+        REFERENCES appuser ( id );
 
 ALTER TABLE userdevice
-    ADD CONSTRAINT userdevice_user_fk FOREIGN KEY ( user_iduser )
-        REFERENCES "User" ( id );
+    ADD CONSTRAINT userdevice_device_fk FOREIGN KEY ( iddevice )
+        REFERENCES device ( id );
 
 
 
