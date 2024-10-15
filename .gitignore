@@ -1,0 +1,45 @@
+# [FRONTEND] dependencies
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+frontend/.yarn/install-state.gz
+
+# [FRONTEND] testing
+frontend/coverage
+
+# [FRONTEND] next.js
+frontend/.next/
+frontend/out/
+
+# [FRONTEND] production
+frontend/build
+
+# [FRONTEND] misc
+frontend/.DS_Store
+frontend/*.pem
+
+# [FRONTEND] debug
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+yarn-error.log*
+
+# [FRONTEND] local env files
+frontend/.env*.local
+
+frontend/# [FRONTEND] vercel
+frontend/.vercel
+
+frontend/# [FRONTEND] typescript
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# [FRONTEND] service-worker files for PWA building
+frontend/public/sw.js
+frontend/public/sw.js.map
+frontend/public/workbox-*.js
+frontend/public/workbox-*.js.map
+
+./frontend/public/sw.js
+./frontend/public/sw.js.map
+./frontend/public/workbox-*.js
+./frontend/public/workbox-*.js.map
