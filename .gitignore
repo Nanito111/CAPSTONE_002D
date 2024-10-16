@@ -44,6 +44,14 @@ frontend/public/workbox-*.js.map
 ./frontend/public/workbox-*.js.map
 
 # [Aplicacion]
+Fase 2/Evidencias de sistema/Aplicación/node_modules
+Fase 2/Evidencias de sistema/Aplicación/out/
+Fase 2/Evidencias de sistema/Aplicación/build
+Fase 2/Evidencias de sistema/Aplicación/.DS_Store
+Fase 2/Evidencias de sistema/Aplicación/*.pem
+Fase 2/Evidencias de sistema/Aplicación/npm-debug.log*
+Fase 2/Evidencias de sistema/Aplicación/yarn-debug.log*
+Fase 2/Evidencias de sistema/Aplicación/yarn-error.log*
 Fase 2/Evidencias de sistema/Aplicación/public/sw.js
 Fase 2/Evidencias de sistema/Aplicación/public/sw.js.map
 Fase 2/Evidencias de sistema/Aplicación/public/workbox-*.js
