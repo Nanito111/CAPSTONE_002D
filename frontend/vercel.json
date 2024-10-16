@@ -1,8 +1,0 @@
-{
-    "git": {
-      "enabled": true,
-      "deployBranch": "website",
-      "ignoredBranches": ["main", "develop", "master", "backend","database","simulation","*"],
-      "autoAliasBranch": "website/*"
-    }
-  }
