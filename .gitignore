@@ -43,26 +43,27 @@ frontend/public/workbox-*.js.map
 ./frontend/public/workbox-*.js
 ./frontend/public/workbox-*.js.map
 
+
 # [Aplicacion]
-Fase 2/Evidencias de sistema/Aplicación/node_modules
-Fase 2/Evidencias de sistema/Aplicación/out/
-Fase 2/Evidencias de sistema/Aplicación/build
-Fase 2/Evidencias de sistema/Aplicación/.DS_Store
-Fase 2/Evidencias de sistema/Aplicación/*.pem
-Fase 2/Evidencias de sistema/Aplicación/npm-debug.log*
-Fase 2/Evidencias de sistema/Aplicación/yarn-debug.log*
-Fase 2/Evidencias de sistema/Aplicación/yarn-error.log*
-Fase 2/Evidencias de sistema/Aplicación/public/sw.js
-Fase 2/Evidencias de sistema/Aplicación/public/sw.js.map
-Fase 2/Evidencias de sistema/Aplicación/public/workbox-*.js
-Fase 2/Evidencias de sistema/Aplicación/public/workbox-*.js.map
-Fase 2/Evidencias de sistema/Aplicación/public/sw.js
-Fase 2/Evidencias de sistema/Aplicación/public/sw.js.map
-Fase 2/Evidencias de sistema/Aplicación/public/workbox-*.js
-Fase 2/Evidencias de sistema/Aplicación/public/workbox-*.js.map
-Fase 2/Evidencias de sistema/Aplicación/.env*.local
-Fase 2/Evidencias de sistema/Aplicación/.vercel
-Fase 2/Evidencias de sistema/Aplicación/.next
-Fase 2/Evidencias de sistema/Aplicación/*.tsbuildinfo
-Fase 2/Evidencias de sistema/Aplicación/next-env.d.ts
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/node_modules
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/out/
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/build
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/.DS_Store
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/*.pem
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/npm-debug.log*
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/yarn-debug.log*
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/yarn-error.log*
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/sw.js
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/sw.js.map
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/workbox-*.js
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/workbox-*.js.map
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/sw.js
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/sw.js.map
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/workbox-*.js
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/public/workbox-*.js.map
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/.env*.local
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/.vercel
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/.next
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/*.tsbuildinfo
+Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/next-env.d.ts
 
