@@ -4,11 +4,14 @@ python-dotenv
 fastapi
 uvicorn[standard]
 gunicorn
-pytz
+pyjwt
+passlib[bcrypt]
 
 # utils
+pytz
 psutil
 furl
+python-multipart
 
 # Base de Datos
 sqlalchemy

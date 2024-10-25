@@ -1,5 +1,6 @@
 from typing import Annotated
 from fastapi import Depends
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 import database
 from datetime import datetime
@@ -17,3 +18,5 @@ FormattedDatetime = Annotated[
     datetime,
     WrapSerializer(format_datetime, return_type=str),
 ]
+
+AuthFormData = Annotated[OAuth2PasswordRequestForm, Depends()]

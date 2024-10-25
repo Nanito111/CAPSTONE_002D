@@ -1,316 +1,128 @@
-from typing import Any
+from datetime import datetime, timezone
+from typing import Annotated, Dict
 from fastapi import (
     APIRouter,
-    Response,
-    status,
+    Depends,
 )
 import logging
 
-from fastapi.exceptions import (
-    ValidationException,
-    RequestValidationError,
-)
-from pydantic import SecretBytes, ValidationError
+from fastapi.security import OAuth2PasswordBearer
 
-from sqlalchemy import delete, insert, select, update
-from sqlalchemy.exc import MultipleResultsFound
-from dependencies import SessionDataBase
-from login import schemas
-import models
-from constants import API_ENCRYPTION_KEY
-from hashlib import sha256
-from cryptography.fernet import Fernet
+from sqlalchemy import select
+from login import exceptions
+from login.schemas import TokenResponse
+from dependencies import SessionDataBase, AuthFormData
+from models import User
+from constants import PWD_CONTEXT, API_SECRET_KEY, API_ALGORITHM, TOKEN_EXPIRATION_DELTA
+import jwt
+from jwt.exceptions import InvalidTokenError
 
 logger = logging.getLogger("login.router")
 
-router = APIRouter(prefix="/login", tags=["login"])
+router = APIRouter(prefix="/account", tags=["login"])
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/account/authenticate")
 
 
-@router.post(
-    "/comprobar-credenciales",
-    tags=["login"],
-    status_code=status.HTTP_200_OK,
-)
-def comprobar_credenciales(
-    credenciales: schemas.Credenciales,
-    session_db: SessionDataBase,
-    response: Response,
-) -> schemas.LoginResultado:
+def does_user_exist(
+    user_email: str,
+    database_session: SessionDataBase,
+):
+    statement = select(User).where(User.email.__eq__(user_email))
+
+    return database_session.execute(statement).one_or_none() is not None
+
+
+def get_password_from_database(
+    user_email: str,
+    database_session: SessionDataBase,
+):
+    statement = select(User.password).where(User.email.__eq__(user_email))
+    return database_session.execute(statement).scalar_one()
+
+
+def get_current_user_from_database(
+    token: Annotated[str, Depends(oauth2_scheme)],
+    database_session: SessionDataBase,
+):
     try:
-        statement = select(models.Usuario).where(
-            models.Usuario.correo.__eq__(credenciales.email)
+        payload = jwt.decode(
+            token, API_SECRET_KEY.get_secret_value(), algorithms=[API_ALGORITHM]
         )
 
-        user_db = session_db.execute(statement).scalar_one_or_none()
+        user_email: str = payload.get("sub")
 
-        # usuario no existe
-        if user_db is None:
-            logger.warning("El usuario no existe.")
-            return schemas.LoginResultado()
+        # check if user_email is in token
+        if user_email is None:
+            raise exceptions.InvalidTokenException
 
-        password_db: bytes = user_db.password
+    except InvalidTokenError:
+        raise exceptions.InvalidTokenException
 
-        # decrypt db password
-        fernet_encrypter: Fernet = Fernet(API_ENCRYPTION_KEY)
-        password_db = fernet_encrypter.decrypt(password_db)
+    # make query to get user
+    statement = select(User).where(User.email.__eq__(user_email))
+    user = database_session.execute(statement).scalar_one_or_none()
 
-        # hash input password SHA-256
-        input_password: bytes = sha256(
-            credenciales.password.get_secret_value()
-        ).digest()
+    if user is None:
+        raise exceptions.UserIsMissingFromDatabase
 
-        if password_db != input_password:
-            logger.warning("Password incorrecta.")
-            return schemas.LoginResultado()
-
-        # encrypt user id
-        encoded_user_id: bytes = str(user_db.id).encode()
-        user_id_encrypted: bytes = fernet_encrypter.encrypt(encoded_user_id)
-
-        return schemas.LoginResultado(
-            user_id=user_id_encrypted,
-            user=user_db.correo,
-            nombre=user_db.nombre,
-            apellido=user_db.apellido,
-            numero_telefono=user_db.numero_telefono.__str__(),
-            codigo_telefono=user_db.codigo_telefono.__str__(),
-            result=True,
-        )
-
-    except (ValidationError, ValidationException, RequestValidationError) as err:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        logger.exception(err)
-        return schemas.LoginResultado()
-
-    except MultipleResultsFound as err:
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        logger.exception(err)
-        return schemas.LoginResultado()
-
-    except Exception as err:
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        logger.exception(err)
-        return schemas.LoginResultado()
+    return database_session.execute(statement).scalar_one_or_none()
 
 
-@router.post(
-    "/crear-cuenta",
-    tags=["login", "crud"],
-    status_code=status.HTTP_201_CREATED,
-)
-def crear_cuenta(
-    datos_cuenta: schemas.DatosCuenta,
-    session_db: SessionDataBase,
-    response: Response,
-) -> str | None:
-    try:
-        # hashear
-        password_with_salt: bytes = sha256(
-            datos_cuenta.password.get_secret_value()
-        ).digest()
-
-        # encriptar
-        fernet_encrypter: Fernet = Fernet(API_ENCRYPTION_KEY)
-
-        password_with_salt = fernet_encrypter.encrypt(password_with_salt)
-
-        datos_cuenta.password = SecretBytes(password_with_salt)
-
-        # check if user already exist
-        statement = select(models.Usuario).where(
-            models.Usuario.correo.__eq__(datos_cuenta.correo)
-        )
-
-        user_exist: bool = session_db.execute(statement).one_or_none() is not None
-
-        if user_exist:
-            logger.warning(
-                "Usuario no fue creado por que ya existe. user: %s",
-                datos_cuenta.correo,
-            )
-            response.status_code = status.HTTP_409_CONFLICT
-            return "Usuario ya existe."
-
-        # send data to DB
-        statement = insert(models.Usuario).values(
-            nombre=datos_cuenta.nombre,
-            apellido=datos_cuenta.apellido,
-            numero_telefono=datos_cuenta.numero_telefono,
-            codigo_telefono=datos_cuenta.codigo_telefono,
-            correo=datos_cuenta.correo,
-            password=datos_cuenta.password.get_secret_value(),
-        )
-        session_db.execute(statement)
-        session_db.commit()
-
-        return "Usuario creado exitosamente"
-
-    except Exception as err:
-        logger.exception(err)
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        return
+def verify_password(
+    database_password: bytes,
+    raw_password: str,
+) -> bool:
+    return PWD_CONTEXT.verify(raw_password, database_password)
 
 
-@router.patch(
-    "/modificar-usuario",
-    tags=["login", "crud"],
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def modificar_usuario(
-    modificacion_body: schemas.ModifyUser,
-    session_db: SessionDataBase,
-    response: Response,
-) -> None:
-    try:
-        # crea un diccionario excluyendo los campos que no estan modificados
-        modificaciones: dict[str, Any] = modificacion_body.model_dump(
-            exclude_unset=True,
-            by_alias=True,
-        )
+def generate_access_token(data: Dict):
+    # encode user data
+    to_encode = data.copy()
 
-        # Error si no hay modificaciones
-        if modificaciones.__len__() <= 0:
-            logger.warning(
-                "Modificacion fallida ya que la solicitud no tiene campos para modificar.",
-            )
-            response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-            return
+    # creates deltatime to expire token
+    expire = datetime.now(timezone.utc) + TOKEN_EXPIRATION_DELTA
 
-        fernet_encrypter: Fernet = Fernet(API_ENCRYPTION_KEY)
+    to_encode.update({"exp": expire})
 
-        # comprobar si usuario existe
-
-        id_usuario_decrypted: int = int(
-            fernet_encrypter.decrypt(modificacion_body.user_id).decode()
-        )
-
-        statement = select(
-            models.Usuario.id,
-        ).where(
-            models.Usuario.id.__eq__(id_usuario_decrypted),
-        )
-
-        user_not_exist: bool = session_db.execute(statement).one_or_none() is None
-
-        if user_not_exist:
-            logger.warning(
-                "Modificacion de usuario fallida debido a que el usuario no existe.",
-            )
-            response.status_code = status.HTTP_404_NOT_FOUND
-            return
-
-        logger.info(
-            "Campos de Usuario a modificar: %s",
-            list(modificaciones.keys()),
-        )
-
-        # encriptar password si modificacion existe
-        password_db_column = models.Usuario.password.key
-        if modificaciones.get(password_db_column) is not None:
-            # hashear
-            password_with_salt: bytes = sha256(
-                modificaciones[password_db_column].get_secret_value()
-            ).digest()
-
-            password_with_salt = fernet_encrypter.encrypt(password_with_salt)
-
-            modificaciones[password_db_column] = password_with_salt
-
-        # validar que el nuevo correo no existe en otro usuario
-        correo_db_column = models.Usuario.correo.key
-        if modificaciones.get(correo_db_column) is not None:
-            statement = select(
-                models.Usuario.id,
-            ).where(
-                models.Usuario.correo.__eq__(
-                    modificaciones[correo_db_column],
-                ),
-            )
-            user_exist: bool = session_db.execute(statement).one_or_none() is not None
-            if user_exist:
-                logger.warning(
-                    "Modificacion de usuario fallida debido a que hay un usuario con el mismo correo.",
-                )
-                response.status_code = status.HTTP_409_CONFLICT
-
-                return
-
-        # modificar registros en bd
-        statement = (
-            update(
-                models.Usuario,
-            )
-            .where(
-                models.Usuario.id.__eq__(id_usuario_decrypted),
-            )
-            .values(
-                modificaciones,
-            )
-        )
-        session_db.execute(statement)
-        session_db.commit()
-
-        return
-
-    except Exception as err:
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        logger.exception(err)
-
-        return
+    # create token with user data
+    encoded_jwt = jwt.encode(
+        to_encode,
+        API_SECRET_KEY.get_secret_value(),
+        algorithm=API_ALGORITHM,
+    )
+    return encoded_jwt
 
 
-@router.delete(
-    "/eliminar-usuario",
-    tags=["login", "crud"],
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-def eliminar_usuario(
-    user_to_delete: schemas.DeleteUser,
-    session_db: SessionDataBase,
-    response: Response,
-) -> None:
-    try:
-        fernet_encrypter: Fernet = Fernet(API_ENCRYPTION_KEY)
+@router.post(path="/authenticate", tags=["login"])
+def authenticate(
+    form_data: AuthFormData,
+    database_session: SessionDataBase,
+):
+    # check if user do not exist
+    if not does_user_exist(
+        user_email=form_data.username,
+        database_session=database_session,
+    ):
+        raise exceptions.FailedToAuthenticate
 
-        # desencriptar id
-        id_usuario_decrypted: int = int(
-            fernet_encrypter.decrypt(user_to_delete.user_id).decode()
-        )
+    # get password from database
+    database_password = get_password_from_database(
+        user_email=form_data.username,
+        database_session=database_session,
+    )
 
-        statement = select(
-            models.Usuario.id,
-        ).where(
-            models.Usuario.id.__eq__(id_usuario_decrypted),
-        )
+    # check password
+    if not verify_password(
+        raw_password=form_data.password,
+        database_password=database_password,
+    ):
+        raise exceptions.FailedToAuthenticate
 
-        user_not_exist: bool = session_db.execute(statement).one_or_none() is None
+    token = generate_access_token(
+        data={
+            "sub": form_data.username,
+        },
+    )
 
-        if user_not_exist:
-            logger.warning(
-                "Eliminación de usuario fallida debido a que el usuario no existe.",
-            )
-            response.status_code = status.HTTP_404_NOT_FOUND
-
-            return
-
-        # eliminar usuario de bd
-        statement = delete(
-            models.Usuario,
-        ).where(
-            models.Usuario.id.__eq__(id_usuario_decrypted),
-        )
-
-        session_db.execute(statement)
-        session_db.commit()
-
-        return
-
-    except MultipleResultsFound as err:
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        logger.exception(err)
-        return
-
-    except Exception as err:
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        logger.exception(err)
-        return
+    return TokenResponse(access_token=token, expires_in=TOKEN_EXPIRATION_DELTA.seconds)

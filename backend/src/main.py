@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import constants
 from health_check.router import router as health_check_router
 
-# from login.router import router as login_router
+from login.router import router as login_router
 
 app = FastAPI(
     title=constants.PROJECT_NAME,
@@ -19,4 +19,4 @@ app.add_middleware(
 )
 
 app.include_router(health_check_router)
-# app.include_router(login_router)
+app.include_router(login_router)
