@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-12 23:30:53 CLST
+--   en:        2024-10-26 22:06:03 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -12,7 +12,7 @@
 CREATE TABLE address (
     id           NUMBER(20) NOT NULL,
     streetname   VARCHAR2(100) NOT NULL,
-    streetnumber NUMBER(20) NOT NULL,
+    streetnumber VARCHAR2(50) NOT NULL,
     description  VARCHAR2(70) NOT NULL,
     idcomuna     NUMBER(20) NOT NULL,
     idcountry    NUMBER(20) NOT NULL,
@@ -25,8 +25,8 @@ CREATE TABLE appuser (
     id             NUMBER(20) NOT NULL,
     firstname      VARCHAR2(20),
     middlename     VARCHAR2(20),
-    lastname       VARCHAR2(12),
-    secondlastname VARCHAR2(12),
+    lastname       VARCHAR2(20),
+    secondlastname VARCHAR2(20),
     countrycode    VARCHAR2(3),
     numberphone    NUMBER(9),
     email          VARCHAR2(500) NOT NULL,
@@ -37,22 +37,6 @@ CREATE TABLE appuser (
 
 ALTER TABLE appuser ADD CONSTRAINT appuser_pk PRIMARY KEY ( id );
 
-CREATE TABLE chargetype (
-    id   NUMBER(2) NOT NULL,
-    name VARCHAR2(10) NOT NULL
-);
-
-COMMENT ON COLUMN chargetype.name IS
-    'Ejemplo:
-BT1
-BT2
-BT1-T3
-AT2
-AT3
-';
-
-ALTER TABLE chargetype ADD CONSTRAINT chargetype_pk PRIMARY KEY ( id );
-
 CREATE TABLE comuna (
     id   NUMBER(20) NOT NULL,
     name VARCHAR2(20) NOT NULL
@@ -62,21 +46,11 @@ ALTER TABLE comuna ADD CONSTRAINT comuna_pk PRIMARY KEY ( id );
 
 CREATE TABLE contract (
     id                   NUMBER(20) NOT NULL,
-    fixedcost            NUMBER(20) NOT NULL,
-    variablecost         NUMBER(20) NOT NULL,
-    kwhvariable          NUMBER(20, 2) NOT NULL,
-    idelectricitycompany NUMBER(20) NOT NULL,
-    idchargetype         NUMBER(2) NOT NULL
+    serviceadmincost     NUMBER(10) NOT NULL,
+    transportcost        NUMBER(10) NOT NULL,
+    elecricitycost       NUMBER(10) NOT NULL,
+    idelectricitycompany NUMBER(20) NOT NULL
 );
-
-COMMENT ON COLUMN contract.fixedcost IS
-    'Costo Fijo';
-
-COMMENT ON COLUMN contract.variablecost IS
-    'Costo Variable';
-
-COMMENT ON COLUMN contract.idchargetype IS
-    'Tipo de tarifa';
 
 ALTER TABLE contract ADD CONSTRAINT contract_pk PRIMARY KEY ( id );
 
@@ -100,7 +74,7 @@ ALTER TABLE device ADD CONSTRAINT device_serialnumber_un UNIQUE ( serialnumber )
 
 CREATE TABLE electricitycompany (
     id   NUMBER(20) NOT NULL,
-    name VARCHAR2(20) NOT NULL
+    name VARCHAR2(40) NOT NULL
 );
 
 ALTER TABLE electricitycompany ADD CONSTRAINT electricitycompany_pk PRIMARY KEY ( id );
@@ -114,10 +88,10 @@ ALTER TABLE region ADD CONSTRAINT region_pk PRIMARY KEY ( id );
 
 CREATE TABLE result (
     id           NUMBER(20) NOT NULL,
-    kwh          NUMBER(15),
+    kwh          NUMBER(10, 3),
     "date"       DATE,
-    potential    NUMBER(9),
-    ampere       NUMBER(9),
+    power        NUMBER(10, 3),
+    ampere       NUMBER(10, 3),
     iduserdevice NUMBER(20) NOT NULL
 );
 
@@ -130,7 +104,7 @@ CREATE TABLE userdevice (
     creationdate  DATE NOT NULL,
     lastconection DATE NOT NULL,
     description   VARCHAR2(30),
-    idappuser     NUMBER(20) NOT NULL,
+    iduser        NUMBER(20) NOT NULL,
     iddevice      NUMBER(20) NOT NULL
 );
 
@@ -148,9 +122,13 @@ ALTER TABLE address
     ADD CONSTRAINT address_region_fk FOREIGN KEY ( idregion )
         REFERENCES region ( id );
 
-ALTER TABLE contract
-    ADD CONSTRAINT contract_chargetype_fk FOREIGN KEY ( idchargetype )
-        REFERENCES chargetype ( id );
+ALTER TABLE appuser
+    ADD CONSTRAINT appuser_address_fk FOREIGN KEY ( idaddress )
+        REFERENCES address ( id );
+
+ALTER TABLE appuser
+    ADD CONSTRAINT appuser_contract_fk FOREIGN KEY ( idcontract )
+        REFERENCES contract ( id );
 
 ALTER TABLE contract
     ADD CONSTRAINT contract_electricitycompany_fk FOREIGN KEY ( idelectricitycompany )
@@ -160,16 +138,8 @@ ALTER TABLE result
     ADD CONSTRAINT result_userdevice_fk FOREIGN KEY ( iduserdevice )
         REFERENCES userdevice ( id );
 
-ALTER TABLE appuser
-    ADD CONSTRAINT user_address_fk FOREIGN KEY ( idaddress )
-        REFERENCES address ( id );
-
-ALTER TABLE appuser
-    ADD CONSTRAINT user_contract_fk FOREIGN KEY ( idcontract )
-        REFERENCES contract ( id );
-
 ALTER TABLE userdevice
-    ADD CONSTRAINT userdevice_appuser_fk FOREIGN KEY ( idappuser )
+    ADD CONSTRAINT userdevice_appuser_fk FOREIGN KEY ( iduser )
         REFERENCES appuser ( id );
 
 ALTER TABLE userdevice
@@ -180,9 +150,9 @@ ALTER TABLE userdevice
 
 -- Informe de Resumen de Oracle SQL Developer Data Modeler: 
 -- 
--- CREATE TABLE                            11
+-- CREATE TABLE                            10
 -- CREATE INDEX                             0
--- ALTER TABLE                             22
+-- ALTER TABLE                             20
 -- CREATE VIEW                              0
 -- ALTER VIEW                               0
 -- CREATE PACKAGE                           0
