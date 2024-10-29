@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-26 22:07:02 CLST
+--   en:        2024-10-28 22:50:07 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -23,8 +23,8 @@ DROP TABLE region CASCADE CONSTRAINTS;
 
 DROP TABLE result CASCADE CONSTRAINTS;
 
+DROP TABLE street CASCADE CONSTRAINTS;
+
 DROP TABLE userdevice CASCADE CONSTRAINTS;
 
--- predefined type, no DDL - MDSYS.SDO_GEOMETRY
 
--- predefined type, no DDL - XMLTYPE
