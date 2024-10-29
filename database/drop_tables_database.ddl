@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-26 22:07:02 CLST
+--   en:        2024-10-29 00:04:44 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -24,6 +24,18 @@ DROP TABLE region CASCADE CONSTRAINTS;
 DROP TABLE result CASCADE CONSTRAINTS;
 
 DROP TABLE userdevice CASCADE CONSTRAINTS;
+
+
+DROP SEQUENCE userdevice_id_seq; 
+DROP SEQUENCE result_id_seq; 
+DROP SEQUENCE region_id_seq; 
+DROP SEQUENCE electricitycompany_id_seq; 
+DROP SEQUENCE device_id_seq; 
+DROP SEQUENCE contract_id_seq; 
+DROP SEQUENCE comuna_id_seq; 
+DROP SEQUENCE appuser_id_seq; 
+DROP SEQUENCE country_id_seq; 
+DROP SEQUENCE address_id_seq;
 
 -- predefined type, no DDL - MDSYS.SDO_GEOMETRY
 
