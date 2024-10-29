@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-28 23:14:22 CLST
+--   en:        2024-10-29 00:04:06 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -10,12 +10,13 @@
 -- predefined type, no DDL - XMLTYPE
 
 CREATE TABLE address (
-    id          NUMBER(20) NOT NULL,
-    description VARCHAR2(70) NOT NULL,
-    idcomuna    NUMBER(20) NOT NULL,
-    idcountry   NUMBER(20) NOT NULL,
-    idregion    NUMBER(20) NOT NULL,
-    id_street   NUMBER(20) NOT NULL
+    id           NUMBER(20) NOT NULL,
+    streetname   VARCHAR2(100) NOT NULL,
+    streetnumber VARCHAR2(50) NOT NULL,
+    description  VARCHAR2(70) NOT NULL,
+    idcomuna     NUMBER(20) NOT NULL,
+    idcountry    NUMBER(20) NOT NULL,
+    idregion     NUMBER(20) NOT NULL
 );
 
 ALTER TABLE address ADD CONSTRAINT address_pk PRIMARY KEY ( id );
@@ -96,13 +97,6 @@ CREATE TABLE result (
 
 ALTER TABLE result ADD CONSTRAINT result_pk PRIMARY KEY ( id );
 
-CREATE TABLE street (
-    id   NUMBER(20) NOT NULL,
-    name VARCHAR2(40) NOT NULL
-);
-
-ALTER TABLE street ADD CONSTRAINT street_pk PRIMARY KEY ( id );
-
 CREATE TABLE userdevice (
     id            NUMBER(20) NOT NULL,
     alias         VARCHAR2(20),
@@ -127,10 +121,6 @@ ALTER TABLE address
 ALTER TABLE address
     ADD CONSTRAINT address_region_fk FOREIGN KEY ( idregion )
         REFERENCES region ( id );
-
-ALTER TABLE address
-    ADD CONSTRAINT address_street_fk FOREIGN KEY ( id_street )
-        REFERENCES street ( id );
 
 ALTER TABLE appuser
     ADD CONSTRAINT appuser_address_fk FOREIGN KEY ( idaddress )
@@ -270,9 +260,9 @@ END;
 
 -- Informe de Resumen de Oracle SQL Developer Data Modeler: 
 -- 
--- CREATE TABLE                            11
+-- CREATE TABLE                            10
 -- CREATE INDEX                             0
--- ALTER TABLE                             22
+-- ALTER TABLE                             20
 -- CREATE VIEW                              0
 -- ALTER VIEW                               0
 -- CREATE PACKAGE                           0
