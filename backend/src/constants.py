@@ -44,7 +44,7 @@ DB_PEM_PATH: pathlib.Path = pathlib.Path(DB_WALLET_PATH, DB_PEM_FILE_NAME)
 LOGS_DIR_NAME: str = os.environ["LOGS_DIR_NAME"]
 LOGS_PATH: pathlib.Path = pathlib.Path("./../", LOGS_DIR_NAME)
 
-LOGGING_LEVEL: str = logging.getLevelName(logging.DEBUG)
+LOGGING_LEVEL: str = logging.getLevelName(logging.INFO)
 
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

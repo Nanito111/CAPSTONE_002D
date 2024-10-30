@@ -17,3 +17,8 @@ UserIsMissingFromDatabase = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="User is missing",
 )
+
+UserAlreadyExistCannotRegister = HTTPException(
+    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+    detail="Cannot register user. User already exist.",
+)
