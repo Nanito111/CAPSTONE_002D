@@ -1,6 +1,5 @@
 from logging import getLogger
 from fastapi import APIRouter
-from pydantic import Field
 from sqlalchemy import select
 
 from dependencies import SessionDataBase
@@ -15,7 +14,7 @@ router = APIRouter(prefix="/utils", tags=["utils", "database"])
 @router.get("/get-countries")
 def get_countries(
     database_session: SessionDataBase,
-):
+) -> schemas.GetNameAndIdList:
     statement = select(Country)
     rows = database_session.execute(statement).scalars().all()
     countries_as_obj = [country.__dict__ for country in rows]
@@ -27,7 +26,7 @@ def get_countries(
 def get_regions(
     database_session: SessionDataBase,
     country: str,
-):
+) -> schemas.GetNameAndIdList:
     statement = select(Region).where(Region.id_country.__eq__(country))
     rows = database_session.execute(statement).scalars().all()
     regions_as_obj = [region.__dict__ for region in rows]
@@ -39,7 +38,7 @@ def get_regions(
 def get_comuna(
     database_session: SessionDataBase,
     region: str,
-):
+) -> schemas.GetNameAndIdList:
     statement = select(Comuna).where(Comuna.id_region.__eq__(region))
     rows = database_session.execute(statement).scalars().all()
     comuna_as_obj = [comuna.__dict__ for comuna in rows]
@@ -50,7 +49,7 @@ def get_comuna(
 @router.get("/get-empresas")
 def get_empresas(
     database_session: SessionDataBase,
-):
+) -> schemas.GetNameAndIdList:
     statement = select(ElectricityCompany)
     rows = database_session.execute(statement).scalars().all()
     empresas_as_obj = [empresa.__dict__ for empresa in rows]
