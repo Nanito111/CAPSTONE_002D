@@ -1,3 +1,4 @@
+"use client"
 import {
   Card,
   CardContent,
@@ -7,11 +8,21 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 import Image from "next/image";
 import FooterButtons from "@/components/auth/FooterButtons";
 
-export function RegisterForm(
-) {
+export function RegisterForm() {
+  const [mensajeAddress, setMensajeAddress] = useState("Por favor, ingrese su dirección");
+
+  const handleAddressFocus = (event: React.FocusEvent<HTMLInputElement>) => {
+  };
+  const handleAddressBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const direccion = event.target.value;
+    // hacer peticion a api con la direccion ingresada
+
+  };
+
   return (
     <>
       <Card className="w-full max-w-sm">
@@ -65,9 +76,55 @@ export function RegisterForm(
               required
             />
           </div>
+          <div className="grid gap-2">
+          <Label htmlFor="street">Calle</Label>
+            <Input
+              id="street"
+              type="text"
+              placeholder="Avenida Esquina Blanca"
+              required
+              onFocus={handleAddressFocus}
+              onBlur={handleAddressBlur}
+            />
+          </div>
+          <div className="grid gap-2">
+          <Label htmlFor="streetnumber">Numero de calle</Label>
+            <Input
+              id="streetnumber"
+              type="text"
+              placeholder="501"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+          <Label htmlFor="comuna">Comuna</Label>
+            <Input
+              id="comuna"
+              type="text"
+              placeholder="Maipú"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+          <Label htmlFor="region">Región</Label>
+            <Input
+              id="Region"
+              type="text"
+              placeholder="Metropolitana"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+          <Label htmlFor="country">País</Label>
+            <Input
+              id="country"
+              type="text"
+              placeholder="Chile"
+              required
+            />
+          </div>
         </CardContent>
-        <FooterButtons textoBotonPrincipal="Registrarse" />
-
+          <FooterButtons textoBotonPrincipal="Registrarse" />
       </Card>
     </>
   );
