@@ -55,15 +55,15 @@ jobs:
 
         # send dotenv to server
       - name: Copy single file
-        uses: mschmitt/rsync-with-ssh-agent@v2
+        uses: Burnett01/rsync-deployments@7.0.1
         with:
-          SSH_HOST: ${{ secrets.SERVER_HOST }}
-          SSH_PORT: ${{ secrets.SERVER_PORT}}
-          SSH_USER: ${{ secrets.SERVER_USER }}
-          SSH_KEY: ${{ secrets.SERVER_KEY }}
-          SSH_PASSPHRASE: ${{ secrets.SERVER_KEY_PASS }}
-          RSYNC_LOCAL_PATH: ./.env
-          RSYNC_REMOTE_PATH: ./${{ secrets.DEPLOY_DIRECTORY }}
+          path: .env
+          remote_path: ./${{ secrets.DEPLOY_DIRECTORY }}
+          remote_host: ${{ secrets.SERVER_HOST }}
+          remote_port: ${{ secrets.SERVER_PORT }}
+          remote_user: ${{ secrets.SERVER_USER }}
+          remote_key: ${{ secrets.SERVER_KEY }}
+          remote_key_pass: ${{ secrets.SERVER_KEY_PASS }}
 
         # deploy to server
       - name: Deploy with github
