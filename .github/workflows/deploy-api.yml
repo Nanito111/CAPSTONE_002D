@@ -53,19 +53,17 @@ jobs:
           #tmux variables
           API_SCREEN_NAME: ${{ secrets.API_SCREEN_NAME }}
 
-      - run: echo "ls -a"
-      - run: ls -a
-
         # send dotenv to server
       - name: Copy single file
-        uses: tempersama/rsync-copy@2.6
+        uses: mschmitt/rsync-with-ssh-agent@v2
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          source: .env
-          destination: ${{ secrets.DEPLOY_DIRECTORY }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_KEY }}
-          port: ${{ secrets.SERVER_PORT}}
+          SSH_HOST: ${{ secrets.SERVER_HOST }}
+          SSH_PORT: ${{ secrets.SERVER_PORT}}
+          SSH_USER: ${{ secrets.SERVER_USER }}
+          SSH_KEY: ${{ secrets.SERVER_KEY }}
+          SSH_PASSPHRASE: ${{ secrets.SERVER_KEY_PASS }}
+          RSYNC_LOCAL_PATH: ./.env
+          RSYNC_REMOTE_PATH: ./${{ secrets.DEPLOY_DIRECTORY }}
 
         # deploy to server
       - name: Deploy with github
