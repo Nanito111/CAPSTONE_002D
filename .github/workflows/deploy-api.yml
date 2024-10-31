@@ -21,45 +21,61 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v4
-      # - name: Create Dotenv File
-      #   uses: actually-colab/github-action-create-env-file@v2.3
-      #   with:
-      #     envkey_ENVIRONMENT: ${{ variables.ENVIRONMENT }}
-      #
-      #     # Project info
-      #     envkey_PROJECT_NAME: ${{ variables.PROJECT_NAME }}
-      #     envkey_PROJECT_VERSION: ${{ variables.PROJECT_VERSION }}
-      #
-      #     # API variables
-      #     envkey_API_PROTOCOL: ${{ variables.API_PROTOCOL }}
-      #     envkey_API_HOST_IP: ${{ variables.API_HOST_IP }}
-      #     envkey_API_BIND_IP: ${{ variables.API_BIND_IP }}
-      #     envkey_API_PORT: ${{ variables.API_PORT }}
-      #     envkey_API_WORKERS: ${{ variables.API_WORKERS }}
-      #     envkey_API_ENCRYPTION_KEY: ${{ variables.API_ENCRYPTION_KEY}}
-      #
-      #     # Database variables
-      #     envkey_DB_HOST: ${{ variables.DB_HOST }}
-      #     envkey_DB_PORT: ${{ variables.DB_PORT }}
-      #     envkey_DB_DSN_ALIAS: ${{ variables.DB_DSN_ALIAS }}
-      #     envkey_DB_TNS_FILE_NAME: ${{ variables.DB_TNS_FILE_NAME }}
-      #     envkey_DB_USER: ${{ secrets.DB_USER }}
-      #     envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      #     envkey_DB_WALLET_DIR_NAME: ${{ variables.DB_WALLET_DIR_NAME }}
-      #     envkey_DB_PEM_FILE_NAME: ${{ variables.DB_PEM_FILE_NAME }}
-      #     envkey_DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
-      #
-      #     # other variables
-      #     LOGS_DIR_NAME: ${{ variables.LOGS_DIR_NAME }}
 
+        # create dotenv
+      - name: Create Dotenv File
+        uses: actually-colab/github-action-create-env-file@v2.3
+        with:
+          envkey_ENVIRONMENT: ${{ variables.ENVIRONMENT }}
+          # Project info
+          envkey_PROJECT_NAME: ${{ variables.PROJECT_NAME }}
+          envkey_PROJECT_VERSION: ${{ variables.PROJECT_VERSION }}
+          # API variables
+          envkey_API_PROTOCOL: ${{ variables.API_PROTOCOL }}
+          envkey_API_HOST_IP: ${{ secrets.API_HOST_IP }}
+          envkey_API_BIND_IP: ${{ secrets.API_HOST_IP }}
+          envkey_API_PORT: ${{ secrets.API_PORT }}
+          envkey_API_WORKERS: ${{ variables.API_WORKERS }}
+          envkey_API_SECRET_KEY: ${{ secrets.API_SECRET_KEY}}
+          envkey_API_ALGORITHM: ${{ secrets.API_ALGORITHM}}
+          # Database variables
+          envkey_DB_HOST: ${{ secrets.DB_HOST }}
+          envkey_DB_PORT: ${{ secrets.DB_PORT }}
+          envkey_DB_DSN_ALIAS: ${{ secrets.DB_DSN_ALIAS }}
+          envkey_DB_TNS_FILE_NAME: ${{ secrets.DB_TNS_FILE_NAME }}
+          envkey_DB_USER: ${{ secrets.DB_USER }}
+          envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          envkey_DB_WALLET_DIR_NAME: ${{ secrets.DB_WALLET_DIR_NAME }}
+          envkey_DB_PEM_FILE_NAME: ${{ secrets.DB_PEM_FILE_NAME }}
+          envkey_DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
+          # other variables
+          envkey_LOGS_DIR_NAME: ${{ variables.LOGS_DIR_NAME }}
+          #tmux variables
+          envkey_API_SCREEN_NAME: ${{ secrets.API_SCREEN_NAME }}
+
+        # send dotenv to server
+      - name: SFTP Upload
+        uses: Dylan700/sftp-upload-action@v1.2.3
+        with:
+          server: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          passphrase: ${{ secrets.SERVER_KEY_PASS }}
+          uploads: |
+            ./ => ./${{ secrets.DEPLOY_DIRECTORY }}
+          ignore: |
+            !.env
+
+        # deploy to server
       - name: Deploy with github
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           passphrase: ${{ secrets.SERVER_KEY_PASS }}
-          port: ${{ secrets.SERVER_PORT }}
           script: |
             cd ${{ secrets.DEPLOY_DIRECTORY }}
             git checkout ${{ github.event.inputs.branch }}
