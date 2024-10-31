@@ -2,12 +2,11 @@
 include = ["src"]
 exclude = ["**/node_modules",
     "**/__pycache__",
-    "src/experimental",
-    "src/typestubs"
 ]
 
 reportMissingImports = "error"
+reportMissingTypeStubs = false
 
 executionEnvironments = [
-  { root = "src" }
+  { root = "src/" }
 ]
