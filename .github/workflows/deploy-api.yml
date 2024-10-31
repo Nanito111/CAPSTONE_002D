@@ -58,7 +58,7 @@ jobs:
 
         # send dotenv to server
       - name: Copy single file
-        uses: tempersama/rsync-action@2.3
+        uses: tempersama/rsync-copy@2.6
         with:
           host: ${{ secrets.SERVER_HOST }}
           source: .env
