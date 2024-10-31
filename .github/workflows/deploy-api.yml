@@ -58,7 +58,7 @@ jobs:
         uses: Burnett01/rsync-deployments@7.0.1
         with:
           path: .env
-          remote_path: ./${{ secrets.DEPLOY_DIRECTORY }}
+          remote_path: /home/${{ secrets.SERVER_USER}}/
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_port: ${{ secrets.SERVER_PORT }}
           remote_user: ${{ secrets.SERVER_USER }}
