@@ -54,18 +54,17 @@ jobs:
           API_SCREEN_NAME: ${{ secrets.API_SCREEN_NAME }}
 
         # send dotenv to server
-      - name: SFTP Upload
-        uses: Dylan700/sftp-upload-action@v1.2.3
+      - name: Copy single file
+        uses: tempersama/rsync-action@2.3
+        run: echo "ls -a"
+        run: ls -a
         with:
-          server: ${{ secrets.SERVER_HOST }}
-          port: ${{ secrets.SERVER_PORT }}
+          host: ${{ secrets.SERVER_HOST }}
+          source: .env
+          destination: ${{ secrets.DEPLOY_DIRECTORY }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
-          passphrase: ${{ secrets.SERVER_KEY_PASS }}
-          uploads: |
-            ./ => ./${{ secrets.DEPLOY_DIRECTORY }}
-          ignore: |
-            !.env
+          port: ${{ secrets.SERVER_PORT}}
 
         # deploy to server
       - name: Deploy with github
