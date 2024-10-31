@@ -23,35 +23,35 @@ jobs:
       - uses: actions/checkout@v4
 
         # create dotenv
-      - name: Create Dotenv File
-        uses: actually-colab/github-action-create-env-file@v2.3
-        with:
-          envkey_ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+      - name: Create dotenv
+        uses: iamsauravsharma/create-dotenv@v3.1.0
+        env:
+          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
           # Project info
-          envkey_PROJECT_NAME: ${{ vars.PROJECT_NAME }}
-          envkey_PROJECT_VERSION: ${{ vars.PROJECT_VERSION }}
+          PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+          PROJECT_VERSION: ${{ vars.PROJECT_VERSION }}
           # API variables
-          envkey_API_PROTOCOL: ${{ vars.API_PROTOCOL }}
-          envkey_API_HOST_IP: ${{ secrets.API_HOST_IP }}
-          envkey_API_BIND_IP: ${{ secrets.API_HOST_IP }}
-          envkey_API_PORT: ${{ secrets.API_PORT }}
-          envkey_API_WORKERS: ${{ vars.API_WORKERS }}
-          envkey_API_SECRET_KEY: ${{ secrets.API_SECRET_KEY}}
-          envkey_API_ALGORITHM: ${{ secrets.API_ALGORITHM}}
+          API_PROTOCOL: ${{ vars.API_PROTOCOL }}
+          API_HOST_IP: ${{ secrets.API_HOST_IP }}
+          API_BIND_IP: ${{ secrets.API_HOST_IP }}
+          API_PORT: ${{ secrets.API_PORT }}
+          API_WORKERS: ${{ vars.API_WORKERS }}
+          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY}}
+          API_ALGORITHM: ${{ secrets.API_ALGORITHM}}
           # Database variables
-          envkey_DB_HOST: ${{ secrets.DB_HOST }}
-          envkey_DB_PORT: ${{ secrets.DB_PORT }}
-          envkey_DB_DSN_ALIAS: ${{ secrets.DB_DSN_ALIAS }}
-          envkey_DB_TNS_FILE_NAME: ${{ secrets.DB_TNS_FILE_NAME }}
-          envkey_DB_USER: ${{ secrets.DB_USER }}
-          envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          envkey_DB_WALLET_DIR_NAME: ${{ secrets.DB_WALLET_DIR_NAME }}
-          envkey_DB_PEM_FILE_NAME: ${{ secrets.DB_PEM_FILE_NAME }}
-          envkey_DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_DSN_ALIAS: ${{ secrets.DB_DSN_ALIAS }}
+          DB_TNS_FILE_NAME: ${{ secrets.DB_TNS_FILE_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_WALLET_DIR_NAME: ${{ secrets.DB_WALLET_DIR_NAME }}
+          DB_PEM_FILE_NAME: ${{ secrets.DB_PEM_FILE_NAME }}
+          DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
           # other variables
-          envkey_LOGS_DIR_NAME: ${{ vars.LOGS_DIR_NAME }}
+          LOGS_DIR_NAME: ${{ vars.LOGS_DIR_NAME }}
           #tmux variables
-          envkey_API_SCREEN_NAME: ${{ secrets.API_SCREEN_NAME }}
+          API_SCREEN_NAME: ${{ secrets.API_SCREEN_NAME }}
 
         # send dotenv to server
       - name: SFTP Upload
