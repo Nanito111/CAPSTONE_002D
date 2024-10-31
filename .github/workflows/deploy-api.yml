@@ -26,16 +26,16 @@ jobs:
       - name: Create Dotenv File
         uses: actually-colab/github-action-create-env-file@v2.3
         with:
-          envkey_ENVIRONMENT: ${{ variables.ENVIRONMENT }}
+          envkey_ENVIRONMENT: ${{ vars.ENVIRONMENT }}
           # Project info
-          envkey_PROJECT_NAME: ${{ variables.PROJECT_NAME }}
-          envkey_PROJECT_VERSION: ${{ variables.PROJECT_VERSION }}
+          envkey_PROJECT_NAME: ${{ vars.PROJECT_NAME }}
+          envkey_PROJECT_VERSION: ${{ vars.PROJECT_VERSION }}
           # API variables
-          envkey_API_PROTOCOL: ${{ variables.API_PROTOCOL }}
+          envkey_API_PROTOCOL: ${{ vars.API_PROTOCOL }}
           envkey_API_HOST_IP: ${{ secrets.API_HOST_IP }}
           envkey_API_BIND_IP: ${{ secrets.API_HOST_IP }}
           envkey_API_PORT: ${{ secrets.API_PORT }}
-          envkey_API_WORKERS: ${{ variables.API_WORKERS }}
+          envkey_API_WORKERS: ${{ vars.API_WORKERS }}
           envkey_API_SECRET_KEY: ${{ secrets.API_SECRET_KEY}}
           envkey_API_ALGORITHM: ${{ secrets.API_ALGORITHM}}
           # Database variables
@@ -49,7 +49,7 @@ jobs:
           envkey_DB_PEM_FILE_NAME: ${{ secrets.DB_PEM_FILE_NAME }}
           envkey_DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
           # other variables
-          envkey_LOGS_DIR_NAME: ${{ variables.LOGS_DIR_NAME }}
+          envkey_LOGS_DIR_NAME: ${{ vars.LOGS_DIR_NAME }}
           #tmux variables
           envkey_API_SCREEN_NAME: ${{ secrets.API_SCREEN_NAME }}
 
