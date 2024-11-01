@@ -1,6 +1,5 @@
 from logging import getLogger
 from fastapi import APIRouter
-from pydantic import Field
 from sqlalchemy import select
 
 from dependencies import SessionDataBase
@@ -9,7 +8,7 @@ from utils import schemas
 
 logger = getLogger("utils.router")
 
-router = APIRouter(prefix="/utils", tags=["utils", "database"])
+router = APIRouter(prefix="/utils", tags=["utils"])
 
 
 @router.get("/get-countries")
