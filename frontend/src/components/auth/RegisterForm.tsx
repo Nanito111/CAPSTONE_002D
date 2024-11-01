@@ -16,13 +16,9 @@ export function RegisterForm() {
   const [mensajeAddress, setMensajeAddress] = useState("");
   const [mensajeColor, setMensajeColor] = useState("");
 
-  const handleAddressFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-  };
   const handleAddressBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const direccion = event.target.value;
-    // hacer peticion a api con la direccion ingresada
     const api = `https://nominatim.openstreetmap.org/search?street=${direccion}&format=json`;
-    console.log(api);
     fetch(api)
       .then((response) => response.json())
       .then((data) => {
@@ -96,10 +92,9 @@ export function RegisterForm() {
               type="text"
               placeholder="Avenida Esquina Blanca"
               required
-              onFocus={handleAddressFocus}
               onBlur={handleAddressBlur}
             />
-            <p 
+            <p
               className={`text-sm ${mensajeColor}`}
             >{mensajeAddress}</p>
           </div>
