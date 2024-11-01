@@ -26,37 +26,35 @@ jobs:
       - name: Create dotenv
         uses: iamsauravsharma/create-dotenv@v3.1.0
         with:
+          input-prefix: ENV_
           file-path: ./backend/.env
         env:
-          ENVIRONMENT: \"${{ vars.ENVIRONMENT }}\"
+          ENV_ENVIRONMENT: "${{ vars.ENVIRONMENT }}"
           # Project info
-          PROJECT_NAME: \"${{ vars.PROJECT_NAME }}\"
-          PROJECT_VERSION: \"${{ vars.PROJECT_VERSION }}\"
+          ENV_PROJECT_NAME: "${{ vars.PROJECT_NAME }}"
+          ENV_PROJECT_VERSION: "${{ vars.PROJECT_VERSION }}"
           # API variables
-          API_PROTOCOL: \"${{ vars.API_PROTOCOL }}\"
-          API_HOST_IP: \"${{ secrets.API_HOST_IP }}\"
-          API_BIND_IP: \"${{ secrets.API_HOST_IP }}\"
-          API_PORT: ${{ secrets.API_PORT }}
-          API_WORKERS: ${{ vars.API_WORKERS }}
-          API_SECRET_KEY: \"${{ secrets.API_SECRET_KEY}}\"
-          API_ALGORITHM: \"${{ secrets.API_ALGORITHM}}\"
+          ENV_API_PROTOCOL: "${{ vars.API_PROTOCOL }}"
+          ENV_API_HOST_IP: "${{ secrets.API_HOST_IP }}"
+          ENV_API_BIND_IP: "${{ secrets.API_HOST_IP }}"
+          ENV_API_PORT: ${{ secrets.API_PORT }}
+          ENV_API_WORKERS: ${{ vars.API_WORKERS }}
+          ENV_API_SECRET_KEY: "${{ secrets.API_SECRET_KEY}}"
+          ENV_API_ALGORITHM: "${{ secrets.API_ALGORITHM}}"
           # Database variables
-          DB_HOST: \"${{ secrets.DB_HOST }}\"
-          DB_PORT: \"${{ secrets.DB_PORT }}\"
-          DB_DSN_ALIAS: \"${{ secrets.DB_DSN_ALIAS }}\"
-          DB_TNS_FILE_NAME: \"${{ secrets.DB_TNS_FILE_NAME }}\"
-          DB_USER: \"${{ secrets.DB_USER }}\"
-          DB_PASSWORD: \"${{ secrets.DB_PASSWORD }}\"
-          DB_WALLET_DIR_NAME: \"${{ secrets.DB_WALLET_DIR_NAME }}\"
-          DB_PEM_FILE_NAME: \"${{ secrets.DB_PEM_FILE_NAME }}\"
-          DB_WALLET_PASSWORD: \"${{ secrets.DB_WALLET_PASSWORD }}\"
+          ENV_DB_HOST: "${{ secrets.DB_HOST }}"
+          ENV_DB_PORT: "${{ secrets.DB_PORT }}"
+          ENV_DB_DSN_ALIAS: "${{ secrets.DB_DSN_ALIAS }}"
+          ENV_DB_TNS_FILE_NAME: "${{ secrets.DB_TNS_FILE_NAME }}"
+          ENV_DB_USER: "${{ secrets.DB_USER }}"
+          ENV_DB_PASSWORD: "${{ secrets.DB_PASSWORD }}"
+          ENV_DB_WALLET_DIR_NAME: "${{ secrets.DB_WALLET_DIR_NAME }}"
+          ENV_DB_PEM_FILE_NAME: "${{ secrets.DB_PEM_FILE_NAME }}"
+          ENV_DB_WALLET_PASSWORD: "${{ secrets.DB_WALLET_PASSWORD }}"
           # other variables
-          LOGS_DIR_NAME: \"${{ vars.LOGS_DIR_NAME }}\"
+          ENV_LOGS_DIR_NAME: "${{ vars.LOGS_DIR_NAME }}"
           #tmux variables
-          API_SCREEN_NAME: \"${{ secrets.API_SCREEN_NAME }}\"
-
-      - run: ls -a "./backend/"
-      - run: cat "./backend/.env"
+          ENV_API_SCREEN_NAME: "${{ secrets.API_SCREEN_NAME }}"
 
         # send dotenv to server
       - name: Copy single file
