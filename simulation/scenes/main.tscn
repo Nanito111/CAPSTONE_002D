@@ -1,0 +1,104 @@
+[gd_scene load_steps=22 format=3 uid="uid://duormiueglly"]
+
+[ext_resource type="PackedScene" uid="uid://h7ux4wiw82fs" path="res://assets/room.tscn" id="1_la1a4"]
+[ext_resource type="PackedScene" uid="uid://dc62genfs1a50" path="res://assets/user.tscn" id="2_euvoq"]
+[ext_resource type="PackedScene" uid="uid://ch8iug0w1fvbt" path="res://assets/objects/escritorio_mesa.glb" id="3_30v44"]
+[ext_resource type="PackedScene" uid="uid://drxp6nqeo02va" path="res://assets/objects/silla_simple.glb" id="4_fvfw5"]
+[ext_resource type="PackedScene" uid="uid://dj7ognmqgyib8" path="res://assets/objects/silla_simple_brazos.glb" id="5_pdhct"]
+[ext_resource type="PackedScene" uid="uid://ct7756mcqewaw" path="res://assets/devices/computador.glb" id="6_6o27f"]
+[ext_resource type="PackedScene" uid="uid://cwrwyl7xrcf4v" path="res://assets/devices/televisor.glb" id="7_asqda"]
+[ext_resource type="PackedScene" uid="uid://bbysj2wtv3a2f" path="res://assets/devices/laptop.glb" id="8_ana4m"]
+[ext_resource type="PackedScene" uid="uid://bucp6fspmhoue" path="res://assets/devices/tablet.glb" id="9_qx7y8"]
+[ext_resource type="PackedScene" uid="uid://b3p41sgt5ri7u" path="res://assets/devices/secadora.glb" id="10_c1ag1"]
+[ext_resource type="PackedScene" uid="uid://dlwi5ydp41eln" path="res://assets/devices/lavadora.glb" id="11_borvc"]
+[ext_resource type="PackedScene" uid="uid://d03k52ajay61u" path="res://assets/devices/microondas.glb" id="12_ky3sc"]
+[ext_resource type="PackedScene" uid="uid://bvnx3olpsu4na" path="res://assets/devices/refrigerador.glb" id="13_ncc8i"]
+[ext_resource type="PackedScene" uid="uid://cjwv0bxb8ds30" path="res://assets/devices/hervidor.glb" id="14_imw00"]
+[ext_resource type="PackedScene" uid="uid://bmh5e73oemxs6" path="res://assets/devices/monitor.glb" id="14_ndqqs"]
+[ext_resource type="PackedScene" uid="uid://youbdpm3os13" path="res://assets/devices/plancha.glb" id="16_8uhcl"]
+[ext_resource type="PackedScene" uid="uid://bx1iqru812hej" path="res://assets/devices/secador de pelo.glb" id="17_ordv8"]
+[ext_resource type="PackedScene" uid="uid://c1aocntf45fv3" path="res://assets/devices/impresora.glb" id="18_cmtex"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2q15j"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_gwreq"]
+sky_material = SubResource("ProceduralSkyMaterial_2q15j")
+
+[sub_resource type="Environment" id="Environment_rkl0x"]
+background_energy_multiplier = 0.0
+sky = SubResource("Sky_gwreq")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.22
+reflected_light_source = 1
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Main" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+light_volumetric_fog_energy = 0.0
+light_bake_mode = 0
+shadow_enabled = true
+directional_shadow_mode = 0
+directional_shadow_fade_start = 1.0
+directional_shadow_max_distance = 10.0
+sky_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_rkl0x")
+
+[node name="Room" parent="." instance=ExtResource("1_la1a4")]
+
+[node name="User" parent="." instance=ExtResource("2_euvoq")]
+
+[node name="EscritorioMesa" parent="." instance=ExtResource("3_30v44")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26297, -1.19209e-07, 0.686561)
+
+[node name="silla_simple" parent="." instance=ExtResource("4_fvfw5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.98034, 0, 1.483)
+
+[node name="silla_simple_brazos" parent="." instance=ExtResource("5_pdhct")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03255, -1.19209e-07, 0.677306)
+
+[node name="televisor" parent="." instance=ExtResource("7_asqda")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.129957, 0, 1.66258)
+
+[node name="laptop" parent="." instance=ExtResource("8_ana4m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07646, 0.755712, 1.03697)
+
+[node name="tablet" parent="." instance=ExtResource("9_qx7y8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.46503, 0.781108, 1.082)
+
+[node name="secadora" parent="." instance=ExtResource("10_c1ag1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.834567, 0, 0.91469)
+
+[node name="lavadora" parent="." instance=ExtResource("11_borvc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72617, 0, 0.883469)
+
+[node name="microondas" parent="." instance=ExtResource("12_ky3sc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11407, 0, -0.437836)
+
+[node name="refrigerador" parent="." instance=ExtResource("13_ncc8i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.82389, 1.19209e-07, -0.547782)
+
+[node name="hervidor" parent="." instance=ExtResource("14_imw00")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.812899, 0, -1.12748)
+
+[node name="monitor" parent="." instance=ExtResource("14_ndqqs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.30627, 0.863265, 0.519346)
+
+[node name="computador" parent="." instance=ExtResource("6_6o27f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31216, 0.751653, 0.487665)
+
+[node name="plancha" parent="." instance=ExtResource("16_8uhcl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.46152, 0, -1.15267)
+
+[node name="secador de pelo" parent="." instance=ExtResource("17_ordv8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1352, 0, -1.2069)
+
+[node name="impresora" parent="." instance=ExtResource("18_cmtex")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03303, 0, -1.14327)
