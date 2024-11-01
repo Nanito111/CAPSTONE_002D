@@ -21,47 +21,64 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v4
-      # - name: Create Dotenv File
-      #   uses: actually-colab/github-action-create-env-file@v2.3
-      #   with:
-      #     envkey_ENVIRONMENT: ${{ variables.ENVIRONMENT }}
-      #
-      #     # Project info
-      #     envkey_PROJECT_NAME: ${{ variables.PROJECT_NAME }}
-      #     envkey_PROJECT_VERSION: ${{ variables.PROJECT_VERSION }}
-      #
-      #     # API variables
-      #     envkey_API_PROTOCOL: ${{ variables.API_PROTOCOL }}
-      #     envkey_API_HOST_IP: ${{ variables.API_HOST_IP }}
-      #     envkey_API_BIND_IP: ${{ variables.API_BIND_IP }}
-      #     envkey_API_PORT: ${{ variables.API_PORT }}
-      #     envkey_API_WORKERS: ${{ variables.API_WORKERS }}
-      #     envkey_API_ENCRYPTION_KEY: ${{ variables.API_ENCRYPTION_KEY}}
-      #
-      #     # Database variables
-      #     envkey_DB_HOST: ${{ variables.DB_HOST }}
-      #     envkey_DB_PORT: ${{ variables.DB_PORT }}
-      #     envkey_DB_DSN_ALIAS: ${{ variables.DB_DSN_ALIAS }}
-      #     envkey_DB_TNS_FILE_NAME: ${{ variables.DB_TNS_FILE_NAME }}
-      #     envkey_DB_USER: ${{ secrets.DB_USER }}
-      #     envkey_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      #     envkey_DB_WALLET_DIR_NAME: ${{ variables.DB_WALLET_DIR_NAME }}
-      #     envkey_DB_PEM_FILE_NAME: ${{ variables.DB_PEM_FILE_NAME }}
-      #     envkey_DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
-      #
-      #     # other variables
-      #     LOGS_DIR_NAME: ${{ variables.LOGS_DIR_NAME }}
 
+        # create dotenv
+      - name: Create dotenv
+        uses: iamsauravsharma/create-dotenv@v3.1.0
+        with:
+          input-prefix: ENV_
+          file-path: ./backend/.env
+        env:
+          ENV_ENVIRONMENT: '"${{ vars.ENVIRONMENT }}"'
+          # Project info
+          ENV_PROJECT_NAME: '"${{ vars.PROJECT_NAME }}"'
+          ENV_PROJECT_VERSION: '"${{ vars.PROJECT_VERSION }}"'
+          # API variables
+          ENV_API_PROTOCOL: '"${{ vars.API_PROTOCOL }}"'
+          ENV_API_HOST_IP: '"${{ secrets.API_HOST_IP }}"'
+          ENV_API_BIND_IP: '"${{ secrets.API_HOST_IP }}"'
+          ENV_API_PORT: ${{ secrets.API_PORT }}
+          ENV_API_WORKERS: ${{ vars.API_WORKERS }}
+          ENV_API_SECRET_KEY: '"${{ secrets.API_SECRET_KEY}}"'
+          ENV_API_ALGORITHM: '"${{ secrets.API_ALGORITHM}}"'
+          # Database variables
+          ENV_DB_HOST: '"${{ secrets.DB_HOST }}"'
+          ENV_DB_PORT: '"${{ secrets.DB_PORT }}"'
+          ENV_DB_DSN_ALIAS: '"${{ secrets.DB_DSN_ALIAS }}"'
+          ENV_DB_TNS_FILE_NAME: '"${{ secrets.DB_TNS_FILE_NAME }}"'
+          ENV_DB_USER: '"${{ secrets.DB_USER }}"'
+          ENV_DB_PASSWORD: '"${{ secrets.DB_PASSWORD }}"'
+          ENV_DB_WALLET_DIR_NAME: '"${{ secrets.DB_WALLET_DIR_NAME }}"'
+          ENV_DB_PEM_FILE_NAME: '"${{ secrets.DB_PEM_FILE_NAME }}"'
+          ENV_DB_WALLET_PASSWORD: '"${{ secrets.DB_WALLET_PASSWORD }}"'
+          # other variables
+          ENV_LOGS_DIR_NAME: '"${{ vars.LOGS_DIR_NAME }}"'
+          #tmux variables
+          ENV_API_SCREEN_NAME: '"${{ secrets.API_SCREEN_NAME }}"'
+
+        # send dotenv to server
+      - name: Copy single file
+        uses: Burnett01/rsync-deployments@7.0.1
+        with:
+          path: ./backend/.env
+          remote_path: /home/${{ secrets.SERVER_USER}}/${{ vars.DEPLOY_DIRECTORY}}
+          remote_host: ${{ secrets.SERVER_HOST }}
+          remote_port: ${{ secrets.SERVER_PORT }}
+          remote_user: ${{ secrets.SERVER_USER }}
+          remote_key: ${{ secrets.SERVER_KEY }}
+          remote_key_pass: ${{ secrets.SERVER_KEY_PASS }}
+
+        # deploy to server
       - name: Deploy with github
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
           passphrase: ${{ secrets.SERVER_KEY_PASS }}
-          port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd ${{ secrets.DEPLOY_DIRECTORY }}
+            cd ${{ vars.DEPLOY_DIRECTORY }}
             git checkout ${{ github.event.inputs.branch }}
             git fetch --all
             git pull
