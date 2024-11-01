@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-29 00:04:06 CLST
+--   en:        2024-10-30 01:47:05 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -13,10 +13,7 @@ CREATE TABLE address (
     id           NUMBER(20) NOT NULL,
     streetname   VARCHAR2(100) NOT NULL,
     streetnumber VARCHAR2(50) NOT NULL,
-    description  VARCHAR2(70) NOT NULL,
-    idcomuna     NUMBER(20) NOT NULL,
-    idcountry    NUMBER(20) NOT NULL,
-    idregion     NUMBER(20) NOT NULL
+    idcomuna     NUMBER(20) NOT NULL
 );
 
 ALTER TABLE address ADD CONSTRAINT address_pk PRIMARY KEY ( id );
@@ -38,8 +35,9 @@ CREATE TABLE appuser (
 ALTER TABLE appuser ADD CONSTRAINT appuser_pk PRIMARY KEY ( id );
 
 CREATE TABLE comuna (
-    id   NUMBER(20) NOT NULL,
-    name VARCHAR2(20) NOT NULL
+    id       NUMBER(20) NOT NULL,
+    name     VARCHAR2(70) NOT NULL,
+    idregion NUMBER(20) NOT NULL
 );
 
 ALTER TABLE comuna ADD CONSTRAINT comuna_pk PRIMARY KEY ( id );
@@ -56,7 +54,7 @@ ALTER TABLE contract ADD CONSTRAINT contract_pk PRIMARY KEY ( id );
 
 CREATE TABLE country (
     id   NUMBER(20) NOT NULL,
-    name VARCHAR2(20) NOT NULL
+    name VARCHAR2(50) NOT NULL
 );
 
 ALTER TABLE country ADD CONSTRAINT country_pk PRIMARY KEY ( id );
@@ -80,8 +78,9 @@ CREATE TABLE electricitycompany (
 ALTER TABLE electricitycompany ADD CONSTRAINT electricitycompany_pk PRIMARY KEY ( id );
 
 CREATE TABLE region (
-    id   NUMBER(20) NOT NULL,
-    name VARCHAR2(20) NOT NULL
+    id        NUMBER(20) NOT NULL,
+    name      VARCHAR2(70) NOT NULL,
+    idcountry NUMBER(20) NOT NULL
 );
 
 ALTER TABLE region ADD CONSTRAINT region_pk PRIMARY KEY ( id );
@@ -114,14 +113,6 @@ ALTER TABLE address
     ADD CONSTRAINT address_comuna_fk FOREIGN KEY ( idcomuna )
         REFERENCES comuna ( id );
 
-ALTER TABLE address
-    ADD CONSTRAINT address_country_fk FOREIGN KEY ( idcountry )
-        REFERENCES country ( id );
-
-ALTER TABLE address
-    ADD CONSTRAINT address_region_fk FOREIGN KEY ( idregion )
-        REFERENCES region ( id );
-
 ALTER TABLE appuser
     ADD CONSTRAINT appuser_address_fk FOREIGN KEY ( idaddress )
         REFERENCES address ( id );
@@ -130,9 +121,17 @@ ALTER TABLE appuser
     ADD CONSTRAINT appuser_contract_fk FOREIGN KEY ( idcontract )
         REFERENCES contract ( id );
 
+ALTER TABLE comuna
+    ADD CONSTRAINT comuna_region_fk FOREIGN KEY ( idregion )
+        REFERENCES region ( id );
+
 ALTER TABLE contract
     ADD CONSTRAINT contract_electricitycompany_fk FOREIGN KEY ( idelectricitycompany )
         REFERENCES electricitycompany ( id );
+
+ALTER TABLE region
+    ADD CONSTRAINT region_country_fk FOREIGN KEY ( idcountry )
+        REFERENCES country ( id );
 
 ALTER TABLE result
     ADD CONSTRAINT result_userdevice_fk FOREIGN KEY ( iduserdevice )
