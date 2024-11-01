@@ -25,40 +25,42 @@ jobs:
         # create dotenv
       - name: Create dotenv
         uses: iamsauravsharma/create-dotenv@v3.1.0
+        with:
+          file-path: "./backend/.env"
         env:
-          ENVIRONMENT: ${{ vars.ENVIRONMENT }}
+          ENVIRONMENT: \"${{ vars.ENVIRONMENT }}\"
           # Project info
-          PROJECT_NAME: ${{ vars.PROJECT_NAME }}
-          PROJECT_VERSION: ${{ vars.PROJECT_VERSION }}
+          PROJECT_NAME: \"${{ vars.PROJECT_NAME }}\"
+          PROJECT_VERSION: \"${{ vars.PROJECT_VERSION }}\"
           # API variables
-          API_PROTOCOL: ${{ vars.API_PROTOCOL }}
-          API_HOST_IP: ${{ secrets.API_HOST_IP }}
-          API_BIND_IP: ${{ secrets.API_HOST_IP }}
+          API_PROTOCOL: \"${{ vars.API_PROTOCOL }}\"
+          API_HOST_IP: \"${{ secrets.API_HOST_IP }}\"
+          API_BIND_IP: \"${{ secrets.API_HOST_IP }}\"
           API_PORT: ${{ secrets.API_PORT }}
           API_WORKERS: ${{ vars.API_WORKERS }}
-          API_SECRET_KEY: ${{ secrets.API_SECRET_KEY}}
-          API_ALGORITHM: ${{ secrets.API_ALGORITHM}}
+          API_SECRET_KEY: \"${{ secrets.API_SECRET_KEY}}\"
+          API_ALGORITHM: \"${{ secrets.API_ALGORITHM}}\"
           # Database variables
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_DSN_ALIAS: ${{ secrets.DB_DSN_ALIAS }}
-          DB_TNS_FILE_NAME: ${{ secrets.DB_TNS_FILE_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_WALLET_DIR_NAME: ${{ secrets.DB_WALLET_DIR_NAME }}
-          DB_PEM_FILE_NAME: ${{ secrets.DB_PEM_FILE_NAME }}
-          DB_WALLET_PASSWORD: ${{ secrets.DB_WALLET_PASSWORD }}
+          DB_HOST: \"${{ secrets.DB_HOST }}\"
+          DB_PORT: \"${{ secrets.DB_PORT }}\"
+          DB_DSN_ALIAS: \"${{ secrets.DB_DSN_ALIAS }}\"
+          DB_TNS_FILE_NAME: \"${{ secrets.DB_TNS_FILE_NAME }}\"
+          DB_USER: \"${{ secrets.DB_USER }}\"
+          DB_PASSWORD: \"${{ secrets.DB_PASSWORD }}\"
+          DB_WALLET_DIR_NAME: \"${{ secrets.DB_WALLET_DIR_NAME }}\"
+          DB_PEM_FILE_NAME: \"${{ secrets.DB_PEM_FILE_NAME }}\"
+          DB_WALLET_PASSWORD: \"${{ secrets.DB_WALLET_PASSWORD }}\"
           # other variables
-          LOGS_DIR_NAME: ${{ vars.LOGS_DIR_NAME }}
+          LOGS_DIR_NAME: \"${{ vars.LOGS_DIR_NAME }}\"
           #tmux variables
-          API_SCREEN_NAME: ${{ secrets.API_SCREEN_NAME }}
+          API_SCREEN_NAME: \"${{ secrets.API_SCREEN_NAME }}\"
 
         # send dotenv to server
       - name: Copy single file
         uses: Burnett01/rsync-deployments@7.0.1
         with:
-          path: .env
-          remote_path: /home/${{ secrets.SERVER_USER}}/
+          path: ./backend/.env
+          remote_path: /home/${{ secrets.SERVER_USER}}/${{ secrets.DEPLOY_DIRECTORY}}
           remote_host: ${{ secrets.SERVER_HOST }}
           remote_port: ${{ secrets.SERVER_PORT }}
           remote_user: ${{ secrets.SERVER_USER }}
