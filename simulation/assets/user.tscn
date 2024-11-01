@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://dc62genfs1a50"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e4h0a"]
+diffuse_mode = 3
+specular_mode = 2
+disable_ambient_light = true
+disable_fog = true
+albedo_color = Color(0.409008, 0.85871, 0.437112, 1)
+disable_receive_shadows = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hwjqw"]
+material = SubResource("StandardMaterial3D_e4h0a")
+top_radius = 0.0
+bottom_radius = 0.25
+height = 1.3
+radial_segments = 16
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_cg6j0"]
+material = SubResource("StandardMaterial3D_e4h0a")
+radius = 0.2
+height = 0.4
+radial_segments = 8
+rings = 4
+
+[node name="User" type="Node3D"]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="torso" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+mesh = SubResource("CylinderMesh_hwjqw")
+
+[node name="head" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("SphereMesh_cg6j0")
