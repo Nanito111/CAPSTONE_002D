@@ -63,6 +63,7 @@ class UserRegistro(BaseModel):
         description="Nombre de pila del usuario.",
     )
     middle_name: str = Field(
+        default="",
         max_length=20,
         pattern=_name_pattern,
         description="Segundo nombre del usuario (opcional).",
@@ -73,6 +74,7 @@ class UserRegistro(BaseModel):
         description="Apellido del usuario.",
     )
     second_last_name: str = Field(
+        default="",
         max_length=20,
         pattern=_name_pattern,
         description="Segundo apellido del usuario (opcional).",
@@ -145,6 +147,33 @@ class RegistroData(BaseModel):
     user: UserRegistro
     address: AddressRegistro
     contract: ContractRegistro
+
+
+class GetUser(BaseModel):
+    class User(BaseModel):
+        first_name: str
+        last_name: str
+        second_last_name: str
+        phone_number: int
+        country_code: str
+        email: str
+
+    class Address(BaseModel):
+        street_name: str
+        street_number: str
+        comuna: str
+        region: str
+        country: str
+
+    class Contract(BaseModel):
+        electricity_company: str
+        service_administration_cost: int
+        transport_cost: int
+        electricity_cost: int
+
+    user: User
+    address: Address
+    contract: Contract
 
 
 # class ModifyUser(BaseModel):

@@ -8,7 +8,7 @@ from utils import schemas
 
 logger = getLogger("utils.router")
 
-router = APIRouter(prefix="/utils", tags=["utils", "database"])
+router = APIRouter(prefix="/utils", tags=["utils"])
 
 
 @router.get("/get-countries")
