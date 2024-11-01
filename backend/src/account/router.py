@@ -10,7 +10,7 @@ from logging import getLogger
 
 from fastapi.security import OAuth2PasswordBearer
 
-from sqlalchemy import insert, select
+from sqlalchemy import delete, insert, select
 from account import exceptions
 from account import schemas
 from dependencies import SessionDataBase, AuthFormData
@@ -44,10 +44,7 @@ def get_password_from_database(
     return database_session.execute(statement).scalar_one()
 
 
-def get_current_user_from_database(
-    token: TokenOAuth2,
-    database_session: SessionDataBase,
-):
+def get_user_email_from_token(token: TokenOAuth2):
     try:
         payload = jwt.decode(
             token, API_SECRET_KEY.get_secret_value(), algorithms=[API_ALGORITHM]
@@ -59,8 +56,17 @@ def get_current_user_from_database(
         if user_email is None:
             raise exceptions.InvalidTokenException
 
+        return user_email
+
     except InvalidTokenError:
         raise exceptions.InvalidTokenException
+
+
+def get_current_user_from_database(
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    user_email = get_user_email_from_token(token)
 
     # make query to get user
     statement = select(User).where(User.email.__eq__(user_email.upper()))
@@ -288,3 +294,43 @@ def get_current_user(
         address=address_data,
         contract=contract_data,
     )
+
+
+@router.delete(
+    "/user",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_current_user(
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    user_email = get_user_email_from_token(token)
+
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        raise exceptions.UserIsMissingFromDatabase
+
+    statement = (
+        delete(User)
+        .where(
+            User.email.__eq__(user_email),
+        )
+        .returning(
+            User.id_contract,
+        )
+    )
+    logger.info(f"Deleting user {user_email}.")
+
+    contract_id = database_session.execute(statement).scalar_one()
+
+    statement = delete(Contract).where(
+        Contract.id.__eq__(contract_id),
+    )
+    logger.info(f"Deleting user {user_email} contract.")
+    database_session.execute(statement)
+
+    database_session.commit()
+
+    logger.info(f"User {user_email} deleted successfully.")
