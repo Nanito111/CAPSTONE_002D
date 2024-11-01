@@ -13,14 +13,27 @@ import Image from "next/image";
 import FooterButtons from "@/components/auth/FooterButtons";
 
 export function RegisterForm() {
-  const [mensajeAddress, setMensajeAddress] = useState("Por favor, ingrese su dirección");
+  const [mensajeAddress, setMensajeAddress] = useState("");
+  const [mensajeColor, setMensajeColor] = useState("");
 
   const handleAddressFocus = (event: React.FocusEvent<HTMLInputElement>) => {
   };
   const handleAddressBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const direccion = event.target.value;
     // hacer peticion a api con la direccion ingresada
-
+    const api = `https://nominatim.openstreetmap.org/search?street=${direccion}&format=json`;
+    console.log(api);
+    fetch(api)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length > 0) {
+          setMensajeAddress(`Dirección encontrada`);
+          setMensajeColor("text-green-500");
+        } else {
+          setMensajeAddress("Dirección no encontrada");
+          setMensajeColor("text-red-500");
+        }
+      });
   };
 
   return (
@@ -86,6 +99,9 @@ export function RegisterForm() {
               onFocus={handleAddressFocus}
               onBlur={handleAddressBlur}
             />
+            <p 
+              className={`text-sm ${mensajeColor}`}
+            >{mensajeAddress}</p>
           </div>
           <div className="grid gap-2">
           <Label htmlFor="streetnumber">Numero de calle</Label>
