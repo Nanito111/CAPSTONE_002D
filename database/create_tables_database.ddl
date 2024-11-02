@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-30 01:47:05 CLST
+--   en:        2024-11-01 20:43:59 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -21,7 +21,6 @@ ALTER TABLE address ADD CONSTRAINT address_pk PRIMARY KEY ( id );
 CREATE TABLE appuser (
     id             NUMBER(20) NOT NULL,
     firstname      VARCHAR2(20),
-    middlename     VARCHAR2(20),
     lastname       VARCHAR2(20),
     secondlastname VARCHAR2(20),
     countrycode    VARCHAR2(3),
