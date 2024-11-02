@@ -15,7 +15,7 @@ export function NamesInput({ tipoNombre, placeholder, required}: NamesInputProps
 
     const handleTipoNombreBlur = (event: React.FocusEvent<HTMLInputElement>) => {
         const valor = event.target.value;
-        const regex = /^[a-zA-Z]+$/;
+        const regex = /^[a-zA-ZñÑ]+$/;
         setInputIsValid(regex.test(valor) ? 1 : (required || valor !== "") ? 2 : 0);
     }
 
