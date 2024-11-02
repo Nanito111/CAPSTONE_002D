@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://duormiueglly"]
+[gd_scene load_steps=24 format=3 uid="uid://duormiueglly"]
 
 [ext_resource type="PackedScene" uid="uid://h7ux4wiw82fs" path="res://assets/room.tscn" id="1_la1a4"]
 [ext_resource type="PackedScene" uid="uid://dc62genfs1a50" path="res://assets/user.tscn" id="2_euvoq"]
@@ -18,6 +18,8 @@
 [ext_resource type="PackedScene" uid="uid://youbdpm3os13" path="res://assets/devices/plancha.glb" id="16_8uhcl"]
 [ext_resource type="PackedScene" uid="uid://bx1iqru812hej" path="res://assets/devices/secador de pelo.glb" id="17_ordv8"]
 [ext_resource type="PackedScene" uid="uid://c1aocntf45fv3" path="res://assets/devices/impresora.glb" id="18_cmtex"]
+[ext_resource type="Script" path="res://code/daynight.gd" id="19_8hl8b"]
+[ext_resource type="Resource" uid="uid://cqw3rcsiquj8g" path="res://assets/daynight/daynight_config.tres" id="20_qp5np"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2q15j"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -27,18 +29,19 @@ ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 sky_material = SubResource("ProceduralSkyMaterial_2q15j")
 
 [sub_resource type="Environment" id="Environment_rkl0x"]
-background_energy_multiplier = 0.0
 sky = SubResource("Sky_gwreq")
 ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 0.22
-reflected_light_source = 1
-tonemap_mode = 2
-glow_enabled = true
+ambient_light_color = Color(0.7, 0.7, 0.7, 1)
 
 [node name="Main" type="Node3D"]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DayNight" type="Node3D" parent="."]
+script = ExtResource("19_8hl8b")
+sky_settings = ExtResource("20_qp5np")
+max_day_minutes = 1.0
+
+[node name="SourceLight" type="DirectionalLight3D" parent="DayNight"]
+unique_name_in_owner = true
 transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
 light_volumetric_fog_energy = 0.0
 light_bake_mode = 0
@@ -48,7 +51,8 @@ directional_shadow_fade_start = 1.0
 directional_shadow_max_distance = 10.0
 sky_mode = 1
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="DayNight"]
+unique_name_in_owner = true
 environment = SubResource("Environment_rkl0x")
 
 [node name="Room" parent="." instance=ExtResource("1_la1a4")]
@@ -89,7 +93,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.82389, 1.19209e-07, -0.547
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.812899, 0, -1.12748)
 
 [node name="monitor" parent="." instance=ExtResource("14_ndqqs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.30627, 0.863265, 0.519346)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.30627, 0.857415, 0.519346)
 
 [node name="computador" parent="." instance=ExtResource("6_6o27f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31216, 0.751653, 0.487665)
@@ -102,3 +106,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1352, 0, -1.2069)
 
 [node name="impresora" parent="." instance=ExtResource("18_cmtex")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03303, 0, -1.14327)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.846509, -0.160407, 0.507634, 1.49012e-08, 0.953528, 0.301305, -0.532374, 0.255057, -0.80717, 3.6607, 3.18918, -5.74095)
