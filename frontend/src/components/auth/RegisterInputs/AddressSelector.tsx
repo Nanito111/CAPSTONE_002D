@@ -41,36 +41,30 @@ export function AddressSelector() {
     }, [selectedRegion])
 
     const fetchCountries = async () => {
-        console.log('Fetching countries...')
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utils/get-countries`)
+            const response = await fetch(`api/utils/get-countries`)
             const data = await response.json()
             setCountries(data)
-            console.log('Fetched countries:', data)
         } catch (error) {
             console.error('Error fetching countries:', error)
         }
     }
 
     const fetchRegions = async (countryId: string) => {
-        console.log(`Fetching regions for country ${countryId}...`)
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utils/get-regions?country=${countryId}`)
+            const response = await fetch(`api/utils/get-regions?country=${countryId}`)
             const data = await response.json()
             setRegions(data)
-            console.log('Fetched regions:', data)
         } catch (error) {
             console.error('Error fetching regions:', error)
         }
     }
 
     const fetchComunas = async (regionId: string) => {
-        console.log(`Fetching comunas for region ${regionId}...`)
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/utils/get-comuna?region=${regionId}`)
+            const response = await fetch(`api/utils/get-comuna?region=${regionId}`)
             const data = await response.json()
             setComunas(data)
-            console.log('Fetched comunas:', data)
         } catch (error) {
             console.error('Error fetching comunas:', error)
         }
