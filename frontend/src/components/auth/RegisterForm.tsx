@@ -15,6 +15,7 @@ import { NamesInput } from "@/components/auth/RegisterInputs/NamesInput";
 import { PasswordInputs } from "@/components/auth/RegisterInputs/PasswordInput";
 import { AddressSelector } from "@/components/auth/RegisterInputs/AddressSelector";
 import { NumAddressInput } from "@/components/auth/RegisterInputs/NumAddressInput";
+import { EmpresaInput } from "@/components/auth/RegisterInputs/EmpresaInput";
 import Image from "next/image";
 
 export function RegisterForm() {
@@ -52,6 +53,7 @@ export function RegisterForm() {
             required={true}
           />
           <PasswordInputs/>
+          <EmpresaInput />
           <AddressSelector />
           <AddressInput />
           <NumAddressInput />

@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { CountryInput } from './CountryInput'
-import { RegionInput } from './RegionInput'
-import { ComunaInput } from './ComunaInput'
+import { CountryInput } from '@/components/auth/RegisterInputs/CountryInput'
+import { RegionInput } from '@/components/auth/RegisterInputs/RegionInput'
+import { ComunaInput } from '@/components/auth/RegisterInputs/ComunaInput'
 
 interface Location {
     id: string
