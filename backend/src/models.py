@@ -18,11 +18,6 @@ class User(Base):
         VARCHAR2(20),
         nullable=True,
     )
-    middle_name: MappedColumn[str] = mapped_column(
-        "middlename",
-        VARCHAR2(20),
-        nullable=True,
-    )
     last_name: MappedColumn[str] = mapped_column(
         "lastname",
         VARCHAR2(12),

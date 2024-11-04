@@ -210,7 +210,6 @@ def register(
     # register new user
     insert_user = insert(User).values(
         first_name=data.user.first_name,
-        middle_name=data.user.middle_name,
         last_name=data.user.last_name,
         second_last_name=data.user.second_last_name,
         phone_number=data.user.phone_number,
