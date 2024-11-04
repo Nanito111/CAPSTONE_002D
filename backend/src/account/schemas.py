@@ -62,12 +62,6 @@ class UserRegistro(BaseModel):
         pattern=_name_pattern,
         description="Nombre de pila del usuario.",
     )
-    middle_name: str = Field(
-        default="",
-        max_length=20,
-        pattern=_name_pattern,
-        description="Segundo nombre del usuario (opcional).",
-    )
     last_name: str = Field(
         max_length=20,
         pattern=_name_pattern,
@@ -99,7 +93,6 @@ class UserRegistro(BaseModel):
 
     _clean_str = field_validator(
         "first_name",
-        "middle_name",
         "last_name",
         "second_last_name",
         "country_code",
