@@ -3,42 +3,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
-export function AddressInput() {
+export function KwHInput() {
   const [inputIsValid, setInputIsValid] = useState(0);
 
-  const handleAddressBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    const direccion = event.target.value;
-    const api = `https://nominatim.openstreetmap.org/search?street=${direccion}&format=json`;
-    setInputIsValid(1);
-    fetch(api)
-      .then((response) => response.json())
-      .then((data) => {
-        setInputIsValid(data.length > 0 ? 2 : 3);
-      });
-  };
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const numAddress = event.target.value;
+    const regexNumAddress = /^[0-9]+$/;
+    if (!regexNumAddress.test(numAddress)) {
+      event.target.value = numAddress.slice(0, -1);
+    }
+    setInputIsValid(regexNumAddress.test(numAddress) && numAddress !== "" ? 1 : 2);
+  }
 
   return (
     <TooltipProvider>
       <div className="grid gap-2">
-        <Label htmlFor="street">Calle</Label>
+        <Label htmlFor="numAddress">Número</Label>
         <div className="relative">
           <Input
-            id="street"
+            id="numAddress"
             type="text"
-            placeholder="Avenida Esquina Blanca"
+            placeholder="501"
             required
-            onBlur={handleAddressBlur}
-            className={inputIsValid === 3 ? "pr-10 border-red-500" : ""}
+            onChange={handleInputChange}
+            className={inputIsValid === 2 ? "pr-10 border-red-500" : ""}
           />
           {inputIsValid !== 0 && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
                   {inputIsValid === 1 ? (
-                    <Loader2 className="h-5 w-5 text-gray-500 animate-spin" />
-                  ) : inputIsValid === 2 ? (
                     <CheckCircle className="h-5 w-5 text-green-500" />
                   ) : (
                     <AlertCircle className="h-5 w-5 text-red-500" />
@@ -46,9 +42,11 @@ export function AddressInput() {
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                {inputIsValid === 1 && <p>Validando dirección...</p>}
-                {inputIsValid === 2 && <p>Dirección válida</p>}
-                {inputIsValid === 3 && <p>Dirección inválida</p>}
+                {inputIsValid === 1 ? (
+                  <p>Número válido</p>
+                ) : (
+                  <p>Número inválido</p>
+                )}
               </TooltipContent>
             </Tooltip>
           )}

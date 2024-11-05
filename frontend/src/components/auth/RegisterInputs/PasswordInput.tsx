@@ -2,26 +2,27 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AlertCircle, CheckCircle } from "lucide-react";
 
 export function PasswordInputs() {
   const [passInputIsValid, setPassInputIsValid] = useState(0);
   const [repeatPassInputIsValid, setRepeatPassInputIsValid] = useState(0);
-  const [errorLongitud, setErrorLongitud] = useState("");
-  const [errorNumero, setErrorNumero] = useState("");
-  const [errorMinuscula, setErrorMinuscula] = useState("");
-  const [errorMayuscula, setErrorMayuscula] = useState("");
-  const [errorSimbolo, setErrorSimbolo] = useState("");
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const handlePasswordBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const password = event.target.value;
-    const regexPassword =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$$/;
+    const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     setPassInputIsValid(regexPassword.test(password) ? 1 : 2);
 
-    password.length < 8 ? setErrorLongitud("La contraseña debe tener al menos 8 caracteres\n") : setErrorLongitud("");
-    !/[0-9]/.test(password) ? setErrorNumero("La contraseña debe tener al menos un número\n") : setErrorNumero("");
-    !/[a-z]/.test(password) ? setErrorMinuscula("La contraseña debe tener al menos una letra minúscula\n") : setErrorMinuscula("");
-    !/[A-Z]/.test(password) ? setErrorMayuscula("La contraseña debe tener al menos una letra mayúscula\n") : setErrorMayuscula("");
-    !/[@$!%*?&]/.test(password) ? setErrorSimbolo("La contraseña debe tener al menos un símbolo\n") : setErrorSimbolo("");
+    const errors: string[] = [];
+    if (password.length < 8) errors.push("La contraseña debe tener al menos 8 caracteres");
+    if (!/[0-9]/.test(password)) errors.push("La contraseña debe tener al menos un número");
+    if (!/[a-z]/.test(password)) errors.push("La contraseña debe tener al menos una letra minúscula");
+    if (!/[A-Z]/.test(password)) errors.push("La contraseña debe tener al menos una letra mayúscula");
+    if (!/[@$!%*?&]/.test(password)) errors.push("La contraseña debe tener al menos un símbolo");
+
+    setErrorMessages(errors);
   };
 
   const handleRepeatPasswordBlur = (event: React.FocusEvent<HTMLInputElement>) => {
@@ -32,37 +33,79 @@ export function PasswordInputs() {
   };
 
   return (
-    <>
-      <div className="grid gap-2">
-        <Label htmlFor="password">Contraseña</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="******** (letras y numeros)"
-          required
-          onBlur={handlePasswordBlur}
-          />
-          {passInputIsValid === 1 && <p className="text-sm text-green-500">Contraseña válida</p>}
-          {passInputIsValid === 2 && <p className="text-sm text-red-500">Contraseña inválida</p>}
-          {errorLongitud !== "" && <p className="text-sm text-red-300">{errorLongitud}</p>}
-          {errorNumero !== "" && <p className="text-sm text-red-300">{errorNumero}</p>}
-          {errorMinuscula !== "" && <p className="text-sm text-red-300">{errorMinuscula}</p>}
-          {errorMayuscula !== "" && <p className="text-sm text-red-300">{errorMayuscula}</p>}
-          {errorSimbolo !== "" && <p className="text-sm text-red-300">{errorSimbolo}</p>}
-
+    <TooltipProvider>
+      <div className="grid gap-4">
+        <div className="relative">
+          <Label htmlFor="password">Contraseña</Label>
+          <div className="flex items-center">
+            <Input
+              id="password"
+              type="password"
+              placeholder="******** (letras y números)"
+              required
+              onBlur={handlePasswordBlur}
+              className={passInputIsValid === 2 ? "pr-10 border-red-500" : ""}
+            />
+            {passInputIsValid !== 0 && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="absolute right-3 top-[32px]">
+                    {passInputIsValid === 1 ? (
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    ) : (
+                      <AlertCircle className="h-5 w-5 text-red-500" />
+                    )}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {passInputIsValid === 1 ? (
+                    <p>Contraseña válida</p>
+                  ) : (
+                    <ul className="list-disc pl-4">
+                      {errorMessages.map((error, index) => (
+                        <li key={index}>{error}</li>
+                      ))}
+                    </ul>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+        </div>
+        <div className="relative">
+          <Label htmlFor="repeatpassword">Repetir contraseña</Label>
+          <div className="flex items-center">
+            <Input
+              id="repeatpassword"
+              type="password"
+              placeholder="******** (letras y números)"
+              required
+              onBlur={handleRepeatPasswordBlur}
+              className={repeatPassInputIsValid === 2 ? "pr-10 border-red-500" : ""}
+            />
+            {repeatPassInputIsValid !== 0 && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="absolute right-3 top-[32px]">
+                    {repeatPassInputIsValid === 1 ? (
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    ) : (
+                      <AlertCircle className="h-5 w-5 text-red-500" />
+                    )}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {repeatPassInputIsValid === 1 ? (
+                    <p>Las contraseñas coinciden</p>
+                  ) : (
+                    <p>Las contraseñas no coinciden</p>
+                  )}
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="grid gap-2">
-        <Label htmlFor="repeatpassword">Repetir contraseña</Label>
-        <Input
-          id="repeatpassword"
-          type="password"
-          placeholder="******** (letras y numeros)"
-          required
-          onBlur={handleRepeatPasswordBlur}
-        />
-          {repeatPassInputIsValid === 1 && <p className="text-sm text-green-500">Las contraseñas coinciden</p>}
-          {repeatPassInputIsValid === 2 && <p className="text-sm text-red-500">Las contraseñas no coinciden</p>}
-      </div>
-    </>
+    </TooltipProvider>
   );
 }

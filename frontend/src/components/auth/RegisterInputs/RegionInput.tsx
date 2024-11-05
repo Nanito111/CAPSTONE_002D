@@ -27,7 +27,9 @@ export function RegionInput({ regions, selectedRegion, onSelectRegion, disabled 
         <SelectContent>
           {regions.map((region) => (
             <SelectItem key={region.id} value={region.id}>
-              {region.name.charAt(0).toUpperCase() + region.name.slice(1).toLowerCase()}
+              {region.name.length > 35
+              ? (region.name.charAt(0).toUpperCase() + region.name.slice(1).toLowerCase()).slice(0, 35) + "..."
+              : region.name.charAt(0).toUpperCase() + region.name.slice(1).toLowerCase()}
             </SelectItem>
           ))}
         </SelectContent>
