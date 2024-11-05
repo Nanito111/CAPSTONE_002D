@@ -1,5 +1,5 @@
 class_name DayNight
-extends Node3D
+extends Node
 
 @onready var source_light:DirectionalLight3D = %SourceLight
 @onready var world_environment:WorldEnvironment = %WorldEnvironment
@@ -23,6 +23,11 @@ var day_passed:int = 0
 # current daytime
 var real_today_unix_time: int
 
+const COUNT_HALF_HOUR_IN_DAY: int = 48
+var half_hour_in_seconds: float
+var next_half_hour_in_seconds: float
+signal at_half_hour()
+
 func get_today_datetime_at_zero():
 	return Time.get_unix_time_from_datetime_dict(Time.get_date_dict_from_system(true))
 
@@ -31,15 +36,15 @@ func calculate_time_variables(delta:float):
 	if (use_real_life_time):
 		current_daytime_seconds = clampf(Time.get_unix_time_from_system() - real_today_unix_time, 0, seconds_in_day)
 
-		printt(current_daytime_seconds, seconds_in_day)
-
 		if (current_daytime_seconds == seconds_in_day):
 			real_today_unix_time = get_today_datetime_at_zero()
+			next_half_hour_in_seconds = current_daytime_seconds + half_hour_in_seconds
 
 	else:
 		current_daytime_seconds = clampf(current_daytime_seconds + delta, 0, seconds_in_day)
 		if (current_daytime_seconds == seconds_in_day):
 			current_daytime_seconds = 0
+			next_half_hour_in_seconds = current_daytime_seconds + half_hour_in_seconds
 
 	var half_day:float = seconds_in_day * 0.5
 
@@ -54,7 +59,11 @@ func calculate_time_variables(delta:float):
 	current_half_time_percentage = current_daytime_seconds / half_day - current_day_state
 	current_half_time_percentage = clampf(current_half_time_percentage, 0, 1)
 
-	# TODO: crear event por cada hora que pasa
+	# es media hora
+	if current_daytime_seconds >= next_half_hour_in_seconds:
+		at_half_hour.emit()
+		next_half_hour_in_seconds = current_daytime_seconds + half_hour_in_seconds
+	
 
 func light_setting():
 	source_light.rotation.x = lerpf(
@@ -92,6 +101,8 @@ func _ready():
 		current_daytime_seconds = Time.get_unix_time_from_system() - real_today_unix_time
 	else:
 		seconds_in_day = max_day_minutes * 60
+
+	half_hour_in_seconds = seconds_in_day / COUNT_HALF_HOUR_IN_DAY
 
 
 

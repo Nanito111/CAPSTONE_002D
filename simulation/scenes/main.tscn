@@ -35,9 +35,10 @@ ambient_light_color = Color(0.7, 0.7, 0.7, 1)
 
 [node name="Main" type="Node3D"]
 
-[node name="DayNight" type="Node3D" parent="."]
+[node name="DayNight" type="Node" parent="."]
 script = ExtResource("19_8hl8b")
 sky_settings = ExtResource("20_qp5np")
+use_real_life_time = false
 max_day_minutes = 1.0
 
 [node name="SourceLight" type="DirectionalLight3D" parent="DayNight"]
