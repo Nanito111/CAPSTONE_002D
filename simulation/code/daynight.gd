@@ -26,7 +26,7 @@ var real_today_unix_time: int
 const COUNT_HALF_HOUR_IN_DAY: int = 48
 var half_hour_in_seconds: float
 var next_half_hour_in_seconds: float
-signal at_half_hour()
+signal at_half_hour(half_hour_count:int)
 
 func get_today_datetime_at_zero():
 	return Time.get_unix_time_from_datetime_dict(Time.get_date_dict_from_system(true))
@@ -61,7 +61,7 @@ func calculate_time_variables(delta:float):
 
 	# es media hora
 	if current_daytime_seconds >= next_half_hour_in_seconds:
-		at_half_hour.emit()
+		at_half_hour.emit(current_daytime_seconds / half_hour_in_seconds)
 		next_half_hour_in_seconds = current_daytime_seconds + half_hour_in_seconds
 	
 
