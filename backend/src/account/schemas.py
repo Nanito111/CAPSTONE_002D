@@ -125,14 +125,17 @@ class ContractRegistro(BaseModel):
     electricity_company: CoercedIntId = Field(
         description="Id en base de datos de la compañía electrica del usuario.",
     )
-    service_administration_cost: PositiveInt = Field(
+    service_administration_cost: int = Field(
         description="Costo por administración del servicio.",
+        ge=0,
     )
-    transport_cost: PositiveInt = Field(
+    transport_cost: int = Field(
         description="Costo de transporte de electricidad por 1 kWh, obtenida del costo total de transporte de electricidad dividido por total consumido de kWh.",
+        ge=0,
     )
-    electricity_cost: PositiveInt = Field(
+    electricity_cost: int = Field(
         description="Costo de 1 kWh, obtenida del costo total de electricidad dividido por total consumido de kWh.",
+        ge=0,
     )
 
 
