@@ -2,7 +2,7 @@ class_name Task
 extends Resource
 
 @export var task_duration_range_in_minutes: Vector2
-@export var device_data: DeviceData
+@export var devices: Array[DeviceData]
 
 enum TaskType {ACTIVE, DEFERRED}
 @export var task_type:TaskType
@@ -13,7 +13,7 @@ signal starting_task()
 signal task_has_started()
 signal task_has_ended()
 
-func execute(user_instance: User):
+func execute(user_instance: User, devices_instances:Array[Device]):
 	# start task
 	user_instance.doing_a_task = true
 
@@ -32,6 +32,10 @@ func execute(user_instance: User):
 		user_instance.doing_a_task = false
 
 	task_has_started.emit()
+
+	for device in devices_instances:
+		device.start_using()
+
 	await task_timer.timeout
 
 	# end task
@@ -41,6 +45,10 @@ func execute(user_instance: User):
 		user_instance.doing_a_task = false
 
 	task_has_ended.emit()
+
+	for device in devices_instances:
+		device.stop_using()
+
 	user_instance.remove_ended_task_from_pool(self)
 
 func stop_task():

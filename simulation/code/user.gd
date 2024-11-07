@@ -32,6 +32,9 @@ func execute_random_task():
 	var selected_task: Task = last_task
 
 	while (selected_task == last_task):
+		if (len(tasks) == 1):
+			selected_task = tasks[0]
+			break
 		# get random task from tasks
 		selected_task = tasks.pick_random()
 
@@ -40,7 +43,12 @@ func execute_random_task():
 
 	last_task = selected_task
 	tasks_in_progress.append(selected_task)
-	selected_task.execute(self)
+
+	var devices: Array[Device]
+	for device_data in selected_task.devices:
+		devices.append(get_parent().find_child(device_data.name))
+
+	selected_task.execute(self, devices)
 
 
 func remove_ended_task_from_pool(task:Task):

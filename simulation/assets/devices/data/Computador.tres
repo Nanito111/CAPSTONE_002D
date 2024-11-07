@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DeviceData" load_steps=2 format=3 uid="uid://c02cvhkx1vctg"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_to6bb"]
+
+[resource]
+script = ExtResource("1_to6bb")
+name = "Computadora"
+power_watts = 65
+consumption_ws = 234000
+has_low_consumption_mode = true
+has_sleep_mode = true
+has_battery = false
+battery_capacity_mAh = 0.0
