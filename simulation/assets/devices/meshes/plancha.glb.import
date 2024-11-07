@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c1aocntf45fv3"
-path="res://.godot/imported/impresora.glb-3916da572a73e3c8052dfbbf9a2f1e02.scn"
+uid="uid://youbdpm3os13"
+path="res://.godot/imported/plancha.glb-ca8e13a1d46ded53b17d5b03a173d7c8.scn"
 
 [deps]
 
-source_file="res://assets/devices/impresora.glb"
-dest_files=["res://.godot/imported/impresora.glb-3916da572a73e3c8052dfbbf9a2f1e02.scn"]
+source_file="res://assets/devices/meshes/plancha.glb"
+dest_files=["res://.godot/imported/plancha.glb-ca8e13a1d46ded53b17d5b03a173d7c8.scn"]
 
 [params]
 
@@ -33,7 +33,7 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
-"Material.003": {
+"Material.002": {
 "use_external/enabled": true,
 "use_external/path": "res://assets/materials/electric_device_mat.tres"
 }

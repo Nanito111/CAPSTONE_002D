@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DeviceData" load_steps=2 format=3 uid="uid://cm6cxx0nxx53s"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_km0oq"]
+
+[resource]
+script = ExtResource("1_km0oq")
+name = "Hervidor"
+power_watts = 0
+consumption_ws = 0
+has_low_consumption_mode = false
+has_sleep_mode = false
+has_battery = false
+battery_capacity_mAh = 0.0

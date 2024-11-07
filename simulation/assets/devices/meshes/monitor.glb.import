@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://d03k52ajay61u"
-path="res://.godot/imported/microondas.glb-8e904dd326ae0b54e3d6b1e0a8cf10c1.scn"
+uid="uid://bmh5e73oemxs6"
+path="res://.godot/imported/monitor.glb-e2f3fa9256af569119859263c6a7a3cf.scn"
 
 [deps]
 
-source_file="res://assets/devices/microondas.glb"
-dest_files=["res://.godot/imported/microondas.glb-8e904dd326ae0b54e3d6b1e0a8cf10c1.scn"]
+source_file="res://assets/devices/meshes/monitor.glb"
+dest_files=["res://.godot/imported/monitor.glb-e2f3fa9256af569119859263c6a7a3cf.scn"]
 
 [params]
 
@@ -33,7 +33,7 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
-"Material": {
+"Material.001": {
 "use_external/enabled": true,
 "use_external/path": "res://assets/materials/electric_device_mat.tres"
 }

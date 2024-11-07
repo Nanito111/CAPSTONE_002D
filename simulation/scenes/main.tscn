@@ -1,64 +1,34 @@
-[gd_scene load_steps=24 format=3 uid="uid://duormiueglly"]
+[gd_scene load_steps=23 format=3 uid="uid://duormiueglly"]
 
 [ext_resource type="PackedScene" uid="uid://h7ux4wiw82fs" path="res://assets/room.tscn" id="1_la1a4"]
 [ext_resource type="PackedScene" uid="uid://dc62genfs1a50" path="res://assets/user.tscn" id="2_euvoq"]
 [ext_resource type="PackedScene" uid="uid://ch8iug0w1fvbt" path="res://assets/objects/escritorio_mesa.glb" id="3_30v44"]
+[ext_resource type="Script" path="res://code/task.gd" id="3_j56rj"]
 [ext_resource type="PackedScene" uid="uid://drxp6nqeo02va" path="res://assets/objects/silla_simple.glb" id="4_fvfw5"]
+[ext_resource type="Resource" uid="uid://obgbwp5t2lwu" path="res://assets/tasks/test1.tres" id="4_lwyur"]
 [ext_resource type="PackedScene" uid="uid://dj7ognmqgyib8" path="res://assets/objects/silla_simple_brazos.glb" id="5_pdhct"]
-[ext_resource type="PackedScene" uid="uid://ct7756mcqewaw" path="res://assets/devices/computador.glb" id="6_6o27f"]
-[ext_resource type="PackedScene" uid="uid://cwrwyl7xrcf4v" path="res://assets/devices/televisor.glb" id="7_asqda"]
-[ext_resource type="PackedScene" uid="uid://bbysj2wtv3a2f" path="res://assets/devices/laptop.glb" id="8_ana4m"]
-[ext_resource type="PackedScene" uid="uid://bucp6fspmhoue" path="res://assets/devices/tablet.glb" id="9_qx7y8"]
-[ext_resource type="PackedScene" uid="uid://b3p41sgt5ri7u" path="res://assets/devices/secadora.glb" id="10_c1ag1"]
-[ext_resource type="PackedScene" uid="uid://dlwi5ydp41eln" path="res://assets/devices/lavadora.glb" id="11_borvc"]
-[ext_resource type="PackedScene" uid="uid://d03k52ajay61u" path="res://assets/devices/microondas.glb" id="12_ky3sc"]
-[ext_resource type="PackedScene" uid="uid://bvnx3olpsu4na" path="res://assets/devices/refrigerador.glb" id="13_ncc8i"]
-[ext_resource type="PackedScene" uid="uid://cjwv0bxb8ds30" path="res://assets/devices/hervidor.glb" id="14_imw00"]
-[ext_resource type="PackedScene" uid="uid://bmh5e73oemxs6" path="res://assets/devices/monitor.glb" id="14_ndqqs"]
-[ext_resource type="PackedScene" uid="uid://youbdpm3os13" path="res://assets/devices/plancha.glb" id="16_8uhcl"]
-[ext_resource type="PackedScene" uid="uid://bx1iqru812hej" path="res://assets/devices/secador de pelo.glb" id="17_ordv8"]
-[ext_resource type="PackedScene" uid="uid://c1aocntf45fv3" path="res://assets/devices/impresora.glb" id="18_cmtex"]
-[ext_resource type="Script" path="res://code/daynight.gd" id="19_8hl8b"]
-[ext_resource type="Resource" uid="uid://cqw3rcsiquj8g" path="res://assets/daynight/daynight_config.tres" id="20_qp5np"]
+[ext_resource type="Resource" uid="uid://b12wsik5qs030" path="res://assets/tasks/test2.tres" id="5_x6ucc"]
+[ext_resource type="PackedScene" uid="uid://ct7756mcqewaw" path="res://assets/devices/meshes/computador.glb" id="6_6o27f"]
+[ext_resource type="Resource" uid="uid://iwxthiux336s" path="res://assets/tasks/test3.tres" id="6_x7ys1"]
+[ext_resource type="PackedScene" uid="uid://cwrwyl7xrcf4v" path="res://assets/devices/meshes/televisor.glb" id="7_asqda"]
+[ext_resource type="PackedScene" uid="uid://bbysj2wtv3a2f" path="res://assets/devices/meshes/laptop.glb" id="8_ana4m"]
+[ext_resource type="PackedScene" uid="uid://bucp6fspmhoue" path="res://assets/devices/meshes/tablet.glb" id="9_qx7y8"]
+[ext_resource type="PackedScene" uid="uid://b3p41sgt5ri7u" path="res://assets/devices/meshes/secadora.glb" id="10_c1ag1"]
+[ext_resource type="PackedScene" uid="uid://dlwi5ydp41eln" path="res://assets/devices/meshes/lavadora.glb" id="11_borvc"]
+[ext_resource type="PackedScene" uid="uid://d03k52ajay61u" path="res://assets/devices/meshes/microondas.glb" id="12_ky3sc"]
+[ext_resource type="PackedScene" uid="uid://bvnx3olpsu4na" path="res://assets/devices/meshes/refrigerador.glb" id="13_ncc8i"]
+[ext_resource type="PackedScene" uid="uid://cjwv0bxb8ds30" path="res://assets/devices/meshes/hervidor.glb" id="14_imw00"]
+[ext_resource type="PackedScene" uid="uid://bmh5e73oemxs6" path="res://assets/devices/meshes/monitor.glb" id="14_ndqqs"]
+[ext_resource type="PackedScene" uid="uid://youbdpm3os13" path="res://assets/devices/meshes/plancha.glb" id="16_8uhcl"]
+[ext_resource type="PackedScene" uid="uid://bx1iqru812hej" path="res://assets/devices/meshes/secador de pelo.glb" id="17_ordv8"]
+[ext_resource type="PackedScene" uid="uid://c1aocntf45fv3" path="res://assets/devices/meshes/impresora.glb" id="18_cmtex"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2q15j"]
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-
-[sub_resource type="Sky" id="Sky_gwreq"]
-sky_material = SubResource("ProceduralSkyMaterial_2q15j")
-
-[sub_resource type="Environment" id="Environment_rkl0x"]
-sky = SubResource("Sky_gwreq")
-ambient_light_source = 2
-ambient_light_color = Color(0.7, 0.7, 0.7, 1)
-
-[node name="Main" type="Node3D"]
-
-[node name="DayNight" type="Node" parent="."]
-script = ExtResource("19_8hl8b")
-sky_settings = ExtResource("20_qp5np")
-use_real_life_time = false
-max_day_minutes = 1.0
-
-[node name="SourceLight" type="DirectionalLight3D" parent="DayNight"]
-unique_name_in_owner = true
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
-light_volumetric_fog_energy = 0.0
-light_bake_mode = 0
-shadow_enabled = true
-directional_shadow_mode = 0
-directional_shadow_fade_start = 1.0
-directional_shadow_max_distance = 10.0
-sky_mode = 1
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="DayNight"]
-unique_name_in_owner = true
-environment = SubResource("Environment_rkl0x")
+[node name="Main" type="Node"]
 
 [node name="Room" parent="." instance=ExtResource("1_la1a4")]
 
 [node name="User" parent="." instance=ExtResource("2_euvoq")]
+tasks = Array[ExtResource("3_j56rj")]([ExtResource("4_lwyur"), ExtResource("5_x6ucc"), ExtResource("6_x7ys1")])
 
 [node name="EscritorioMesa" parent="." instance=ExtResource("3_30v44")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.26297, -1.19209e-07, 0.686561)
@@ -110,3 +80,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03303, 0, -1.14327)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.846509, -0.160407, 0.507634, 1.49012e-08, 0.953528, 0.301305, -0.532374, 0.255057, -0.80717, 3.6607, 3.18918, -5.74095)
+current = true

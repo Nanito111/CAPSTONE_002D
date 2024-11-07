@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dc62genfs1a50"]
+[gd_scene load_steps=5 format=3 uid="uid://dc62genfs1a50"]
 
 [ext_resource type="Material" uid="uid://dnj8c88n2c8fu" path="res://assets/materials/user_mat.tres" id="1_jvqtk"]
+[ext_resource type="Script" path="res://code/user.gd" id="1_y4sd6"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_hwjqw"]
 material = ExtResource("1_jvqtk")
@@ -19,6 +20,7 @@ radial_segments = 8
 rings = 4
 
 [node name="User" type="Node3D"]
+script = ExtResource("1_y4sd6")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 

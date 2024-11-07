@@ -1,4 +1,3 @@
-class_name DayNight
 extends Node
 
 @onready var source_light:DirectionalLight3D = %SourceLight
@@ -8,7 +7,6 @@ extends Node
 @export var sky_settings:SkySettings
 @export var light_rotation_offset:float = 5
 
-@export var use_real_life_time:bool = true
 @export_subgroup("Fake Time")
 @export var max_day_minutes:float = 6
 @export var current_daytime_seconds:float = 0
@@ -22,6 +20,7 @@ var day_passed:int = 0
 
 # current daytime
 var real_today_unix_time: int
+const REAL_DAY_IN_SECONDS: int = 86400
 
 const COUNT_HALF_HOUR_IN_DAY: int = 48
 var half_hour_in_seconds: float
@@ -31,20 +30,42 @@ signal at_half_hour(half_hour_count:int)
 func get_today_datetime_at_zero():
 	return Time.get_unix_time_from_datetime_dict(Time.get_date_dict_from_system(true))
 
-func calculate_time_variables(delta:float):
 
-	if (use_real_life_time):
-		current_daytime_seconds = clampf(Time.get_unix_time_from_system() - real_today_unix_time, 0, seconds_in_day)
+func get_current_day_seconds():
+	if (Globals.test_environment):
+		current_daytime_seconds = clampf(current_daytime_seconds + get_physics_process_delta_time(), 0, seconds_in_day)
+		return
+	current_daytime_seconds = clampf(Time.get_unix_time_from_system() - real_today_unix_time, 0, seconds_in_day)
 
-		if (current_daytime_seconds == seconds_in_day):
-			real_today_unix_time = get_today_datetime_at_zero()
-			next_half_hour_in_seconds = current_daytime_seconds + half_hour_in_seconds
 
-	else:
-		current_daytime_seconds = clampf(current_daytime_seconds + delta, 0, seconds_in_day)
-		if (current_daytime_seconds == seconds_in_day):
-			current_daytime_seconds = 0
-			next_half_hour_in_seconds = current_daytime_seconds + half_hour_in_seconds
+func reset_day_time():
+	next_half_hour_in_seconds = half_hour_in_seconds
+	current_daytime_seconds = 0
+
+	if (not Globals.test_environment):
+		real_today_unix_time = get_today_datetime_at_zero()
+
+
+func get_current_or_next_half_hour_count(next_half_hour:bool = false):
+	var half_hour: int = floori(current_daytime_seconds / half_hour_in_seconds)
+	if next_half_hour:
+		half_hour += 1
+	return clampi(half_hour, 0, COUNT_HALF_HOUR_IN_DAY)
+
+
+func set_next_half_hour_in_seconds():
+	next_half_hour_in_seconds = get_current_or_next_half_hour_count(true) * half_hour_in_seconds
+	next_half_hour_in_seconds = clampf(next_half_hour_in_seconds, 0, seconds_in_day)
+
+
+func set_half_hour():
+	at_half_hour.emit(get_current_or_next_half_hour_count())
+	printt(current_daytime_seconds, next_half_hour_in_seconds)
+	set_next_half_hour_in_seconds()
+
+
+func calculate_time_variables():
+	get_current_day_seconds()
 
 	var half_day:float = seconds_in_day * 0.5
 
@@ -60,10 +81,12 @@ func calculate_time_variables(delta:float):
 	current_half_time_percentage = clampf(current_half_time_percentage, 0, 1)
 
 	# es media hora
-	if current_daytime_seconds >= next_half_hour_in_seconds:
-		at_half_hour.emit(current_daytime_seconds / half_hour_in_seconds)
-		next_half_hour_in_seconds = current_daytime_seconds + half_hour_in_seconds
-	
+	if (current_daytime_seconds >= next_half_hour_in_seconds):
+		set_half_hour()
+
+	if (current_daytime_seconds == seconds_in_day):
+		reset_day_time()
+
 
 func light_setting():
 	source_light.rotation.x = lerpf(
@@ -95,18 +118,21 @@ func day_night_global_shader_parameters():
 func _ready():
 	current_half_time_percentage = 0
 
-	if (use_real_life_time):
-		seconds_in_day = 86400
+	if (Globals.test_environment):
+		seconds_in_day = max_day_minutes * 60
+	else:
+		seconds_in_day = REAL_DAY_IN_SECONDS
 		real_today_unix_time = get_today_datetime_at_zero()
 		current_daytime_seconds = Time.get_unix_time_from_system() - real_today_unix_time
-	else:
-		seconds_in_day = max_day_minutes * 60
 
 	half_hour_in_seconds = seconds_in_day / COUNT_HALF_HOUR_IN_DAY
+	set_next_half_hour_in_seconds()
 
 
-
-func _process(delta):
-	calculate_time_variables(delta)
+func _process(_delta):
 	light_setting()
 	day_night_global_shader_parameters()
+
+
+func _physics_process(_delta) -> void:
+	calculate_time_variables()

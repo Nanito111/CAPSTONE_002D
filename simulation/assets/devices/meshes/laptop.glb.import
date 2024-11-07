@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cwrwyl7xrcf4v"
-path="res://.godot/imported/televisor.glb-b3f06bd773913a122df4a3b1f7cea600.scn"
+uid="uid://bbysj2wtv3a2f"
+path="res://.godot/imported/laptop.glb-6fcff8297414b13d319afd6e223b33d3.scn"
 
 [deps]
 
-source_file="res://assets/devices/televisor.glb"
-dest_files=["res://.godot/imported/televisor.glb-b3f06bd773913a122df4a3b1f7cea600.scn"]
+source_file="res://assets/devices/meshes/laptop.glb"
+dest_files=["res://.godot/imported/laptop.glb-6fcff8297414b13d319afd6e223b33d3.scn"]
 
 [params]
 

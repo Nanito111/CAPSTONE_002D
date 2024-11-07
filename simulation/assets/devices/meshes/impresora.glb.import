@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cjwv0bxb8ds30"
-path="res://.godot/imported/hervidor.glb-5fd939c6c21e9d96bdbda9a538277710.scn"
+uid="uid://c1aocntf45fv3"
+path="res://.godot/imported/impresora.glb-2673265bd98c8c2d2c659b7630b52eb0.scn"
 
 [deps]
 
-source_file="res://assets/devices/hervidor.glb"
-dest_files=["res://.godot/imported/hervidor.glb-5fd939c6c21e9d96bdbda9a538277710.scn"]
+source_file="res://assets/devices/meshes/impresora.glb"
+dest_files=["res://.godot/imported/impresora.glb-2673265bd98c8c2d2c659b7630b52eb0.scn"]
 
 [params]
 
@@ -33,7 +33,7 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
-"Material": {
+"Material.003": {
 "use_external/enabled": true,
 "use_external/path": "res://assets/materials/electric_device_mat.tres"
 }

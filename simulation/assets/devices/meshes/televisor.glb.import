@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b3p41sgt5ri7u"
-path="res://.godot/imported/secadora.glb-48b12d94d5a8f19e0a9e93bce998a8a4.scn"
+uid="uid://cwrwyl7xrcf4v"
+path="res://.godot/imported/televisor.glb-a82b9bcfb7fbd939f98535d80373eb38.scn"
 
 [deps]
 
-source_file="res://assets/devices/secadora.glb"
-dest_files=["res://.godot/imported/secadora.glb-48b12d94d5a8f19e0a9e93bce998a8a4.scn"]
+source_file="res://assets/devices/meshes/televisor.glb"
+dest_files=["res://.godot/imported/televisor.glb-a82b9bcfb7fbd939f98535d80373eb38.scn"]
 
 [params]
 

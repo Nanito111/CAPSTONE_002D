@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bucp6fspmhoue"
-path="res://.godot/imported/tablet.glb-dafdd10ec60ad90ab46448ad36b0ac68.scn"
+uid="uid://bvnx3olpsu4na"
+path="res://.godot/imported/refrigerador.glb-168ced06b7987a178e62b7dac261fefd.scn"
 
 [deps]
 
-source_file="res://assets/devices/tablet.glb"
-dest_files=["res://.godot/imported/tablet.glb-dafdd10ec60ad90ab46448ad36b0ac68.scn"]
+source_file="res://assets/devices/meshes/refrigerador.glb"
+dest_files=["res://.godot/imported/refrigerador.glb-168ced06b7987a178e62b7dac261fefd.scn"]
 
 [params]
 

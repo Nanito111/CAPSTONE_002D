@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bx1iqru812hej"
-path="res://.godot/imported/secador de pelo.glb-92f66d12864d5962b66b200c228cbe53.scn"
+uid="uid://ct7756mcqewaw"
+path="res://.godot/imported/computador.glb-47cd68624bdc1fb2dc6e2449d2b9756b.scn"
 
 [deps]
 
-source_file="res://assets/devices/secador de pelo.glb"
-dest_files=["res://.godot/imported/secador de pelo.glb-92f66d12864d5962b66b200c228cbe53.scn"]
+source_file="res://assets/devices/meshes/computador.glb"
+dest_files=["res://.godot/imported/computador.glb-47cd68624bdc1fb2dc6e2449d2b9756b.scn"]
 
 [params]
 

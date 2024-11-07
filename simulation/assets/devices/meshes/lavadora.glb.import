@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bbysj2wtv3a2f"
-path="res://.godot/imported/laptop.glb-5c9a99976700fd6e22c54a583c66c53c.scn"
+uid="uid://dlwi5ydp41eln"
+path="res://.godot/imported/lavadora.glb-6336ce0f27ab1771ae3f813cd806c381.scn"
 
 [deps]
 
-source_file="res://assets/devices/laptop.glb"
-dest_files=["res://.godot/imported/laptop.glb-5c9a99976700fd6e22c54a583c66c53c.scn"]
+source_file="res://assets/devices/meshes/lavadora.glb"
+dest_files=["res://.godot/imported/lavadora.glb-6336ce0f27ab1771ae3f813cd806c381.scn"]
 
 [params]
 
