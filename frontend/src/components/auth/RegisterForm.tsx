@@ -35,10 +35,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { HelpForm } from "@/components/auth/HelpForm";
-
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { number } from "zod";
 
 export function RegisterForm() {
   // Estados de validacion (Getters y setters). 0 = no validado, 1 = validado, 2 = invalido
@@ -115,8 +113,7 @@ export function RegisterForm() {
         electricity_cost: Number((document.getElementById("CostoElectricidadkWh") as HTMLInputElement).value)
       }
     };
-    console.log(typeof formData.user.phone_number)
-    console.log(formData)
+
     try {
       const response = await fetch('/api/account/register', {
         method: 'POST',
