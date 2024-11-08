@@ -116,6 +116,7 @@ export function RegisterForm() {
       }
     };
     console.log(typeof formData.user.phone_number)
+    console.log(formData)
     try {
       const response = await fetch('/api/account/register', {
         method: 'POST',
@@ -1128,7 +1129,7 @@ export function RegisterForm() {
               <Input
                 type="text"
                 id="CostoElectricidadkWh"
-                value={totalCostkWh ? `${totalCostkWh}` : "Esperando valores..."}
+                value={totalCostkWh ? `${Math.round(totalCostkWh)}` : "Esperando valores..."}
                 disabled
                 className="pl-10 pr-10"
               />
@@ -1145,7 +1146,7 @@ export function RegisterForm() {
               <Input
                 type="text"
                 id="CostoTransporteElectricoKWh"
-                value={totalCostTransport ? `${totalCostTransport}` : "Esperando valores..."}
+                value={totalCostTransport ? `${Math.round(totalCostTransport)}` : "Esperando valores..."}
                 disabled
                 className="pl-10 pr-10"
                 />
