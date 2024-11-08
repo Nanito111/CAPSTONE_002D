@@ -19,6 +19,6 @@ UserIsMissingFromDatabase = HTTPException(
 )
 
 UserAlreadyExistCannotRegister = HTTPException(
-    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+    status_code=status.HTTP_409_CONFLICT,
     detail="Cannot register user. User already exist.",
 )
