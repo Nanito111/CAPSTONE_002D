@@ -4,8 +4,11 @@ extends Resource
 @export var name: String
 
 @export_group("Consumption")
-@export_range(0, 3000, 1, "or_greater") var power_watts: int = 0
-@export_range(0, 1000000, 1,"or_greater") var consumption_ws: int = 0
+
+# values are in kWh
+@export_range(0, 10, 0.001, "or_greater") var consumption_in_use: float = 0
+@export_range(0, 10, 0.001, "or_greater") var consumption_in_idle: float = 0
+
 @export var has_low_consumption_mode: bool = false
 @export var has_sleep_mode: bool = false
 

@@ -23,7 +23,7 @@ func execute(user_instance: User, devices_instances:Array[Device]):
 	# doing task
 	var timeout_minutes = randf_range(task_duration_range_in_minutes.x, task_duration_range_in_minutes.y)
 	# convert minutes with seconds in a day
-	var timeout_seconds = (timeout_minutes * 60) * (DayNight.seconds_in_day / DayNight.REAL_DAY_IN_SECONDS)
+	var timeout_seconds = (timeout_minutes * 60) * (DayNight.day_in_seconds / DayNight.REAL_DAY_IN_SECONDS)
 
 	prints("doing my task for", timeout_seconds, "seconds")
 	task_timer = user_instance.get_tree().create_timer(timeout_seconds)

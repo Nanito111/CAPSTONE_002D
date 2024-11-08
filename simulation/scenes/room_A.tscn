@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c0p2606t482qo"]
+[gd_scene load_steps=14 format=3 uid="uid://c0p2606t482qo"]
 
 [ext_resource type="Script" path="res://code/task.gd" id="2_3b2gm"]
 [ext_resource type="PackedScene" uid="uid://dc62genfs1a50" path="res://assets/user.tscn" id="2_lha1j"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://code/device.gd" id="8_a06ne"]
 [ext_resource type="Resource" uid="uid://c02cvhkx1vctg" path="res://assets/devices/data/Computador.tres" id="9_stj1p"]
 [ext_resource type="Resource" uid="uid://ch5jkawki57nx" path="res://assets/devices/data/Monitor.tres" id="11_xevnh"]
+[ext_resource type="PackedScene" uid="uid://c1aocntf45fv3" path="res://assets/devices/meshes/impresora.glb" id="12_nun52"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_jidpr"]
 vertices = PackedVector3Array(-2, 0.499678, -2, -2, 0.499678, -1.25, -1.5, 0.499678, -1.25, -1.5, 0.499678, 1.25, -2, 0.499678, 1.25, -2, 0.499678, 2, -1.25, 0.499678, -0.5, -0.75, 0.499678, -0.25, -0.75, 0.499678, 0.5, 2.25, 0.499678, 2, 2.25, 0.499678, -2)
@@ -39,14 +40,17 @@ mesh = ExtResource("3_2oa2n")
 skeleton = NodePath("../..")
 
 [node name="silla_simple_brazos" parent="NavigationRegion3D" instance=ExtResource("4_8pqco")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.35919, 0, 0.0290444)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.35919, 0, 0.329044)
 
 [node name="computador" parent="NavigationRegion3D" instance=ExtResource("5_ahrtx")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.1495, 0.749598, 0.0411874)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.1495, 0.749598, 0.341187)
 script = ExtResource("8_a06ne")
 device_data = ExtResource("9_stj1p")
 
 [node name="monitor" parent="NavigationRegion3D" instance=ExtResource("6_5qyi0")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.15841, 0.85558, 0.0153636)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.15841, 0.85558, 0.315364)
 script = ExtResource("8_a06ne")
 device_data = ExtResource("11_xevnh")
+
+[node name="impresora" parent="." instance=ExtResource("12_nun52")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.13072, 0.753929, -0.335645)

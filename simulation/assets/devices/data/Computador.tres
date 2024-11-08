@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_to6bb")
 name = "Computadora"
-power_watts = 65
-consumption_ws = 234000
+consumption_in_use = 300.0
+consumption_in_idle = 75.0
 has_low_consumption_mode = true
 has_sleep_mode = true
 has_battery = false

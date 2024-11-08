@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_yvu2t")
 name = "Monitor"
-power_watts = 25
-consumption_ws = 90000
+consumption_in_use = 30.0
+consumption_in_idle = 10.0
 has_low_consumption_mode = true
 has_sleep_mode = true
 has_battery = false
