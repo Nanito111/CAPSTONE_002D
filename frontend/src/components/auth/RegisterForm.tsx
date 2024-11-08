@@ -38,6 +38,7 @@ import { HelpForm } from "@/components/auth/HelpForm";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { number } from "zod";
 
 export function RegisterForm() {
   // Estados de validacion (Getters y setters). 0 = no validado, 1 = validado, 2 = invalido
@@ -95,7 +96,7 @@ export function RegisterForm() {
         first_name: (document.getElementById("Nombre") as HTMLInputElement).value,
         last_name: (document.getElementById("Apellido") as HTMLInputElement).value,
         second_last_name: (document.getElementById("SegundoApellido") as HTMLInputElement).value,
-        phone_number: (document.getElementById("numAddress") as HTMLInputElement).value,
+        phone_number: Number((document.getElementById("numAddress") as HTMLInputElement).value),
         country_code: '56', // valor hardcodeado
         email: (document.getElementById("email") as HTMLInputElement).value,
         password: (document.getElementById("Clave") as HTMLInputElement).value
@@ -114,7 +115,7 @@ export function RegisterForm() {
         electricity_cost: Number((document.getElementById("CostoElectricidadkWh") as HTMLInputElement).value)
       }
     };
-
+    console.log(typeof formData.user.phone_number)
     try {
       const response = await fetch('/api/account/register', {
         method: 'POST',
