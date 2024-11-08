@@ -80,7 +80,6 @@ export function RegisterForm() {
   const regexClave =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   const regexNumerosEnteros = /^[0-9]+$/;
-  const regexNumPhone = /^[0-9\s]+$/;
   const regexNumerosDecimales = /^[0-9]+(\.[0-9]+)?$/;
 
   // Handlers
@@ -698,7 +697,7 @@ export function RegisterForm() {
                     onChange={(event) =>
                       handleNumericInputChange(
                         event,
-                        regexNumPhone,
+                        regexNumerosEnteros,
                         setTelefonoInputIsValid
                       )
                     }
