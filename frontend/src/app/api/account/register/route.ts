@@ -10,7 +10,7 @@ export async function POST(request: Request) {
             body: JSON.stringify(body),
         });
         const data = await response.json();
-        return Response.json(data);
+        return new Response(JSON.stringify(data), { status: response.status, headers: { 'Content-Type': 'application/json' } });
     }
     catch (error) {
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
