@@ -13,15 +13,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { AlertCircle } from "lucide-react";
+import { Loader } from "@/components/loader";
 import Image from "next/image";
+import { LoaderCircleIcon } from "lucide-react";
 
 export function LoginForm() {
+  const [cargando, setCargando] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-
+  const clasesInputError = "border-red-500 focus:ring-red-500 focus:border-red-500";
   const router = useRouter();
+
+  const erasePassword = () =>{
+    // Elimina la contraseña del formulario cuando es erronea al momento de enviarse
+    const inputPassword = document.getElementById("password") as HTMLInputElement;
+    inputPassword.value = "";
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    setErrorLogin(false);
+    setCargando(true);
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
@@ -43,30 +55,33 @@ export function LoginForm() {
     if (response.ok) {
       router.push("/dashboard");
     } else {
+      setErrorLogin(true);
       const contentType = response.headers.get("content-type");
       if (contentType?.includes("application/json")) {
-        if (response.status === 401) {
-          setTitulo("Credenciales incorrectas");
-          setDescripcion("El email o la contraseña son incorrectos " + response.status);
-        } else if (response.status === 404) {
-          setTitulo("Usuario no encontrado");
-          setDescripcion("El usuario con el email proporcionado no existe " + response.status);
-        } else if (response.status === 500) {
-          setTitulo("Error interno del servidor");
-          setDescripcion("El servidor no pudo procesar la solicitud " + response.status);
-          setTimeout(() => {
-            router.push("/dummydashboard");
-          }, 10000);
-        } else {
-          setTitulo("Error desconocido");
-          setDescripcion("Ocurrió un error inesperado " + response.status);
+        switch (response.status) {
+          case 401:
+            setTitulo("Credenciales incorrectas");
+            setDescripcion("El email o la contraseña son incorrectos " + response.status);
+            erasePassword();
+            break;
+          case 404:
+            setTitulo("Usuario no encontrado");
+            setDescripcion("El usuario con el email proporcionado no existe " + response.status);
+            erasePassword();
+            break;
+          case 500:
+            setTitulo("Error interno del servidor");
+            setDescripcion("El servidor no pudo procesar la solicitud " + response.status);
+            break;
+          default:
+            setTitulo("Error desconocido");
+            setDescripcion("Ocurrió un error inesperado " + response.status);
+            break;
         }
-        console.log(`data status: ${response.status}`)
-        setErrorLogin(true);
+        console.log(`data status: ${response.status}`)    }
     }
-    }
+    setCargando(false);
   }
-
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -93,9 +108,9 @@ export function LoginForm() {
                 id="email"
                 type="email"
                 name="email"
-                // onChange={handleChange}
                 placeholder="correo@ejemplo.com"
                 required
+                className={errorLogin ? clasesInputError : ""}
               />
             </div>
             <div className="grid gap-2">
@@ -106,12 +121,17 @@ export function LoginForm() {
                 name="password"
                 placeholder="********"
                 required
+                className={errorLogin ? clasesInputError : ""}
               />
             </div>
           </CardContent>
           <FooterButtons textoBotonPrincipal="Iniciar Sesión" />
         </Card>
       </form>
+      {
+        // loading animation
+        cargando && <Loader/>
+      }
       {errorLogin && (
         <Alert variant="destructive" className="w-full max-w-sm mt-10 max-2xl:">
           <AlertCircle className="h-4 w-4" />
