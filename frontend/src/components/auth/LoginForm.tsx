@@ -45,7 +45,6 @@ export function LoginForm() {
     } else {
       const contentType = response.headers.get("content-type");
       if (contentType?.includes("application/json")) {
-        const data = await response.json();
         if (response.status === 401) {
           setTitulo("Credenciales incorrectas");
           setDescripcion("El email o la contraseña son incorrectos " + response.status);
@@ -55,6 +54,9 @@ export function LoginForm() {
         } else if (response.status === 500) {
           setTitulo("Error interno del servidor");
           setDescripcion("El servidor no pudo procesar la solicitud " + response.status);
+          setTimeout(() => {
+            router.push("/dummydashboard");
+          }, 10000);
         } else {
           setTitulo("Error desconocido");
           setDescripcion("Ocurrió un error inesperado " + response.status);
