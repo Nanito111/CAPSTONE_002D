@@ -8,13 +8,11 @@ const protectedRoutes = [
 ];
 
 const dynamicProtectedRoutes = [
-  /^\/dispositivos\/\d+$/, // Ruta dinámica para "/dispositivos/[id]"
+  /^\/dispositivos\/\d+$/, 
 ];
 
 export default function middleware(req: NextRequest) {
   const isAuthenticated = req.cookies.get('authenticated');
-  console.log(`Usuario autenticado[middleware]: ${isAuthenticated}`);
-
   const isProtectedRoute = protectedRoutes.includes(req?.nextUrl?.pathname) ||
     dynamicProtectedRoutes.some((route) => route.test(req?.nextUrl?.pathname));
 
