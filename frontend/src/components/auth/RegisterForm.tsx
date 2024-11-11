@@ -35,10 +35,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { HelpForm } from "@/components/auth/HelpForm";
-
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { number } from "zod";
 
 export function RegisterForm() {
   // Estados de validacion (Getters y setters). 0 = no validado, 1 = validado, 2 = invalido
@@ -78,8 +76,8 @@ export function RegisterForm() {
   // regex
   const regexNombres = /^[a-zA-ZñÑ]+$/;
   const regexCorreo = /\S+@\S+\.\S+/;
-  const regexClave =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  //const regexClave = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+  const regexClave = /[\w+\s+\d+\W+]{8,40}/
   const regexNumerosEnteros = /^[0-9]+$/;
   const regexNumerosDecimales = /^[0-9]+(\.[0-9]+)?$/;
 
@@ -115,8 +113,7 @@ export function RegisterForm() {
         electricity_cost: Number((document.getElementById("CostoElectricidadkWh") as HTMLInputElement).value)
       }
     };
-    console.log(typeof formData.user.phone_number)
-    console.log(formData)
+
     try {
       const response = await fetch('/api/account/register', {
         method: 'POST',
@@ -191,15 +188,14 @@ export function RegisterForm() {
     const errors: string[] = [];
     if (password.length < 8)
       errors.push("La contraseña debe tener al menos 8 caracteres");
-    if (!/[0-9]/.test(password))
+    if (!/\d/g.test(password))
       errors.push("La contraseña debe tener al menos un número");
     if (!/[a-z]/.test(password))
       errors.push("La contraseña debe tener al menos una letra minúscula");
     if (!/[A-Z]/.test(password))
       errors.push("La contraseña debe tener al menos una letra mayúscula");
-    if (!/[@$!%*?&]/.test(password))
+    if (!/[^a-zA-Z0-9]/g.test(password))
       errors.push("La contraseña debe tener al menos un símbolo");
-
     setMensajesErrorContraseña(errors);
   };
   const handleRepetirClaveBlur = (
@@ -634,6 +630,17 @@ export function RegisterForm() {
                       </Tooltip>
                     )}
                   </div>
+                  {
+                      // Mostrar solo en vistas moviles atributo p de color rojo
+                      ClaveInputIsValid === 2 ? (
+                        <>
+                          <p className="text-red-500 text-sm sm:hidden block">Contraseña inválida.</p>
+                          {MensajesErrorContraseña.map((error, index) => (
+                            <p key={index} className="text-red-500 text-sm sm:hidden block">{error}</p>
+                          ))}
+                        </>
+                      ) : null
+                    }
                 </div>
               </div>
             </TooltipProvider>
