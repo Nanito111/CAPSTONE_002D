@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { LayoutGrid, LogOut, User } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -20,8 +19,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 export function UserNav() {
+  const [logoutStatus, setLogoutStatus] = useState(false);
+
+  const handleLogout = () => {
+    console.log("handleLogout called");
+    setLogoutStatus(false);
+    const apiKillSession = `/api/account/killsession`;
+    fetch(apiKillSession, {
+      method: "GET",
+    })
+      .then((response) => {
+        console.log("API response received", response);
+        if (response.ok) {
+          setLogoutStatus(true);
+          // setTimeout(() => {
+          //   window.location.href = "/login";
+          // }, 500);
+        } else {
+          console.error("API response not OK", response);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   return (
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>
@@ -69,12 +94,14 @@ export function UserNav() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <Link href={"/"} >
-        <DropdownMenuItem className="hover:cursor-pointer" onClick={() => {}}>
-          <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
-          Cerrar Sesión
+        <DropdownMenuItem className="hover:cursor-pointer" onClick={handleLogout}>
+          <LogOut className="w-4 h-4 mr-3 text-muted-foreground" onClick={handleLogout}/>
+          {
+            logoutStatus ? "Cerrando sesion.." : "Cerrar sesión"
+          }
         </DropdownMenuItem>
           </Link>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+    );
 }
