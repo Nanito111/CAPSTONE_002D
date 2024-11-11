@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dlwi5ydp41eln"
-path="res://.godot/imported/lavadora.glb-ba80b999425b75dfe17e97a7f76a9e21.scn"
+uid="uid://youbdpm3os13"
+path="res://.godot/imported/plancha.glb-ca8e13a1d46ded53b17d5b03a173d7c8.scn"
 
 [deps]
 
-source_file="res://assets/devices/lavadora.glb"
-dest_files=["res://.godot/imported/lavadora.glb-ba80b999425b75dfe17e97a7f76a9e21.scn"]
+source_file="res://assets/devices/meshes/plancha.glb"
+dest_files=["res://.godot/imported/plancha.glb-ca8e13a1d46ded53b17d5b03a173d7c8.scn"]
 
 [params]
 
@@ -33,7 +33,7 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
-"Material": {
+"Material.002": {
 "use_external/enabled": true,
 "use_external/path": "res://assets/materials/electric_device_mat.tres"
 }

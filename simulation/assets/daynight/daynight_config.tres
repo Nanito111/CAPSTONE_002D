@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="SkySettings" load_steps=8 format=3 uid="uid://cqw3rcsiquj8g"]
+
+[ext_resource type="Gradient" uid="uid://lnkn6p20baps" path="res://assets/daynight/gradients/day_ambient_color.tres" id="1_3s8dm"]
+[ext_resource type="Gradient" uid="uid://d0h37qrpqb2h4" path="res://assets/daynight/gradients/moon_light_color.tres" id="2_7lu6v"]
+[ext_resource type="Curve" uid="uid://d1gvlu3wrv8aw" path="res://assets/daynight/curves/moon_light_enegy.tres" id="3_0fvtb"]
+[ext_resource type="Gradient" uid="uid://bdan0ryl7ny7w" path="res://assets/daynight/gradients/night_ambient_color.tres" id="3_1gn27"]
+[ext_resource type="Script" path="res://code/sky_settings.gd" id="4_it81d"]
+[ext_resource type="Gradient" uid="uid://bxcxj3s5mob21" path="res://assets/daynight/gradients/sun_light_color.tres" id="5_21w7n"]
+[ext_resource type="Curve" uid="uid://b5xoadfipbxyv" path="res://assets/daynight/curves/sun_light_energy.tres" id="7_u44x0"]
+
+[resource]
+script = ExtResource("4_it81d")
+sun_light_energy = ExtResource("7_u44x0")
+moon_light_energy = ExtResource("3_0fvtb")
+sun_light_color = ExtResource("5_21w7n")
+moon_light_color = ExtResource("2_7lu6v")
+day_ambient_color = ExtResource("1_3s8dm")
+night_ambient_color = ExtResource("3_1gn27")

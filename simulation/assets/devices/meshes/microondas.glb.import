@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bvnx3olpsu4na"
-path="res://.godot/imported/refrigerador.glb-e4bf589fbb215314abc8b10eb1bc389c.scn"
+uid="uid://d03k52ajay61u"
+path="res://.godot/imported/microondas.glb-5ccdeec488c0e3cea13b017478cdb3ca.scn"
 
 [deps]
 
-source_file="res://assets/devices/refrigerador.glb"
-dest_files=["res://.godot/imported/refrigerador.glb-e4bf589fbb215314abc8b10eb1bc389c.scn"]
+source_file="res://assets/devices/meshes/microondas.glb"
+dest_files=["res://.godot/imported/microondas.glb-5ccdeec488c0e3cea13b017478cdb3ca.scn"]
 
 [params]
 

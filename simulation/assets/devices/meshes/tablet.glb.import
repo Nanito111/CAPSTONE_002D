@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://youbdpm3os13"
-path="res://.godot/imported/plancha.glb-f17ea0ae6e0143aecd82d1b5f5531eb2.scn"
+uid="uid://bucp6fspmhoue"
+path="res://.godot/imported/tablet.glb-7897f69f4dd6e6b9fa2faf86e905d358.scn"
 
 [deps]
 
-source_file="res://assets/devices/plancha.glb"
-dest_files=["res://.godot/imported/plancha.glb-f17ea0ae6e0143aecd82d1b5f5531eb2.scn"]
+source_file="res://assets/devices/meshes/tablet.glb"
+dest_files=["res://.godot/imported/tablet.glb-7897f69f4dd6e6b9fa2faf86e905d358.scn"]
 
 [params]
 
@@ -33,7 +33,7 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "materials": {
-"Material.002": {
+"Material": {
 "use_external/enabled": true,
 "use_external/path": "res://assets/materials/electric_device_mat.tres"
 }

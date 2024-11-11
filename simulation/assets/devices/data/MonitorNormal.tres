@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DeviceData" load_steps=3 format=3 uid="uid://ch5jkawki57nx"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_yvu2t"]
+
+[sub_resource type="Curve" id="Curve_ni0vy"]
+min_value = 15.0
+max_value = 30.0
+_data = [Vector2(0, 15), 0.0, 15.0, 0, 1, Vector2(0.5, 22.5), -63.4771, -63.4771, 0, 0, Vector2(1, 30), 70.0, 0.0, 1, 0]
+point_count = 3
+metadata/_snap_enabled = true
+metadata/_snap_count = 20
+
+[resource]
+script = ExtResource("1_yvu2t")
+name = "MonitorNormal"
+consumption_in_use_curve = SubResource("Curve_ni0vy")
+jitter_percentage_in_use = 0.1
+consumption_in_idle = 0.75
+jitter_percentage_in_idle = 0.1
+has_battery = false
+battery_capacity_Ah = 0.0
+battery_nominal_voltage = 0.0

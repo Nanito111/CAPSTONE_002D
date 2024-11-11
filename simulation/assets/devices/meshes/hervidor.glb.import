@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b3p41sgt5ri7u"
-path="res://.godot/imported/secadora.glb-48b12d94d5a8f19e0a9e93bce998a8a4.scn"
+uid="uid://cjwv0bxb8ds30"
+path="res://.godot/imported/hervidor.glb-da4f25c4cc63052e05057f84d34a31b4.scn"
 
 [deps]
 
-source_file="res://assets/devices/secadora.glb"
-dest_files=["res://.godot/imported/secadora.glb-48b12d94d5a8f19e0a9e93bce998a8a4.scn"]
+source_file="res://assets/devices/meshes/hervidor.glb"
+dest_files=["res://.godot/imported/hervidor.glb-da4f25c4cc63052e05057f84d34a31b4.scn"]
 
 [params]
 
