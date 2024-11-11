@@ -76,8 +76,7 @@ export function RegisterForm() {
   // regex
   const regexNombres = /^[a-zA-ZñÑ]+$/;
   const regexCorreo = /\S+@\S+\.\S+/;
-  const regexClave =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const regexClave = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
   const regexNumerosEnteros = /^[0-9]+$/;
   const regexNumerosDecimales = /^[0-9]+(\.[0-9]+)?$/;
 
@@ -194,7 +193,7 @@ export function RegisterForm() {
       errors.push("La contraseña debe tener al menos una letra minúscula");
     if (!/[A-Z]/.test(password))
       errors.push("La contraseña debe tener al menos una letra mayúscula");
-    if (!/[@$!%*?&]/.test(password))
+    if (!/[@$!%*#?&]/.test(password))
       errors.push("La contraseña debe tener al menos un símbolo");
 
     setMensajesErrorContraseña(errors);
