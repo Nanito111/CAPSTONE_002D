@@ -2,8 +2,11 @@ class_name Device
 extends Node3D
 
 @export var device_data: DeviceData
+
 var is_being_use: bool
 var current_energy_consumption: float
+
+var send_data: bool = true
 
 
 func start_using():
@@ -16,21 +19,44 @@ func stop_using():
 	prints("stop using device ", device_data.name)
 
 
-func jitter_value(value:float):
-	var jitter_range = value * 0.1
+func jitter_value(value:float, jitter_amount: float):
+	var jitter_range = value * jitter_amount
 	var jitter:float = randf_range(-jitter_range, jitter_range) + value
 	return jitter
 
 
 func consumption_in_idle():
-	current_energy_consumption = jitter_value(device_data.consumption_in_idle) / DayNight.hour_in_seconds
+	current_energy_consumption = jitter_value(
+		device_data.consumption_in_idle,
+		device_data.jitter_percentage_in_idle
+	) / DayNight.hour_in_seconds
 
-	prints("Device", device_data.name, "is idle, energy consumed in this second:", current_energy_consumption, "Watts")
+	# prints(
+	# 	"Device",
+	# 	device_data.name,
+	# 	"is idle, energy consumed at this second:",
+	# 	current_energy_consumption,
+	# 	"Watts"
+	# )
 
 
 func consumption_in_use():
-	current_energy_consumption = jitter_value(device_data.consumption_in_use) / DayNight.hour_in_seconds
-	current_energy_consumption *= get_physics_process_delta_time()
+	var consumption = device_data.consumption_in_use_curve.sample(randf())
+	consumption = jitter_value(consumption, device_data.jitter_percentage_in_use)
+	consumption = clampf(
+		consumption,
+		device_data.consumption_in_use_curve.min_value,
+		device_data.consumption_in_use_curve.max_value
+	)
+	current_energy_consumption = consumption / DayNight.hour_in_seconds
+
+	prints(
+		"Device",
+		device_data.name,
+		"in use, energy consumed at this second:",
+		current_energy_consumption,
+		"Watts"
+	)
 
 
 func set_consumption():

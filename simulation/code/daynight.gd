@@ -23,14 +23,16 @@ var day_passed:int = 0
 var real_today_unix_time: int
 const REAL_DAY_IN_SECONDS: int = 86400
 
-const COUNT_HALF_HOUR_IN_DAY: int = 48
-var half_hour_in_seconds: float
-var next_half_hour_in_seconds: float
-signal at_half_hour(half_hour_count:int)
+const COUNT_QUARTER_HOUR_IN_DAY: int = 96
+var quarter_hour_in_seconds: float
+var next_quarter_hour_in_seconds: float
+signal at_quarter_hour(quarter_hour_count:int)
 
 var simulation_second_in_seconds:float
 var next_simulation_second_in_seconds: float
 signal a_second_has_passed()
+
+signal night_has_started()
 
 func get_today_datetime_at_zero():
 	return Time.get_unix_time_from_datetime_dict(Time.get_date_dict_from_system(true))
@@ -44,7 +46,7 @@ func get_current_day_seconds():
 
 
 func reset_day_time():
-	next_half_hour_in_seconds = half_hour_in_seconds
+	next_quarter_hour_in_seconds = quarter_hour_in_seconds
 	next_simulation_second_in_seconds = simulation_second_in_seconds
 	current_daytime_seconds = 0
 
@@ -52,21 +54,21 @@ func reset_day_time():
 		real_today_unix_time = get_today_datetime_at_zero()
 
 
-func get_current_or_next_half_hour_count(next_half_hour:bool = false):
-	var half_hour: int = floori(current_daytime_seconds / half_hour_in_seconds)
-	if next_half_hour:
-		half_hour += 1
-	return clampi(half_hour, 0, COUNT_HALF_HOUR_IN_DAY)
+func get_current_or_next_quarter_hour_count(next_quarter_hour:bool = false):
+	var quarter_hour: int = floori(current_daytime_seconds / quarter_hour_in_seconds)
+	if next_quarter_hour:
+		quarter_hour += 1
+	return clampi(quarter_hour, 0, COUNT_QUARTER_HOUR_IN_DAY)
 
-func set_next_half_hour_in_seconds():
-	next_half_hour_in_seconds = get_current_or_next_half_hour_count(true) * half_hour_in_seconds
-	next_half_hour_in_seconds = clampf(next_half_hour_in_seconds, 0, day_in_seconds)
+func set_next_quarter_hour_in_seconds():
+	next_quarter_hour_in_seconds = get_current_or_next_quarter_hour_count(true) * quarter_hour_in_seconds
+	next_quarter_hour_in_seconds = clampf(next_quarter_hour_in_seconds, 0, day_in_seconds)
 
 
-func set_half_hour():
-	at_half_hour.emit(get_current_or_next_half_hour_count())
-	# printt(current_daytime_seconds, next_half_hour_in_seconds)
-	set_next_half_hour_in_seconds()
+func set_quarter_hour():
+	at_quarter_hour.emit(get_current_or_next_quarter_hour_count())
+	# printt(current_daytime_seconds, next_quarter_hour_in_seconds)
+	set_next_quarter_hour_in_seconds()
 
 
 func get_current_or_next_second_count(next:bool = false):
@@ -83,7 +85,7 @@ func set_next_simulation_second_in_seconds():
 
 func set_simulation_second():
 	a_second_has_passed.emit()
-	printt(current_daytime_seconds, next_simulation_second_in_seconds)
+	# printt(current_daytime_seconds, next_simulation_second_in_seconds)
 	set_next_simulation_second_in_seconds()
 
 
@@ -99,6 +101,7 @@ func calculate_time_variables():
 
 	if (current_day_state == DayStates.DAY and current_daytime_seconds > half_day):
 		current_day_state = DayStates.NIGHT
+		night_has_started.emit()
 
 	current_half_time_percentage = current_daytime_seconds / half_day - current_day_state
 	current_half_time_percentage = clampf(current_half_time_percentage, 0, 1)
@@ -107,8 +110,8 @@ func calculate_time_variables():
 		set_simulation_second()
 
 	# es media hora
-	if (current_daytime_seconds >= next_half_hour_in_seconds):
-		set_half_hour()
+	if (current_daytime_seconds >= next_quarter_hour_in_seconds):
+		set_quarter_hour()
 
 	if (current_daytime_seconds == day_in_seconds):
 		reset_day_time()
@@ -151,8 +154,8 @@ func _ready():
 		real_today_unix_time = get_today_datetime_at_zero()
 		current_daytime_seconds = Time.get_unix_time_from_system() - real_today_unix_time
 
-	half_hour_in_seconds = day_in_seconds / COUNT_HALF_HOUR_IN_DAY
-	set_next_half_hour_in_seconds()
+	quarter_hour_in_seconds = day_in_seconds / COUNT_QUARTER_HOUR_IN_DAY
+	set_next_quarter_hour_in_seconds()
 	hour_in_seconds = day_in_seconds / 24
 	simulation_second_in_seconds = day_in_seconds / REAL_DAY_IN_SECONDS
 

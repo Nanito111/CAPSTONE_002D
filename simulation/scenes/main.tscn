@@ -4,8 +4,4 @@
 
 [node name="Main" type="Node"]
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.846509, -0.160407, 0.507634, 1.49012e-08, 0.953528, 0.301305, -0.532374, 0.255057, -0.80717, 3.6607, 3.18918, -5.74095)
-current = true
-
 [node name="RoomA" parent="." instance=ExtResource("1_vwotr")]
