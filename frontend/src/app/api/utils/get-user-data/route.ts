@@ -11,7 +11,6 @@ export async function GET(request:Request){
             })
         }
         const value_token = auth_token.value
-        console.log(value_token)
         const requestOptions = {
             method: 'GET',
             headers: {
