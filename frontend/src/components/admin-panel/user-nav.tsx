@@ -19,10 +19,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function UserNav() {
   const [logoutStatus, setLogoutStatus] = useState(false);
+  const [nombreUsuario, setNombreUsuario] = useState("John Titor");
+  const [email, setEmail] = useState("johntitor@energymeter.com");
+  const [iconWords, setIconWords] = useState("O");
 
   const handleLogout = () => {
     console.log("handleLogout called");
@@ -32,20 +35,40 @@ export function UserNav() {
       method: "GET",
     })
       .then((response) => {
-        console.log("API response received", response);
         if (response.ok) {
           setLogoutStatus(true);
-          // setTimeout(() => {
-          //   window.location.href = "/login";
-          // }, 500);
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 500);
         } else {
-          console.error("API response not OK", response);
+          console.error("API response not OK");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
+
+  useEffect(() => {
+    const handleName = async () => {
+      const apiGetUserData = `/api/utils/get-user-data`;
+      const response = await fetch(apiGetUserData, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        const nombreFromApi = capitalize(data.user.first_name) + " " + capitalize(data.user.last_name);
+        const iconWords = data.user.first_name.charAt(0).toUpperCase() + data.user.last_name.charAt(0).toUpperCase();
+        setIconWords(iconWords);
+        setNombreUsuario(nombreFromApi);
+        setEmail((data.user.email).toLowerCase());
+      } else {
+        console.error("API response not OK");
+      }
+    }
+    handleName();
+  },  [])
 
   return (
     <DropdownMenu>
@@ -59,7 +82,7 @@ export function UserNav() {
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="#" alt="Avatar" />
-                  <AvatarFallback className="bg-transparent">JT</AvatarFallback>
+                  <AvatarFallback className="bg-transparent">{iconWords}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -71,9 +94,9 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">John Titor</p>
+            <p className="text-sm font-medium leading-none">{nombreUsuario}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              johntitor@energymeter.com
+              {email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -96,9 +119,7 @@ export function UserNav() {
         <Link href={"/"} >
         <DropdownMenuItem className="hover:cursor-pointer" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-3 text-muted-foreground" onClick={handleLogout}/>
-          {
-            logoutStatus ? "Cerrando sesion.." : "Cerrar sesión"
-          }
+          { logoutStatus ? "Cerrando sesion.." : "Cerrar sesión"  }
         </DropdownMenuItem>
           </Link>
       </DropdownMenuContent>
