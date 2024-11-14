@@ -20,6 +20,7 @@ import { LoaderCircleIcon } from "lucide-react";
 export function LoginForm() {
   const [cargando, setCargando] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
+  const [logged, setLogged] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const clasesInputError = "border-red-500 focus:ring-red-500 focus:border-red-500";
@@ -53,6 +54,7 @@ export function LoginForm() {
         }),
     });
     if (response.ok) {
+      setLogged(true);
       router.push("/dashboard");
     } else {
       setErrorLogin(true);
@@ -139,6 +141,14 @@ export function LoginForm() {
           <AlertDescription>{descripcion}</AlertDescription>
         </Alert>
       )}
+      {
+        // logged animation
+        logged && <Alert className="w-full max-w-sm mt-10 max-2xl:">
+          <LoaderCircleIcon className="h-4 w-4" />
+          <AlertTitle>¡Bienvenido!</AlertTitle>
+          <AlertDescription>Redirigiendo...</AlertDescription>
+        </Alert>
+      }
     </>
   );
 }
