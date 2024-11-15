@@ -7,7 +7,7 @@ from pydantic import (
     EmailStr,
 )
 from pydantic.functional_validators import BeforeValidator, field_validator
-# from models import User
+from models import User as UserDB, Contract as ContractDB, Address as AddressDB
 
 
 def str_id_to_int(v: str) -> int:
@@ -68,10 +68,9 @@ class UserRegistro(BaseModel):
         description="Apellido del usuario.",
     )
     second_last_name: str = Field(
-        default="",
         max_length=20,
         pattern=_name_pattern,
-        description="Segundo apellido del usuario (opcional).",
+        description="Segundo apellido del usuario.",
     )
     phone_number: PositiveInt = Field(
         le=999999999,
@@ -172,44 +171,125 @@ class GetUser(BaseModel):
     contract: Contract
 
 
-# class ModifyUser(BaseModel):
-#     user_id: bytes = Field(exclude=True)
-#
-#     # campos de modificaciones
-#     nombre: Optional[str] = Field(
-#         default=None,
-#         strict=False,
-#         max_length=255,
-#         serialization_alias=User.nombre.key,
-#     )
-#     apellido: Optional[str] = Field(
-#         default=None,
-#         strict=False,
-#         max_length=255,
-#         serialization_alias=User.apellido.key,
-#     )
-#     numero_telefono: Optional[int] = Field(
-#         default=None,
-#         strict=False,
-#         ge=0,
-#         le=99999999999,
-#         serialization_alias=User.numero_telefono.key,
-#     )
-#     codigo_telefono: Optional[str] = Field(
-#         default=None,
-#         strict=False,
-#         max_length=10,
-#         serialization_alias=User.codigo_telefono.key,
-#     )
-#     correo: Optional[EmailStr] = Field(
-#         default=None,
-#         strict=False,
-#         max_length=500,
-#         serialization_alias=User.correo.key,
-#     )
-#     password: Optional[SecretBytes] = Field(
-#         default=None,
-#         strict=False,
-#         max_length=255,
-#         serialization_alias=User.password.key,
-#     )
+class UserModificar(BaseModel):
+    _name_pattern = r"^[a-zA-Z\s]+$"
+
+    first_name: str = Field(
+        default=None,
+        strict=False,
+        max_length=20,
+        pattern=_name_pattern,
+        description="Nombre de pila del usuario.",
+        serialization_alias=UserDB.first_name.key,
+    )
+    last_name: str = Field(
+        default=None,
+        strict=False,
+        max_length=20,
+        pattern=_name_pattern,
+        description="Apellido del usuario.",
+        serialization_alias=UserDB.last_name.key,
+    )
+    second_last_name: str = Field(
+        default=None,
+        strict=False,
+        max_length=20,
+        pattern=_name_pattern,
+        description="Segundo apellido del usuario.",
+        serialization_alias=UserDB.second_last_name.key,
+    )
+    phone_number: PositiveInt = Field(
+        default=None,
+        strict=False,
+        le=999999999,
+        description="Número de teléfono del usuario.",
+        serialization_alias=UserDB.phone_number.key,
+    )
+    country_code: str = Field(
+        default=None,
+        strict=False,
+        max_length=3,
+        description="Código del país en el que reside el usuario.",
+        serialization_alias=UserDB.country_code.key,
+    )
+    _clean_str = field_validator(
+        "first_name",
+        "last_name",
+        "second_last_name",
+        "country_code",
+        mode="after",
+    )(clean_strings)
+
+
+class AddressModificar(BaseModel):
+    street_name: str = Field(
+        default=None,
+        strict=False,
+        max_length=100,
+        description="Nombre de la calle.",
+        serialization_alias=AddressDB.street_name.key,
+    )
+    street_number: str = Field(
+        default=None,
+        strict=False,
+        max_length=50,
+        description="Numero de la calle/domicilio.",
+        serialization_alias=AddressDB.street_number.key,
+    )
+    comuna: CoercedIntId = Field(
+        default=None,
+        strict=False,
+        description="Id en base de datos de la comuna.",
+        serialization_alias=AddressDB.id_comuna.key,
+    )
+
+    _clean_str = field_validator(
+        "street_name",
+        "street_number",
+        mode="after",
+    )(clean_strings)
+
+
+class ContractModificar(BaseModel):
+    electricity_company: CoercedIntId = Field(
+        default=None,
+        strict=False,
+        description="Id en base de datos de la compañía electrica del usuario.",
+        serialization_alias=ContractDB.id_electricity_company.key,
+    )
+    service_administration_cost: int = Field(
+        default=None,
+        strict=False,
+        description="Costo por administración del servicio.",
+        ge=0,
+        serialization_alias=ContractDB.service_admin_cost.key,
+    )
+    transport_cost: int = Field(
+        default=None,
+        strict=False,
+        description="Costo de transporte de electricidad por 1 kWh, obtenida del costo total de transporte de electricidad dividido por total consumido de kWh.",
+        ge=0,
+        serialization_alias=ContractDB.transport_cost.key,
+    )
+    electricity_cost: int = Field(
+        default=None,
+        strict=False,
+        description="Costo de 1 kWh, obtenida del costo total de electricidad dividido por total consumido de kWh.",
+        ge=0,
+        serialization_alias=ContractDB.electricity_cost.key,
+    )
+
+
+class ModificarData(BaseModel):
+    user: UserModificar | None = Field(
+        default=None,
+        strict=False,
+    )
+    address: AddressModificar | None = Field(
+        default=None,
+        strict=False,
+    )
+    contract: ContractModificar | None = Field(
+        default=None,
+        strict=False,
+    )
