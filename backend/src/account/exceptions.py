@@ -31,3 +31,7 @@ UserModificationFailed = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="User couldn't be modified. Internal Error",
 )
+FailedToChangePassword = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Password couldn't be changed. Internal Error",
+)
