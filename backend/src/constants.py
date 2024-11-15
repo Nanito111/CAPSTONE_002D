@@ -1,8 +1,10 @@
+from datetime import timedelta
 import os
 from dotenv import load_dotenv
 import pathlib
 import logging
 from pydantic.types import SecretStr
+from passlib.context import CryptContext
 
 load_dotenv("../.env")
 
@@ -17,7 +19,8 @@ API_HOST_IP: str = os.environ["API_HOST_IP"]
 API_BIND_IP: str = os.environ["API_BIND_IP"]
 API_PORT: int = int(os.environ["API_PORT"])
 API_WORKERS: int = int(os.environ["API_WORKERS"])
-API_ENCRYPTION_KEY: SecretStr = SecretStr(os.environ["API_ENCRYPTION_KEY"])
+API_SECRET_KEY: SecretStr = SecretStr(os.environ["API_SECRET_KEY"])
+API_ALGORITHM: str = os.environ["API_ALGORITHM"]
 
 # SQL Database variables
 DB_HOST: str = os.environ["DB_HOST"]
@@ -41,4 +44,8 @@ DB_PEM_PATH: pathlib.Path = pathlib.Path(DB_WALLET_PATH, DB_PEM_FILE_NAME)
 LOGS_DIR_NAME: str = os.environ["LOGS_DIR_NAME"]
 LOGS_PATH: pathlib.Path = pathlib.Path("./../", LOGS_DIR_NAME)
 
-LOGGING_LEVEL: str = logging.getLevelName(logging.DEBUG)
+LOGGING_LEVEL: str = logging.getLevelName(logging.INFO)
+
+PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+TOKEN_EXPIRATION_DELTA = timedelta(minutes=60)

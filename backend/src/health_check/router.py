@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-router = APIRouter(prefix="/health", tags=["health_check"])
+router = APIRouter(prefix="/health", tags=["health"])
 
 
 @router.get("/ping")
