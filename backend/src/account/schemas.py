@@ -212,19 +212,11 @@ class UserModificar(BaseModel):
         description="Código del país en el que reside el usuario.",
         serialization_alias=UserDB.country_code.key,
     )
-    email: EmailStr = Field(
-        default=None,
-        strict=False,
-        max_length=500,
-        description="Dirección de correo electrónico del usuario.",
-        serialization_alias=UserDB.email.key,
-    )
     _clean_str = field_validator(
         "first_name",
         "last_name",
         "second_last_name",
         "country_code",
-        "email",
         mode="after",
     )(clean_strings)
 

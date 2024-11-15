@@ -13,7 +13,6 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import delete, insert, select, update
 from account import exceptions
 from account import schemas
-import database
 from dependencies import SessionDataBase, AuthFormData
 from models import Address, Comuna, Contract, Country, ElectricityCompany, Region, User
 from constants import PWD_CONTEXT, API_SECRET_KEY, API_ALGORITHM, TOKEN_EXPIRATION_DELTA
@@ -382,9 +381,23 @@ def modify_current_user(
     ):
         raise exceptions.UserIsMissingFromDatabase
 
-    if payload.model_fields_set.__len__() <= 0:
+    # check if payload is empty
+    payload_is_empty = (
+        payload.user is None and payload.address is None and payload.contract is None
+    )
+
+    if payload_is_empty:
         logger.error(f"No field were set to modify user: {user_email}.")
         raise exceptions.NoFieldsSetToModifyUser
+
+    # check if non none model is unset
+    for model in (payload.user, payload.address, payload.contract):
+        if model is None:
+            continue
+
+        if model.model_fields_set.__len__() <= 0:
+            logger.error(f"No field were set to modify user: {user_email}")
+            raise exceptions.NoFieldsSetToModifyUser
 
     try:
         insert_modification_values(
