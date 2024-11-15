@@ -1,10 +1,11 @@
+import re
 from typing import Annotated
 from pydantic import (
     BaseModel,
     Field,
     PositiveInt,
-    SecretBytes,
     EmailStr,
+    SecretStr,
 )
 from pydantic.functional_validators import BeforeValidator, field_validator
 from models import User as UserDB, Contract as ContractDB, Address as AddressDB
@@ -48,28 +49,42 @@ def clean_strings(value: str) -> str:
     return clean_value
 
 
+def validate_password(value: SecretStr) -> SecretStr:
+    def check(pattern, error_msg):
+        if re.search(pattern, value.get_secret_value()) is None:
+            raise ValueError(f"Invalid Password: {error_msg}")
+
+    check(r"[a-z]", "missing lowercase letters")
+    check(r"[A-Z]", "missing uppercase letters")
+    check(r"[0-9]", "missing number characters")
+    check(r"[^a-zA-Z0-9]", "missing symbols")
+
+    return value
+
+
 class TokenResponse(BaseModel):
     token_type: str = "Bearer"
     access_token: str
     expires_in: int
 
 
-class UserRegistro(BaseModel):
-    _name_pattern = r"^[a-zA-Z\s]+$"
+NAME_PATTERN = r"^[a-zA-Z\s]+$"
 
+
+class UserRegistro(BaseModel):
     first_name: str = Field(
         max_length=20,
-        pattern=_name_pattern,
+        pattern=NAME_PATTERN,
         description="Nombre de pila del usuario.",
     )
     last_name: str = Field(
         max_length=20,
-        pattern=_name_pattern,
+        pattern=NAME_PATTERN,
         description="Apellido del usuario.",
     )
     second_last_name: str = Field(
         max_length=20,
-        pattern=_name_pattern,
+        pattern=NAME_PATTERN,
         description="Segundo apellido del usuario.",
     )
     phone_number: PositiveInt = Field(
@@ -84,11 +99,15 @@ class UserRegistro(BaseModel):
         max_length=500,
         description="Dirección de correo electrónico del usuario.",
     )
-    password: SecretBytes = Field(
+    password: SecretStr = Field(
         min_length=8,
         max_length=255,
         description="Contraseña del usuario.",
     )
+    _validate_password = field_validator(
+        "password",
+        mode="after",
+    )(validate_password)
 
     _clean_str = field_validator(
         "first_name",
@@ -172,13 +191,11 @@ class GetUser(BaseModel):
 
 
 class UserModificar(BaseModel):
-    _name_pattern = r"^[a-zA-Z\s]+$"
-
     first_name: str = Field(
         default=None,
         strict=False,
         max_length=20,
-        pattern=_name_pattern,
+        pattern=NAME_PATTERN,
         description="Nombre de pila del usuario.",
         serialization_alias=UserDB.first_name.key,
     )
@@ -186,7 +203,7 @@ class UserModificar(BaseModel):
         default=None,
         strict=False,
         max_length=20,
-        pattern=_name_pattern,
+        pattern=NAME_PATTERN,
         description="Apellido del usuario.",
         serialization_alias=UserDB.last_name.key,
     )
@@ -194,7 +211,7 @@ class UserModificar(BaseModel):
         default=None,
         strict=False,
         max_length=20,
-        pattern=_name_pattern,
+        pattern=NAME_PATTERN,
         description="Segundo apellido del usuario.",
         serialization_alias=UserDB.second_last_name.key,
     )
@@ -296,8 +313,12 @@ class ModificarData(BaseModel):
 
 
 class PasswordChange(BaseModel):
-    new_password: SecretBytes = Field(
+    new_password: SecretStr = Field(
         min_length=8,
         max_length=255,
         description="Nueva contraseña del usuario.",
     )
+    _validate_password = field_validator(
+        "new_password",
+        mode="after",
+    )(validate_password)

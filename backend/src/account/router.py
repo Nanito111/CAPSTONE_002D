@@ -119,7 +119,6 @@ def authenticate(
         user_email=form_data.username,
         database_session=database_session,
     ):
-        print("112")
         raise exceptions.FailedToAuthenticate
 
     # get password from database
@@ -133,7 +132,6 @@ def authenticate(
         raw_password=form_data.password,
         database_password=database_password,
     ):
-        print("130")
         raise exceptions.FailedToAuthenticate
 
     token = generate_access_token(
