@@ -293,3 +293,11 @@ class ModificarData(BaseModel):
         default=None,
         strict=False,
     )
+
+
+class PasswordChange(BaseModel):
+    new_password: SecretBytes = Field(
+        min_length=8,
+        max_length=255,
+        description="Nueva contraseña del usuario.",
+    )

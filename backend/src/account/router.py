@@ -451,3 +451,39 @@ def delete_current_user(
     database_session.commit()
 
     logger.info(f"User {user_email} deleted successfully.")
+
+
+@router.put(
+    "/password/change",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def change_password_current_user(
+    payload: schemas.PasswordChange,
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    user_email = get_user_email_from_token(token)
+
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        raise exceptions.UserIsMissingFromDatabase
+
+    raw_password = payload.new_password.get_secret_value()
+    hashed_password = PWD_CONTEXT.hash(raw_password).encode()
+
+    try:
+        logger.info(f"Changing password of user: {user_email}")
+        insert_user = (
+            update(User)
+            .values(password=hashed_password)
+            .where(User.email.__eq__(user_email))
+        )
+        database_session.execute(insert_user)
+        database_session.commit()
+
+    except Exception as err:
+        database_session.rollback()
+        logger.exception(err)
+        raise exceptions.FailedToChangePassword
