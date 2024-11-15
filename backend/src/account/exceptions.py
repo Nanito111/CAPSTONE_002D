@@ -22,3 +22,12 @@ UserAlreadyExistCannotRegister = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="Cannot register user. User already exist.",
 )
+
+NoFieldsSetToModifyUser = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="No fields were set to modify. Invalid Request",
+)
+UserModificationFailed = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="User couldn't be modified. Internal Error",
+)

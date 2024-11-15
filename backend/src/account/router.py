@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Annotated, Dict
+from typing import Annotated, Any, Dict
 from fastapi import (
     APIRouter,
     Depends,
@@ -10,9 +10,10 @@ from logging import getLogger
 
 from fastapi.security import OAuth2PasswordBearer
 
-from sqlalchemy import delete, insert, select
+from sqlalchemy import delete, insert, select, update
 from account import exceptions
 from account import schemas
+import database
 from dependencies import SessionDataBase, AuthFormData
 from models import Address, Comuna, Contract, Country, ElectricityCompany, Region, User
 from constants import PWD_CONTEXT, API_SECRET_KEY, API_ALGORITHM, TOKEN_EXPIRATION_DELTA
@@ -293,6 +294,110 @@ def get_current_user(
         address=address_data,
         contract=contract_data,
     )
+
+
+def insert_modification_values(
+    payload: schemas.ModificarData,
+    user_email: str,
+    database_session: SessionDataBase,
+):
+    # dump model modifications and insert in database
+    # modify Address
+    if payload.address is not None:
+        modifications: Dict[str, Any] = payload.address.model_dump(
+            by_alias=True,
+            exclude_unset=True,
+        )
+        sub_query = (
+            select(User.id_address)
+            .where(User.email.__eq__(user_email))
+            .scalar_subquery()
+        )
+
+        statement = (
+            update(
+                Address,
+            )
+            .where(
+                Address.id.__eq__(sub_query),
+            )
+            .values(modifications)
+        )
+        database_session.execute(statement)
+
+    # modify Contract
+    if payload.contract is not None:
+        modifications: Dict[str, Any] = payload.contract.model_dump(
+            by_alias=True,
+            exclude_unset=True,
+        )
+        sub_query = (
+            select(User.id_contract)
+            .where(User.email.__eq__(user_email))
+            .scalar_subquery()
+        )
+        statement = (
+            update(
+                Contract,
+            )
+            .where(
+                Contract.id.__eq__(sub_query),
+            )
+            .values(modifications)
+        )
+        database_session.execute(statement)
+
+    # modify User
+    if payload.user is not None:
+        modifications: Dict[str, Any] = payload.user.model_dump(
+            by_alias=True,
+            exclude_unset=True,
+        )
+        statement = (
+            update(
+                User,
+            )
+            .where(
+                User.email.__eq__(user_email),
+            )
+            .values(modifications)
+        )
+        database_session.execute(statement)
+
+
+@router.put(
+    "/user",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def modify_current_user(
+    payload: schemas.ModificarData,
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    user_email = get_user_email_from_token(token)
+
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        raise exceptions.UserIsMissingFromDatabase
+
+    if payload.model_fields_set.__len__() <= 0:
+        logger.error(f"No field were set to modify user: {user_email}.")
+        raise exceptions.NoFieldsSetToModifyUser
+
+    try:
+        insert_modification_values(
+            payload=payload,
+            user_email=user_email,
+            database_session=database_session,
+        )
+        database_session.commit()
+
+    except Exception as err:
+        database_session.rollback()
+        logger.exception(err)
+        raise exceptions.UserModificationFailed
 
 
 @router.delete(
