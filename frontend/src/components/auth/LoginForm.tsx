@@ -143,8 +143,8 @@ export function LoginForm() {
       )}
       {
         // logged animation
-        logged && <Alert className="w-full max-w-sm mt-10 max-2xl:">
-          <LoaderCircleIcon className="h-4 w-4" />
+        logged && <Alert className="w-full max-w-sm mt-10 max-2xl">
+          <LoaderCircleIcon className="h-4 w-4 animate-spin" />
           <AlertTitle>¡Bienvenido!</AlertTitle>
           <AlertDescription>Redirigiendo...</AlertDescription>
         </Alert>

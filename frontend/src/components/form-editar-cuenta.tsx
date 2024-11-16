@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,6 +22,7 @@ interface Item {
 
 export default function FormCuenta() {
   const [editando, setEditando] = useState(false)
+  const [calleInputIsValid, setCalleInputIsValid] = useState(0)
   // User
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -41,10 +43,12 @@ export default function FormCuenta() {
   const [electricityCompany, setElectricityCompany] = useState('')
   const [electricityCompanyId, setElectricityCompanyId] = useState('')
   const [electrictyCost, setElectricityCost] = useState('')
+  const [electrictyCostPerKWh, setElectricityCostPerKWh] = useState('')
   const [serviceAdministrationCost, setServiceAdministrationCost] = useState('')
   const [transportCost, setTransportCost] = useState('')
   const [kWhConsumed, setKWhConsumed] = useState('')
   const [lastMonthElectricityCost, setLastMonthElectricityCost] = useState('')
+  const [transportCostPerKWh, setTransportCostPerKWh] = useState('')
 
   // Lists
   const [listCountry, setListCountry] = useState<Item[]>([])
@@ -52,7 +56,45 @@ export default function FormCuenta() {
   const [listComuna, setListComuna] = useState<Item[]>([])
   const [listEmpresa, setListEmpresa] = useState<Item[]>([])
 
+  const regexNombres = /^[a-zA-ZñÑ]+$/;
+  const regexNumerosEnteros = /^[0-9]+$/;
+  const regexNumerosDecimales = /^[0-9]+(\.[0-9]+)?$/;
+
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+
+  const handleProbeRealStret = (event: React.FocusEvent<HTMLInputElement>) => {
+    const direccion = event.target.value;
+    const api = `https://nominatim.openstreetmap.org/search?street=${direccion}&format=json`;
+    setCalleInputIsValid(1);
+    fetch(api)
+      .then((response) => response.json())
+      .then((data) => {
+        setCalleInputIsValid(data.length > 0 ? 2 : 3);
+      });
+  };
+
+  const handleNumericInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    regex: RegExp,
+    setInputIsValid: React.Dispatch<React.SetStateAction<number>>,
+    setValue: React.Dispatch<React.SetStateAction<string>>
+  ) => {
+    let numericInput = event.target.value;
+    const isDecimal = regex === regexNumerosDecimales;
+
+    if (!regex.test(numericInput)) {
+      const lastChar = numericInput.slice(-1);
+      if (isDecimal && lastChar === '.' && numericInput.indexOf('.') === numericInput.length - 1) {
+        setInputIsValid(1);
+      } else {
+        numericInput = numericInput.slice(0, -1);
+        setInputIsValid(2);
+      }
+    } else {
+      setInputIsValid(numericInput !== "" ? 1 : 2);
+    }
+    setValue(numericInput);
+  };
 
   // Fetches
   const fetchUserData = async () => {
@@ -78,6 +120,8 @@ export default function FormCuenta() {
         setElectricityCost(data.contract.electricity_cost)
         setServiceAdministrationCost(data.contract.service_administration_cost)
         setTransportCost(data.contract.transport_cost)
+        setKWhConsumed(data.contract.kwh_consumed)
+        setLastMonthElectricityCost(data.contract.last_month_electricity_cost)
       } else {
         console.error("[User] API response not OK")
       }
@@ -171,24 +215,31 @@ export default function FormCuenta() {
   }, [electricityCompany])
 
   useEffect(() => {
-    if (kWhConsumed && lastMonthElectricityCost) {
-      const kWh = parseFloat(kWhConsumed)
-      const cost = parseFloat(lastMonthElectricityCost)
-      if (kWh > 0) {
-        setElectricityCost(Math.round(cost / kWh).toString())
-      }
-    }
-  }, [kWhConsumed, lastMonthElectricityCost])
+    calculateCosts()
+  }, [kWhConsumed, lastMonthElectricityCost, transportCost])
 
-  useEffect(() => {
-    if (kWhConsumed && transportCost) {
-      const kWh = parseFloat(kWhConsumed)
-      const cost = parseFloat(transportCost)
-      if (kWh > 0) {
-        setTransportCost(Math.round(cost / kWh).toString())
+  const calculateCosts = () => {
+    const kWh = parseFloat(kWhConsumed)
+    const lastMonthCost = parseFloat(lastMonthElectricityCost)
+    const transport = parseFloat(transportCost)
+
+    if (kWh > 0) {
+      if (lastMonthCost > 0) {
+        setElectricityCostPerKWh(Math.round(lastMonthCost / kWh).toString())
       }
+      if (transport > 0) {
+        setTransportCostPerKWh(Math.round(transport / kWh).toString())
+      }
+    } else {
+      setElectricityCostPerKWh('')
+      setTransportCostPerKWh('')
     }
-  }, [kWhConsumed, transportCost])
+  }
+
+  const handleNumericInput = (value: string, setter: React.Dispatch<React.SetStateAction<string>>) => {
+    const numericValue = value.replace(/[^0-9]/g, '')
+    setter(numericValue)
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -207,12 +258,12 @@ export default function FormCuenta() {
             <div>
               <Label htmlFor="first-name">Nombre</Label>
               <Input 
-                id="first-name" 
-                type="text" 
-                disabled={!editando} 
-                className="mt-1" 
-                value={capitalize(firstName)} 
-                onChange={(e) => setFirstName(e.target.value)} 
+                id="first-name"
+                type="text"
+                disabled={!editando}
+                className="mt-1"
+                value={capitalize(firstName)}
+                onChange={(e) => setFirstName(e.target.value)}
               />
             </div>
             <div>
@@ -244,7 +295,7 @@ export default function FormCuenta() {
               <Input 
                 id="email" 
                 type="email" 
-                disabled={!editando} 
+                disabled={true}
                 className="mt-1" 
                 value={email.toLowerCase()} 
                 onChange={(e) => setEmail(e.target.value)} 
@@ -261,6 +312,13 @@ export default function FormCuenta() {
               value={phoneNumber} 
               onChange={(e) => setPhoneNumber(e.target.value)} 
             />
+          </div>
+          <div className='p-2 text-sm'>
+            <Link
+              href="/cambiar-contrasena"
+            >
+              <p className='underline cursor-pointer'>¿Deseas cambiar tu contraseña?</p>
+            </Link>
           </div>
         </section>
 
@@ -351,7 +409,13 @@ export default function FormCuenta() {
                 id="street-name" 
                 type="text" 
                 disabled={!editando || !comunaId} 
-                className="mt-1" 
+                className={
+                  calleInputIsValid === 0 ? "mt-1" : 
+                  calleInputIsValid === 1 ? "mt-1 border border-yellow-300" : 
+                  calleInputIsValid === 2 ? "mt-1 border border-green-300" : 
+                  "mt-1 border border-red-300"
+                } 
+                onBlur={handleProbeRealStret}
                 value={capitalize(street)} 
                 onChange={(e) => setStreet(e.target.value)} 
               />
@@ -361,10 +425,17 @@ export default function FormCuenta() {
               <Input 
                 id="street-number" 
                 type="text" 
-                disabled={!editando || !street} 
+                disabled={!street} 
                 className="mt-1" 
                 value={number} 
-                onChange={(e) => setNumber(e.target.value)} 
+                onChange={(event) =>
+                  handleNumericInputChange(
+                    event,
+                    regexNumerosEnteros,
+                    setCalleInputIsValid,
+                    setNumber
+                  )
+                }
               />
             </div>
           </div>
@@ -410,7 +481,7 @@ export default function FormCuenta() {
                 disabled={!editando} 
                 className="mt-1 pl-10"  
                 value={serviceAdministrationCost} 
-                onChange={(e) => setServiceAdministrationCost(e.target.value)} 
+                onChange={(e) => handleNumericInput(e.target.value, setServiceAdministrationCost)} 
               />
             </div>
           </div>
@@ -423,10 +494,11 @@ export default function FormCuenta() {
               <Input 
                 id="kwh_consumidos_ultimo_mes" 
                 type="text" 
-                disabled={!editando} 
-                className="mt-1 pl-10"  
+                disabled={!editando}
+                className="mt-1 pl-10"
                 value={kWhConsumed} 
-                onChange={(e) => setKWhConsumed(e.target.value)} 
+                onChange={(e) => handleNumericInput(e.target.value, setKWhConsumed)}
+                placeholder="Esperando modificaciones.."
               />
             </div>
           </div>
@@ -438,13 +510,13 @@ export default function FormCuenta() {
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                   <CircleDollarSign className="h-5 w-5" />
                 </span>
-                <Input 
-                  id="costo_khw_ultimo_mes" 
+                <Input
+                  id="costo_khw_ultimo_mes"
                   type="text" 
-                  disabled={!editando} 
-                  className="mt-1 pl-10" 
-                  value={lastMonthElectricityCost} 
-                  onChange={(e) => setLastMonthElectricityCost(e.target.value)} 
+                  disabled={!editando}
+                  className="mt-1 pl-10"
+                  onChange={(e) => handleNumericInput(e.target.value, setLastMonthElectricityCost)}
+                  placeholder="Esperando modificaciones.."
                 />
               </div>
             </div>
@@ -454,13 +526,13 @@ export default function FormCuenta() {
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                   <CircleDollarSign className="h-5 w-5" />
                 </span>
-                <Input 
-                  id="costo_transporte_electrico" 
-                  type="text" 
-                  disabled={!editando} 
-                  className="mt-1 pl-10" 
-                  value={transportCost} 
-                  onChange={(e) => setTransportCost(e.target.value)} 
+                <Input
+                  id="costo_transporte_electrico"
+                  type="text"
+                  disabled={!editando}
+                  className="mt-1 pl-10"
+                  placeholder="Esperando modificaciones.."
+                  onChange={(e) => handleNumericInput(e.target.value, setTransportCost)}
                 />
               </div>
             </div>
@@ -473,12 +545,12 @@ export default function FormCuenta() {
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                   <CircleDollarSign className="h-5 w-5" />
                 </span>
-                <Input 
-                  id="electricity_cost" 
-                  type="text" 
-                  disabled 
-                  className="mt-1 pl-10" 
-                  value={electrictyCost} 
+                <Input
+                  id="electricity_cost"
+                  type="text"
+                  disabled
+                  className="mt-1 pl-10"
+                  value={electrictyCostPerKWh ? electrictyCostPerKWh : electrictyCost}
                 />
               </div>
             </div>
@@ -488,12 +560,12 @@ export default function FormCuenta() {
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
                   <CircleDollarSign className="h-5 w-5" />
                 </span>
-                <Input 
-                  id="transport_cost" 
-                  type="text" 
-                  disabled 
-                  className="mt-1 pl-10" 
-                  value={transportCost} 
+                <Input
+                  id="transport_cost"
+                  type="text"
+                  disabled
+                  className="mt-1 pl-10"
+                  value={transportCostPerKWh ? transportCostPerKWh : transportCost}
                 />
               </div>
             </div>
