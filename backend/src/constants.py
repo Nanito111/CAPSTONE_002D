@@ -5,6 +5,7 @@ import pathlib
 import logging
 from pydantic.types import SecretStr
 from passlib.context import CryptContext
+from furl import furl as Furl
 
 load_dotenv("../.env")
 
@@ -40,12 +41,22 @@ DB_TNS_PATH: pathlib.Path = pathlib.Path(DB_WALLET_PATH, DB_TNS_FILE_NAME)
 DB_PEM_FILE_NAME: str = os.environ["DB_PEM_FILE_NAME"]
 DB_PEM_PATH: pathlib.Path = pathlib.Path(DB_WALLET_PATH, DB_PEM_FILE_NAME)
 
+# FRONTEND variables
+FE_URL: Furl = Furl(os.environ["FE_URL"])
+FE_RECOVER_PASSWORD: Furl = FE_URL.copy().add(path="recover/")
+SENDER_EMAIL: str = os.environ["SENDER_EMAIL"]
+SENDER_PASSWORD: SecretStr = SecretStr(os.environ["SENDER_PASSWORD"])
+
+
 # Directories name|path variables
 LOGS_DIR_NAME: str = os.environ["LOGS_DIR_NAME"]
 LOGS_PATH: pathlib.Path = pathlib.Path("./../", LOGS_DIR_NAME)
+ASSETS_PATH: pathlib.Path = pathlib.Path("./assets/")
+EMAILS_TEMPLATES_PATH: pathlib.Path = pathlib.Path(ASSETS_PATH, "emails/")
 
 LOGGING_LEVEL: str = logging.getLevelName(logging.INFO)
 
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 TOKEN_EXPIRATION_DELTA = timedelta(minutes=60)
+PASSWORD_REQUEST_EXPIRATION_DELTA = timedelta(hours=24)

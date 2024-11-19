@@ -1,6 +1,8 @@
+from datetime import datetime
 from sqlalchemy.dialects.oracle import NUMBER, VARCHAR2, RAW
 from sqlalchemy.orm import MappedColumn, mapped_column
 from sqlalchemy.orm.properties import ForeignKey
+from sqlalchemy.sql.sqltypes import DateTime
 from database import Base
 
 
@@ -192,5 +194,31 @@ class ElectricityCompany(Base):
     name: MappedColumn[str] = mapped_column(
         "name",
         VARCHAR2(40),
+        nullable=False,
+    )
+
+
+class PassRecoverRequest(Base):
+    __tablename__ = "passrecoverrequest"
+    id: MappedColumn[int] = mapped_column(
+        "id",
+        NUMBER(20),
+        nullable=False,
+        primary_key=True,
+    )
+    request: MappedColumn[bytes] = mapped_column(
+        "request",
+        RAW(255),
+        nullable=False,
+        unique=True,
+    )
+    email: MappedColumn[str] = mapped_column(
+        "email",
+        VARCHAR2(500),
+        nullable=False,
+    )
+    expire_datetime: MappedColumn[datetime] = mapped_column(
+        "expiredatetime",
+        DateTime(),
         nullable=False,
     )

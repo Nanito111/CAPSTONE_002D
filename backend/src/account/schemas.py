@@ -322,3 +322,16 @@ class PasswordChange(BaseModel):
         "new_password",
         mode="after",
     )(validate_password)
+
+
+class RecoverPassword(BaseModel):
+    email: EmailStr = Field(
+        max_length=500,
+        description="Dirección de correo electrónico del usuario.",
+    )
+    dev: bool = Field(False, strict=False)
+
+    _clean_str = field_validator(
+        "email",
+        mode="after",
+    )(clean_strings)

@@ -51,6 +51,10 @@ jobs:
           ENV_DB_WALLET_DIR_NAME: '"${{ secrets.DB_WALLET_DIR_NAME }}"'
           ENV_DB_PEM_FILE_NAME: '"${{ secrets.DB_PEM_FILE_NAME }}"'
           ENV_DB_WALLET_PASSWORD: '"${{ secrets.DB_WALLET_PASSWORD }}"'
+          # Frontend variables
+          ENV_FE_URL: '"${{ vars.FE_URL }}"'
+          ENV_SENDER_EMAIL: '"${{ secrets.SENDER_EMAIL }}"'
+          ENV_SENDER_PASSWORD: '"${{ secrets.SENDER_PASSWORD }}"'
           # other variables
           ENV_LOGS_DIR_NAME: '"${{ vars.LOGS_DIR_NAME }}"'
           #tmux variables
