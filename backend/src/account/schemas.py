@@ -68,7 +68,7 @@ class TokenResponse(BaseModel):
     expires_in: int
 
 
-NAME_PATTERN = r"^[a-zA-Z\s]+$"
+NAME_PATTERN = r"^[a-zA-ZÀ-ÿ\s]+$"
 
 
 class UserRegistro(BaseModel):
