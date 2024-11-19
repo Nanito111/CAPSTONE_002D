@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-10-29 00:04:44 CLST
+--   en:        2024-11-18 20:32:47 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -19,6 +19,8 @@ DROP TABLE device CASCADE CONSTRAINTS;
 
 DROP TABLE electricitycompany CASCADE CONSTRAINTS;
 
+DROP TABLE passrecoverrequest CASCADE CONSTRAINTS;
+
 DROP TABLE region CASCADE CONSTRAINTS;
 
 DROP TABLE result CASCADE CONSTRAINTS;
@@ -36,7 +38,4 @@ DROP SEQUENCE comuna_id_seq;
 DROP SEQUENCE appuser_id_seq; 
 DROP SEQUENCE country_id_seq; 
 DROP SEQUENCE address_id_seq;
-
--- predefined type, no DDL - MDSYS.SDO_GEOMETRY
-
--- predefined type, no DDL - XMLTYPE
+DROP SEQUENCE passrecoverrequest_id_seq;

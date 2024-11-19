@@ -1,5 +1,5 @@
 -- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-11-01 20:43:59 CLST
+--   en:        2024-11-18 20:30:52 CLST
 --   sitio:      Oracle Database 11g
 --   tipo:      Oracle Database 11g
 
@@ -67,7 +67,7 @@ CREATE TABLE device (
 
 ALTER TABLE device ADD CONSTRAINT device_pk PRIMARY KEY ( id );
 
-ALTER TABLE device ADD CONSTRAINT device_serialnumber_un UNIQUE ( serialnumber );
+ALTER TABLE device ADD CONSTRAINT uk_serialnumber UNIQUE ( serialnumber );
 
 CREATE TABLE electricitycompany (
     id   NUMBER(20) NOT NULL,
@@ -75,6 +75,17 @@ CREATE TABLE electricitycompany (
 );
 
 ALTER TABLE electricitycompany ADD CONSTRAINT electricitycompany_pk PRIMARY KEY ( id );
+
+CREATE TABLE passrecoverrequest (
+    id             NUMBER(20) NOT NULL,
+    request        RAW(255) NOT NULL,
+    email          VARCHAR2(500) NOT NULL,
+    expiredatetime DATE NOT NULL
+);
+
+ALTER TABLE passrecoverrequest ADD CONSTRAINT passrecoverrequest_pk PRIMARY KEY ( id );
+
+ALTER TABLE passrecoverrequest ADD CONSTRAINT uk_passrecoverrequest UNIQUE ( request );
 
 CREATE TABLE region (
     id        NUMBER(20) NOT NULL,
@@ -221,6 +232,17 @@ BEGIN
 END;
 /
 
+CREATE SEQUENCE passrecoverrequest_id_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER passrecoverrequest_id_trg BEFORE
+    INSERT ON passrecoverrequest
+    FOR EACH ROW
+    WHEN ( new.id IS NULL )
+BEGIN
+    :new.id := passrecoverrequest_id_seq.nextval;
+END;
+/
+
 CREATE SEQUENCE region_id_seq START WITH 1 NOCACHE ORDER;
 
 CREATE OR REPLACE TRIGGER region_id_trg BEFORE
@@ -255,46 +277,3 @@ END;
 /
 
 
-
--- Informe de Resumen de Oracle SQL Developer Data Modeler: 
--- 
--- CREATE TABLE                            10
--- CREATE INDEX                             0
--- ALTER TABLE                             20
--- CREATE VIEW                              0
--- ALTER VIEW                               0
--- CREATE PACKAGE                           0
--- CREATE PACKAGE BODY                      0
--- CREATE PROCEDURE                         0
--- CREATE FUNCTION                          0
--- CREATE TRIGGER                          10
--- ALTER TRIGGER                            0
--- CREATE COLLECTION TYPE                   0
--- CREATE STRUCTURED TYPE                   0
--- CREATE STRUCTURED TYPE BODY              0
--- CREATE CLUSTER                           0
--- CREATE CONTEXT                           0
--- CREATE DATABASE                          0
--- CREATE DIMENSION                         0
--- CREATE DIRECTORY                         0
--- CREATE DISK GROUP                        0
--- CREATE ROLE                              0
--- CREATE ROLLBACK SEGMENT                  0
--- CREATE SEQUENCE                         10
--- CREATE MATERIALIZED VIEW                 0
--- CREATE MATERIALIZED VIEW LOG             0
--- CREATE SYNONYM                           0
--- CREATE TABLESPACE                        0
--- CREATE USER                              0
--- 
--- DROP TABLESPACE                          0
--- DROP DATABASE                            0
--- 
--- REDACTION POLICY                         0
--- 
--- ORDS DROP SCHEMA                         0
--- ORDS ENABLE SCHEMA                       0
--- ORDS ENABLE OBJECT                       0
--- 
--- ERRORS                                   0
--- WARNINGS                                 0
