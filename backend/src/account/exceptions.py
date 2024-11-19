@@ -39,3 +39,7 @@ FailedToRequestPasswordRecover = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Failed to request password recovery",
 )
+FailToConfirmPasswordToken = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Failed to confirm password token. Internal Error",
+)

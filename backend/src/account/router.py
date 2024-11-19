@@ -86,6 +86,28 @@ def get_user_email_from_token(token: TokenOAuth2 | str):
         raise exceptions.InvalidTokenException
 
 
+def validate_if_token_is_expired(token: str):
+    try:
+        payload: dict[str, Any] = jwt.decode(
+            token, API_SECRET_KEY.get_secret_value(), algorithms=[API_ALGORITHM]
+        )
+
+        expiration: datetime | None = payload.get("exp")
+
+        # check if expiration is in token
+        if expiration is None:
+            raise InvalidTokenError("Token does not have 'exp' item")
+
+        if (datetime.now(timezone.utc) - expiration).total_seconds() >= 0:
+            raise InvalidTokenError("Token has expired.")
+
+        return expiration
+
+    except InvalidTokenError as err:
+        logger.exception(err)
+        raise exceptions.InvalidTokenException
+
+
 def get_current_user_from_database(
     token: TokenOAuth2,
     database_session: SessionDataBase,
@@ -610,3 +632,37 @@ def recover_password(
         database_session.rollback()
         logger.exception(err)
         raise exceptions.FailedToRequestPasswordRecover
+
+
+@router.get(
+    "/password/confirm-recover",
+    status_code=status.HTTP_200_OK,
+)
+def confirm_password_recover(
+    token: str,
+    database_session: SessionDataBase,
+):
+    validate_if_token_is_expired(token)
+
+    encoded_token = token.encode()
+
+    query_where = PassRecoverRequest.request.__eq__(encoded_token)
+
+    # check if token of request exist in db
+    statement = select(PassRecoverRequest).where(query_where)
+    token_exist = database_session.execute(statement).one_or_none() is not None
+
+    if not token_exist:
+        raise exceptions.InvalidTokenException
+
+    # delete request record in db
+    try:
+        logger.info("removing confirm-recover token from database.")
+        statement = delete(PassRecoverRequest).where(query_where)
+        database_session.execute(statement)
+    except Exception as err:
+        database_session.rollback()
+        logger.exception(err)
+        raise exceptions.FailToConfirmPasswordToken
+
+    database_session.commit()
