@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Annotated, Any, Dict
 from fastapi import (
     APIRouter,
@@ -14,10 +14,34 @@ from sqlalchemy import delete, insert, select, update
 from account import exceptions
 from account import schemas
 from dependencies import SessionDataBase, AuthFormData
-from models import Address, Comuna, Contract, Country, ElectricityCompany, Region, User
-from constants import PWD_CONTEXT, API_SECRET_KEY, API_ALGORITHM, TOKEN_EXPIRATION_DELTA
+from models import (
+    Address,
+    Comuna,
+    Contract,
+    Country,
+    ElectricityCompany,
+    PassRecoverRequest,
+    Region,
+    User,
+)
+from constants import (
+    FE_RECOVER_PASSWORD,
+    FE_URL,
+    PASSWORD_REQUEST_EXPIRATION_DELTA,
+    PWD_CONTEXT,
+    API_SECRET_KEY,
+    API_ALGORITHM,
+    SENDER_EMAIL,
+    SENDER_PASSWORD,
+    TOKEN_EXPIRATION_DELTA,
+)
 import jwt
 from jwt.exceptions import InvalidTokenError
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+from furl import furl as Furl
 
 logger = getLogger("login.router")
 
@@ -44,7 +68,7 @@ def get_password_from_database(
     return database_session.execute(statement).scalar_one()
 
 
-def get_user_email_from_token(token: TokenOAuth2):
+def get_user_email_from_token(token: TokenOAuth2 | str):
     try:
         payload = jwt.decode(
             token, API_SECRET_KEY.get_secret_value(), algorithms=[API_ALGORITHM]
@@ -85,18 +109,19 @@ def verify_password(
     return PWD_CONTEXT.verify(raw_password, database_password)
 
 
-def generate_access_token(data: Dict):
-    # encode user data
-    to_encode = data.copy()
+def get_expiration_datetime(expire_delta: timedelta):
+    return datetime.now(timezone.utc) + expire_delta
 
+
+def generate_access_token(sub: str, expiration: datetime):
     # creates deltatime to expire token
-    expire = datetime.now(timezone.utc) + TOKEN_EXPIRATION_DELTA
-
-    to_encode.update({"exp": expire})
-
+    data = {
+        "sub": sub,
+        "exp": expiration,
+    }
     # create token with user data
     encoded_jwt = jwt.encode(
-        to_encode,
+        data,
         API_SECRET_KEY.get_secret_value(),
         algorithm=API_ALGORITHM,
     )
@@ -134,10 +159,10 @@ def authenticate(
     ):
         raise exceptions.FailedToAuthenticate
 
+    expiration_time = get_expiration_datetime(TOKEN_EXPIRATION_DELTA)
     token = generate_access_token(
-        data={
-            "sub": form_data.username,
-        },
+        sub=form_data.username,
+        expiration=expiration_time,
     )
 
     return schemas.TokenResponse(
@@ -485,3 +510,103 @@ def change_password_current_user(
         database_session.rollback()
         logger.exception(err)
         raise exceptions.FailedToChangePassword
+
+
+def create_email_message(
+    recipient: str,
+    subject: str,
+    body: str,
+):
+    msg = MIMEMultipart()
+    msg["From"] = f"EnergyMeter <{SENDER_EMAIL}>"
+    msg["To"] = recipient
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "html"))
+
+    return msg.as_string()
+
+
+def send_email(
+    recipient: str,
+    subject: str,
+    body: str,
+):
+    email_message = create_email_message(recipient, subject, body)
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.ehlo()
+    server.starttls()
+    server.login(SENDER_EMAIL, SENDER_PASSWORD.get_secret_value())
+    server.sendmail(
+        from_addr=SENDER_EMAIL,
+        to_addrs=recipient,
+        msg=email_message,
+    )
+
+
+@router.post(
+    "/password/recover",
+    status_code=status.HTTP_202_ACCEPTED,
+)
+def recover_password(
+    payload: schemas.RecoverPassword,
+    database_session: SessionDataBase,
+):
+    try:
+        user_email = payload.email
+
+        if not does_user_exist(user_email, database_session):
+            raise exceptions.UserIsMissingFromDatabase
+
+        # create solicitud
+        expiration_time = get_expiration_datetime(PASSWORD_REQUEST_EXPIRATION_DELTA)
+
+        request_token = generate_access_token(
+            sub=user_email,
+            expiration=expiration_time,
+        )
+
+        query_create_solicitud = insert(PassRecoverRequest).values(
+            request=request_token.encode(),
+            email=user_email,
+            expire_datetime=expiration_time,
+        )
+        database_session.execute(query_create_solicitud)
+
+        with open("assets/emails/recover_password.html", "r") as file:
+            email_html = file.read()
+
+        # replace html variables
+
+        # get user first name for email html
+        query_get_firstname = select(User.first_name).where(
+            User.email.__eq__(user_email)
+        )
+        user_name = (
+            database_session.execute(query_get_firstname).scalar_one().capitalize()
+        )
+        email_html = email_html.replace("$(user)", user_name)
+
+        image_email = FE_URL.copy().add(path="email_logo.png")
+        email_html = email_html.replace("$(image-url)", image_email.url)
+
+        if payload.dev is True:
+            recover_url = Furl("http://localhost/", path=FE_RECOVER_PASSWORD.path)
+        else:
+            recover_url = FE_RECOVER_PASSWORD.copy()
+            recover_url = recover_url.add(path=request_token)
+
+        email_html = email_html.replace("$(recover-url)", recover_url.url)
+
+        send_email(
+            recipient=user_email,
+            subject="Recuperación de Contraseña",
+            body=email_html,
+        )
+
+        # commit inserted values after all process
+        database_session.commit()
+
+    except Exception as err:
+        database_session.rollback()
+        logger.exception(err)
+        raise exceptions.FailedToRequestPasswordRecover

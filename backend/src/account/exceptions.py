@@ -35,3 +35,7 @@ FailedToChangePassword = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Password couldn't be changed. Internal Error",
 )
+FailedToRequestPasswordRecover = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Failed to request password recovery",
+)
