@@ -551,12 +551,12 @@ def recover_password(
     payload: schemas.RecoverPassword,
     database_session: SessionDataBase,
 ):
+    user_email = payload.email
+
+    if not does_user_exist(user_email, database_session):
+        raise exceptions.UserIsMissingFromDatabase
+
     try:
-        user_email = payload.email
-
-        if not does_user_exist(user_email, database_session):
-            raise exceptions.UserIsMissingFromDatabase
-
         # create solicitud
         expiration_time = get_expiration_datetime(PASSWORD_REQUEST_EXPIRATION_DELTA)
 
@@ -590,11 +590,11 @@ def recover_password(
         email_html = email_html.replace("$(image-url)", image_email.url)
 
         if payload.dev is True:
-            recover_url = Furl("http://localhost/", path=FE_RECOVER_PASSWORD.path)
+            recover_url = Furl("http://localhost:3000/", path=FE_RECOVER_PASSWORD.path)
         else:
             recover_url = FE_RECOVER_PASSWORD.copy()
-            recover_url = recover_url.add(path=request_token)
 
+        recover_url = recover_url.add(path=request_token)
         email_html = email_html.replace("$(recover-url)", recover_url.url)
 
         send_email(
