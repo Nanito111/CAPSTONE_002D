@@ -315,7 +315,7 @@ export default function FormCuenta() {
           </div>
           <div className='p-2 text-sm'>
             <Link
-              href="/cambiar-contrasena"
+              href="/cuenta/cambiar-contrasena"
             >
               <p className='underline cursor-pointer'>¿Deseas cambiar tu contraseña?</p>
             </Link>
