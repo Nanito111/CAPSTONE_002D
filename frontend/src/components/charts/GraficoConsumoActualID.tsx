@@ -11,7 +11,7 @@ import {
 
 export const description = "Grafico estatico de area con gradiente"
 
-export default function ConsumoActualID({ consumo, nombreDispositivo}: {consumo: string, nombreDispositivo: string}) {
+export default function ConsumoActualID({ consumo, nombreDispositivo, preciokwh, precioTransporteElectricidad }: { consumo: string, nombreDispositivo: string, preciokwh: number | string, precioTransporteElectricidad: number | string }): JSX.Element {
   return (
     <Card>
       <CardHeader>
@@ -23,6 +23,8 @@ export default function ConsumoActualID({ consumo, nombreDispositivo}: {consumo:
       <CardContent className="flex flex-col items-center justify-center h-2/4 cursor-pointer">
         <Label className="text-muted-foreground">Consumo actual</Label>
         <h1 className="text-4xl font-bold pt-10">{consumo}</h1>
+        <p>${preciokwh} kWh </p>
+        <p>${precioTransporteElectricidad} Transporte de electricidad</p>
       </CardContent>
     </Card>
   )

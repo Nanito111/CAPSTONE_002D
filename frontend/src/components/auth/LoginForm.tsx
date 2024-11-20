@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -126,6 +127,9 @@ export function LoginForm() {
                 className={errorLogin ? clasesInputError : ""}
               />
             </div>
+            <Link href="/forgot-password">
+              <p className="underline text-sm">¿Olvidaste tu contraseña?</p>
+            </Link>
           </CardContent>
           <FooterButtons textoBotonPrincipal="Iniciar Sesión" />
         </Card>
