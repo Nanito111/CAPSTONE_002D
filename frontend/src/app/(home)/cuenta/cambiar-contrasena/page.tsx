@@ -23,6 +23,12 @@ export default function CambiarcontrasenaPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/cuenta">Cuenta</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
             <BreadcrumbPage>Cambiar contraseña</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 
 export default function PasswordChangeForm() {
   const [currentPassword, setCurrentPassword] = useState("")
+  const [email,setEmail] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
@@ -59,9 +60,64 @@ export default function PasswordChangeForm() {
     }
     setLoading(true)
     setError("")
+
     try {
-      // Simulating an API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // conseguir email del usuario
+      // obtener currentPassword del input
+      // hacer peticion a iniciar sesion para validar que estas sean las credenciales correctas, si no, error
+      // si son correctas, hacer peticion a cambiar contraseña con contraseña nueva y cookie de sesion
+      // si la contraseña se cambia con exito, mostrar mensaje de exito
+
+      // conseguir email del usuario
+      const apiUrlUserData = `/api/utils/get-user-data`
+      const responseUserData = await fetch(apiUrlUserData, {
+        method: 'GET'
+      })
+      if (responseUserData.ok) {
+        const data = await responseUserData.json()
+        console.log(data)
+        setEmail(data.user.email)
+      } else {
+        console.error("API user data response not OK")
+        throw new Error("API user data response not OK")
+      }
+
+      // hacer peticion para iniciar sesión
+      const apiUrlLogin = `/api/account/authenticate`
+      console.log(email)
+      const responseLogin = await fetch(apiUrlLogin,{
+        method : 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "username": email,
+          "password": currentPassword,
+          "grant_type": "password"
+        })
+      })
+      if(!responseLogin.ok){
+        console.error("API login response not OK")
+        throw new Error("API login response not OK")
+      }
+      // hacer peticion para cambiar contraseña
+      const apiUrlChangePassword = '/api/account/change-password'
+      const responseChangePassword = await fetch(apiUrlChangePassword,{
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "new_password": newPassword
+        })
+      })
+      if (!responseChangePassword.ok) {
+        console.error("API change password response not OK")
+        throw new Error("API change password response not OK")
+      }
+
+
+      // Cambio exitoso
       setSuccess("Tu contraseña ha sido cambiada exitosamente")
       setCurrentPassword("")
       setNewPassword("")
