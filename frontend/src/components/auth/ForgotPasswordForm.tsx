@@ -54,17 +54,27 @@ export function ForgotPasswordForm() {
             body: JSON.stringify({ email }),
         });
 
+        setClassInput("border-red-500 focus:ring-red-500 focus:border-red-500");
         if (!regexCorreo.test(email)) {
-            setClassInput("border-red-500 focus:ring-red-500 focus:border-red-500");
             setError("El email no es válido");
         }
         else if (response.ok) {
-            setSuccess("Se ha enviado un email con las instrucciones para recuperar tu contraseña");
+            setError("")
             setEmail("");
+            setSuccess("Se ha enviado un email con las instrucciones para recuperar tu contraseña");
             setClassInput("border-green-500 focus:ring-green-500 focus:border-green-500");
-        } else {
-            setClassInput("border-red-500 focus:ring-red-500 focus:border-red-500");
+        }
+        else if (response.status === 404) {
             setError("El email no se encuentra registrado");
+        }
+        else if(response.status === 422){
+            setError("Error de validación");
+        }
+        else if (response.status === 500) {
+            setError("Error en el servidor");
+        }
+        else if (response.status === 501) {
+            setError("Error interno en el servidor");
         }
         setLoading(false);
     };
@@ -107,7 +117,7 @@ export function ForgotPasswordForm() {
         {
             loading && <LoaderCircleIcon className="mx-auto mt-5 transition animate-spin" size={64} />
         }
-        {       
+        {
             // mensaje solicitud
             success ?
             <Alert className="w-full max-w-sm mt-10 max-2xl">
