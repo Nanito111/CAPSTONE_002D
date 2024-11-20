@@ -120,7 +120,7 @@ export default function GraficoAreaGradiente() {
               Tu consumo aumento un 5.2% este mes <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Enero - Junio 2024
+              Junio - Noviembre 2024
             </div>
           </div>
         </div>
