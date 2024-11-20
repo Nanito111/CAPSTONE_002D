@@ -11,10 +11,7 @@ export async function PUT(request:Request){
         })
     }
     const value_token = token.value
-    console.log('TOKEN: ', value_token)
-    console.log('BODY: ', bodyParams)
     try{
-        console.log('preresponse')
         const response = await fetch(apiUrl,{
             method: 'PUT',
             headers: {
@@ -23,13 +20,11 @@ export async function PUT(request:Request){
             },
             body: JSON.stringify(bodyParams)
         });
-        console.log('postresponse')
-        console.log('pre return ok')
+
         if (response.status === 204) {
             return new Response(JSON.stringify({ message: 'Password updated' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
         }
-        console.log('post return ok')
-        console.log('pre return error')
+
         return new Response(JSON.stringify({ message: 'Error updating password' }), { status: response.status, headers: { 'Content-Type': 'application/json' } });
     }
     catch (error){
