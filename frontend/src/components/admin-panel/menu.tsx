@@ -15,7 +15,8 @@ import {
   TooltipContent,
   TooltipProvider
 } from "@/components/ui/tooltip";
-
+import { useState } from "react";
+import { cookies } from 'next/headers'
 interface MenuProps {
   isOpen: boolean | undefined;
 }
@@ -23,6 +24,31 @@ interface MenuProps {
 export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
   const menuList = getMenuList(pathname);
+
+  const [logoutStatus, setLogoutStatus] = useState(false);
+
+  const handleLogout = () => {
+    console.log("handleLogout called");
+    setLogoutStatus(false);
+    const apiKillSession = `/api/account/killsession`;
+    fetch(apiKillSession, {
+      method: "GET",
+    })
+      .then((response) => {
+        console.log("API response received", response);
+        if (response.ok) {
+          setLogoutStatus(true);
+          setTimeout(() => {
+            window.location.href = "/login";
+          }, 500);
+        } else {
+          console.error("API response not OK", response);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
@@ -108,7 +134,7 @@ export function Menu({ isOpen }: MenuProps) {
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => {}}
+                    onClick={handleLogout}
                     variant="outline"
                     className="w-full justify-center h-10 mt-5"
                   >
@@ -121,12 +147,16 @@ export function Menu({ isOpen }: MenuProps) {
                         isOpen === false ? "opacity-0 hidden" : "opacity-100"
                       )}
                     >
-                      Sign out
+                      {
+                        logoutStatus ? "Cerrando sesion.." : "Cerrar sesión"
+                      }
                     </p>
                   </Button>
                 </TooltipTrigger>
                 {isOpen === false && (
-                  <TooltipContent side="right">Sign out</TooltipContent>
+                  <TooltipContent side="right">
+                    Cerrar sesión
+                  </TooltipContent>
                 )}
               </Tooltip>
             </TooltipProvider>
