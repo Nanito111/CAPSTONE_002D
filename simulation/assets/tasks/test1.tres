@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Task" load_steps=2 format=3 uid="uid://obgbwp5t2lwu"]
+
+[ext_resource type="Script" path="res://code/task.gd" id="1_m08ow"]
+
+[resource]
+script = ExtResource("1_m08ow")
+task_duration_range_in_minutes = Vector2(5, 10)

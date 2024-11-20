@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://cr1ldp0bm3mc6"]
+
+[ext_resource type="Script" path="res://code/daynight.gd" id="1_pw6v0"]
+[ext_resource type="Resource" uid="uid://cqw3rcsiquj8g" path="res://assets/daynight/daynight_config.tres" id="2_5gd2u"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2q15j"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_gwreq"]
+sky_material = SubResource("ProceduralSkyMaterial_2q15j")
+
+[sub_resource type="Environment" id="Environment_rkl0x"]
+sky = SubResource("Sky_gwreq")
+ambient_light_source = 2
+ambient_light_color = Color(0.7, 0.7, 0.7, 1)
+
+[node name="DayNight" type="Node"]
+script = ExtResource("1_pw6v0")
+sky_settings = ExtResource("2_5gd2u")
+max_day_minutes = 1.0
+
+[node name="SourceLight" type="DirectionalLight3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+light_volumetric_fog_energy = 0.0
+light_bake_mode = 0
+shadow_enabled = true
+shadow_blur = 0.05
+directional_shadow_mode = 0
+directional_shadow_fade_start = 1.0
+directional_shadow_max_distance = 15.0
+sky_mode = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+unique_name_in_owner = true
+environment = SubResource("Environment_rkl0x")
