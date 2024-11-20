@@ -3,6 +3,7 @@ import { Command } from "@/components/ui/command";
 import { Card, CardContent, CardDescription} from "@/components/ui/card";
 import { Microchip } from "lucide-react";
 import { usePathname } from "next/navigation";
+import {useEffect, useState} from "react";
 
 import ConsumoActualID from "@/components/charts/GraficoConsumoActualID";
 import MedidorGaugeID from  "@/components/charts/MedidorGaugeID";
@@ -11,12 +12,45 @@ import GraficoConsumoDiarioID from "@/components/charts/GraficoConsumoDiarioID";
 import ConfiguracionDispositivo from "@/components/configuracion-dispositivo";
 
 export default function PlaceholderDispositivoID() {
-  const pathname = usePathname();
+    const [costoElectricidad, setCostoElectricidad] = useState(0);
+    const [costoTransporte, setCostoTransporte] = useState(0);
+    const pathname = usePathname();
+
+
 
   // !Esto en el futuro debe cambiar, debido a que debe ser consumido por una API.
   const id = pathname.split('/')[2];
   const status = Math.random() > 0.5 ? "Activo" : "Inactivo";
-  //const random = Math.floor(Math.random() * 6) + 1; // numero al azar entre 1 y 6 para simular un dispositivo
+
+    // obtener info usuarios
+    const handleFetchUserData = async() => {
+        try {
+            const apiEndpoint = "/api/utils/get-user-data";
+            const response = await fetch(apiEndpoint, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            if (response.ok) {
+                const data = await response.json();
+                setCostoElectricidad(data.contract.electricity_cost);
+                setCostoTransporte(data.contract.transport_cost);
+                console.log(data);
+                console.log("Costo electricidad por fetch:"+ data.contract.electricity_cost)
+                console.log("Costo electricidad por useState: "+costoElectricidad)
+            }
+            else {
+                console.error("Error al obtener la informacion del usuario");
+                setCostoElectricidad(-1);
+                setCostoTransporte(-1);
+            }
+        } catch (error) {
+            console.error("Error al obtener la informacion del usuario");
+            setCostoElectricidad(-1);
+            setCostoTransporte(-1);
+        }
+    }
 
   const Dispositivo = {
     idDispositivo: id,
@@ -67,6 +101,13 @@ const consumodatos24Horas = [
   { hora: "24:00", consumo: Math.trunc(Math.random() * (999-10) + 10) },
 ];
 
+useEffect(() => {
+    handleFetchUserData();
+}, []);
+
+// console.log("Costo electricidad: ", costoElectricidad);
+// console.log("Consumo total actual ", Dispositivo.ultimaMedicion.slice(0,-2));
+// console.log("Total costo electricidad:", costoElectricidad * +Number(Dispositivo.ultimaMedicion.slice(0,-2)));
 
 return (
     <>
@@ -86,11 +127,22 @@ return (
                     <ConsumoActualID
                         consumo={Dispositivo.ultimaMedicion}
                         nombreDispositivo={Dispositivo.nombreDispositivo}
+                        preciokwh={
+                            costoElectricidad === 0 ? "Cargando..." :
+                            costoElectricidad === -1 ? "Error" :
+                            (costoElectricidad * +Dispositivo.ultimaMedicion.slice(0,-3)/ 1000).toFixed(2)
+                        }
+                        precioTransporteElectricidad={
+                            costoTransporte === 0 ? "Cargando..." :
+                            costoTransporte === -1 ? "Error" :
+                            (costoTransporte * +Dispositivo.ultimaMedicion.slice(0,-3)/ 1000).toFixed(2)
+                        }
+
                     />
                     <MedidorGaugeID
                         consumo={+Dispositivo.ultimaMedicion.slice(0,-3)} //con esto se quita el del string KWh y el string se castea a numero
                         nombreDispositivo={Dispositivo.nombreDispositivo}
-                        limite = {700}
+                        limite = {500}
                         color = {Dispositivo.color}
                         fecha={Dispositivo.ultimaConexion}
                     />
