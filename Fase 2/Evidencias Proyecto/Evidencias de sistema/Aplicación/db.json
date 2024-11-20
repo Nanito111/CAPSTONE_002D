@@ -1,0 +1,36 @@
+{
+    "login":[
+        {
+            "email": "admin@admin.cl",
+            "password": "admin"
+        },
+        {
+            "email": "user@user.cl",
+            "password": "user"
+        },
+        {
+            "email": "test@test.cl",
+            "password": "test"
+        }
+    ],
+    "data":[
+        {
+            "email": "test@test.cl",
+            "token":"1234567890asdasd",
+            "name": "Juan",
+            "lastname": "Perez"
+        },
+        {
+            "email": "user@user.cl",
+            "token":"1234567890asdasd",
+            "name": "Pedro",
+            "lastname": "Perez"
+        },
+        {
+            "email": "admin@admin.cl",
+            "token":"1234567890asdasd",
+            "name": "Jose",
+            "lastname": "Perez"
+        }
+    ]
+}
