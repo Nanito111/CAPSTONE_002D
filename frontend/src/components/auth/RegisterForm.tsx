@@ -109,8 +109,10 @@ export function RegisterForm() {
       contract: {
         electricity_company: selectedEmpresa,
         service_administration_cost: Number((document.getElementById("CostoAdministración") as HTMLInputElement).value),
-        transport_cost: Number((document.getElementById("CostoTransporteElectricoKWh") as HTMLInputElement).value),
-        electricity_cost: Number((document.getElementById("CostoElectricidadkWh") as HTMLInputElement).value)
+        // transport_cost: Number((document.getElementById("CostoTransporteElectricoKWh") as HTMLInputElement).value),
+        // electricity_cost: Number((document.getElementById("CostoElectricidadkWh") as HTMLInputElement).value)
+        electricity_cost: totalCostkWh,
+        transport_cost: totalCostTransport,
       }
     };
 
@@ -126,7 +128,6 @@ export function RegisterForm() {
       const contentType = response.headers.get("content-type")
       if (contentType && contentType.indexOf("application/json") !== -1) { // NO SE QUE HACE ESTO PERO FUNCIONA
         const result = await response.json()
-        console.log('Parsed result:', result)
 
         // Reinicia el toast
         loadingToast.dismiss()
@@ -369,17 +370,17 @@ export function RegisterForm() {
         const cost = CostoElectricidad / kWhConsumidos;
         setTotalCostkWh(Number(cost.toFixed(2)));
       } else {
-        setTotalCostkWh(null);
+        setTotalCostkWh(0);
       }
     }
     const calcularCostroTransporteElectrico = () => {
       const CostoTransporte = Number(CostoTransporteElectrico);
       const kWhConsumidos = Number(kWhConsumidosUltimoMes);
-      if (CostoTransporte !== null && kWhConsumidos !== null && kWhConsumidos !== 0){
+        if (CostoTransporte !== null && kWhConsumidos !== null && kWhConsumidos !== 0){
         const cost = CostoTransporte / kWhConsumidos;
         setTotalCostTransport(Number(cost.toFixed(2)));
       } else {
-        setTotalCostTransport(null);
+        setTotalCostTransport(0);
       }
     }
     calcularCostokWhTotal();
