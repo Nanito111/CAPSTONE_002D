@@ -32,7 +32,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function MedidorGauge() {
+interface MedidorGaugeProps {
+  className?: string
+  chartData?: typeof chartData
+}
+
+export default function MedidorGauge({ className, chartData = [] }: MedidorGaugeProps) {
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">

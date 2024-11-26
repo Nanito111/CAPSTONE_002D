@@ -8,9 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export const description = "Grafico estatico de area con gradiente"
+interface ConsumoActualProps {
+  consumo: number
+}
 
-export default function ConsumoActual() {
+export default function ConsumoActual({ consumo }: ConsumoActualProps) {
   return (
     <Card>
       <CardHeader>
@@ -21,7 +23,7 @@ export default function ConsumoActual() {
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center h-2/4 cursor-pointer">
         <Label className="text-muted-foreground">Consumo actual</Label>
-        <h1 className="text-4xl font-bold">234 kWh</h1>
+        <h1 className="text-4xl font-bold">{consumo} kWh</h1>
       </CardContent>
     </Card>
   )
