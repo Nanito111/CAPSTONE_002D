@@ -1,7 +1,7 @@
 from datetime import date
 from logging import getLogger
 from fastapi import APIRouter, status
-from sqlalchemy import insert, select
+from sqlalchemy import delete, insert, select
 
 from account.router import does_user_exist, get_user_email_from_token
 from account.exceptions import InvalidTokenException
@@ -11,6 +11,7 @@ from devices.exceptions import (
     DeviceAlreadyAdded,
     DeviceDoNotExist,
     FailToAddDevice,
+    FailToRemoveDevice,
     UserDontOwnDevice,
 )
 from models import Device, DeviceModel, User, UserDevice
@@ -193,3 +194,60 @@ def get_device(
         creation_date=user_device.creation_date,
         last_connection=user_device.last_connection,
     )
+
+
+@router.delete(
+    "/{serial_number}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def remove_device(
+    serial_number: str,
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    # check if user exist
+    user_email = get_user_email_from_token(token)
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        logger.exception(InvalidTokenException)
+        raise InvalidTokenException
+
+    get_user_id = select(User.id).where(User.email.__eq__(user_email))
+    user_id: int = database_session.execute(get_user_id).scalar_one()
+
+    # check if device exist
+    if not do_device_exist(
+        serial_numer=serial_number,
+        database_session=database_session,
+    ):
+        logger.exception(DeviceDoNotExist)
+        raise DeviceDoNotExist
+
+    user_device = get_device_from_user(
+        user_id=user_id,
+        serial_number=serial_number,
+        database_session=database_session,
+    )
+
+    # check if user owns device
+    if user_device is None:
+        logger.exception(UserDontOwnDevice)
+        raise UserDontOwnDevice
+
+    try:
+        # delete registered device
+        remove_user_device = delete(UserDevice).where(
+            UserDevice.id.__eq__(user_device.id)
+        )
+        database_session.execute(remove_user_device)
+
+    except Exception as err:
+        database_session.rollback()
+
+        logger.error(f"Fail to remove device from user: {user_email}")
+        logger.exception(err)
+        raise FailToRemoveDevice
+
+    database_session.commit()
