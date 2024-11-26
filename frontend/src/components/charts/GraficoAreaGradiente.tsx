@@ -21,12 +21,12 @@ import {
 export const description = "Grafico estatico de area con gradiente"
 
 const chartData = [
-  { month: "Enero", dispositivo1: 186, dispositivo2: 80 },
-  { month: "Febrero", dispositivo1: 305, dispositivo2: 200 },
-  { month: "Marzo", dispositivo1: 237, dispositivo2: 120 },
-  { month: "Abril", dispositivo1: 73, dispositivo2: 190 },
-  { month: "Mayo", dispositivo1: 209, dispositivo2: 130 },
-  { month: "Junio", dispositivo1: 214, dispositivo2: 140 },
+  { month: "Enero", dispositivo1: 186 },
+  { month: "Febrero", dispositivo1: 305 },
+  { month: "Marzo", dispositivo1: 237 },
+  { month: "Abril", dispositivo1: 73 },
+  { month: "Mayo", dispositivo1: 209 },
+  { month: "Junio", dispositivo1: 214 },
 ]
 
 const chartConfig = {
@@ -34,13 +34,22 @@ const chartConfig = {
     label: "dispositivo1",
     color: "hsl(var(--chart-1))",
   },
-  dispositivo2: {
-    label: "dispositivo2",
-    color: "hsl(var(--chart-2))",
-  },
 } satisfies ChartConfig
 
-export default function GraficoAreaGradiente() {
+interface GraficoAreaGradienteProps {
+  data: Array<{
+    month: string;
+    dispositivo1: number;
+    dispositivo2: number;
+    dispositivo3: number;
+    dispositivo4: number;
+    dispositivo5: number;
+    dispositivo6: number;
+    consumoTotal: number;
+  }>
+}
+
+export default function GraficoAreaGradiente({ data }: GraficoAreaGradienteProps) {
   return (
     <Card>
       <CardHeader>
@@ -53,7 +62,7 @@ export default function GraficoAreaGradiente() {
         <ChartContainer config={chartConfig}>
           <AreaChart
             accessibilityLayer
-            data={chartData}
+            data={data}
             margin={{
               left: 12,
               right: 12,
@@ -81,27 +90,7 @@ export default function GraficoAreaGradiente() {
                   stopOpacity={0.1}
                 />
               </linearGradient>
-              <linearGradient id="filldispositivo2" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-dispositivo2)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-dispositivo2)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
             </defs>
-            <Area
-              dataKey="dispositivo1"
-              type="natural"
-              fill="url(#filldispositivo2)"
-              fillOpacity={0.4}
-              stroke="var(--color-dispositivo2)"
-              stackId="a"
-            />
             <Area
               dataKey="dispositivo1"
               type="natural"

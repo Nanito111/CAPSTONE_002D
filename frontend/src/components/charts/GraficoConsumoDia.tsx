@@ -40,10 +40,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function GraficoConsumoDiario( {className}: {className?: string} ) {
-  const classNameProps = {
-    term: className // Assuming 'className' is the intended prop
-  }
+interface GraficoConsumoDiarioProps {
+  className?: string
+  chartData?: typeof chartData
+}
+
+export default function GraficoConsumoDiario( { className, chartData = [] }: GraficoConsumoDiarioProps) {
   return (
     <Card  className={className}>
       <CardHeader>
@@ -96,7 +98,7 @@ export default function GraficoConsumoDiario( {className}: {className?: string} 
               Ultimas 24 horas del dia {new Date().toLocaleDateString()}
             </div>
             <div>
-              Ultima lectura: {chartData[0].dispositivo} kWh
+              Ultima lectura: {chartData.length > 0 ? chartData[chartData.length - 1].dispositivo : 'N/A'} kWh
             </div>
           </div>
         </div>
