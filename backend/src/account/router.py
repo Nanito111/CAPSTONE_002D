@@ -1,19 +1,15 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated, Any, Dict
+from typing import Any, Dict
 from fastapi import (
     APIRouter,
-    Depends,
     status,
 )
 
 from logging import getLogger
-
-from fastapi.security import OAuth2PasswordBearer
-
 from sqlalchemy import delete, insert, select, update
 from account import exceptions
 from account import schemas
-from dependencies import SessionDataBase, AuthFormData
+from dependencies import SessionDataBase, AuthFormData, TokenOAuth2
 from models import (
     Address,
     Comuna,
@@ -23,6 +19,7 @@ from models import (
     PassRecoverRequest,
     Region,
     User,
+    UserDevice,
 )
 from constants import (
     FE_RECOVER_PASSWORD,
@@ -46,9 +43,6 @@ from furl import furl as Furl
 logger = getLogger("login.router")
 
 router = APIRouter(prefix="/account", tags=["account"])
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/account/authenticate")
-TokenOAuth2 = Annotated[str, Depends(oauth2_scheme)]
 
 
 def does_user_exist(
@@ -80,7 +74,7 @@ def get_user_email_from_token(token: TokenOAuth2 | str):
         if user_email is None:
             raise exceptions.InvalidTokenException
 
-        return user_email
+        return user_email.upper()
 
     except InvalidTokenError:
         raise exceptions.InvalidTokenException
@@ -121,7 +115,7 @@ def get_current_user_from_database(
     if user is None:
         raise exceptions.UserIsMissingFromDatabase
 
-    return database_session.execute(statement).scalar_one_or_none()
+    return user
 
 
 def verify_password(
@@ -466,36 +460,38 @@ def delete_current_user(
     token: TokenOAuth2,
     database_session: SessionDataBase,
 ):
-    user_email = get_user_email_from_token(token)
-
-    if not does_user_exist(
-        user_email=user_email,
+    user_db = get_current_user_from_database(
+        token=token,
         database_session=database_session,
-    ):
-        raise exceptions.UserIsMissingFromDatabase
-
-    statement = (
-        delete(User)
-        .where(
-            User.email.__eq__(user_email),
-        )
-        .returning(
-            User.id_contract,
-        )
     )
-    logger.info(f"Deleting user {user_email}.")
 
-    contract_id = database_session.execute(statement).scalar_one()
+    try:
+        # delete user registred devices
+        logger.info(f"Deleting devices from user {user_db.email}.")
+        delete_user_devices = delete(UserDevice).where(
+            UserDevice.id_user.__eq__(user_db.id)
+        )
+        database_session.execute(delete_user_devices)
 
-    statement = delete(Contract).where(
-        Contract.id.__eq__(contract_id),
-    )
-    logger.info(f"Deleting user {user_email} contract.")
-    database_session.execute(statement)
+        # delete user
+        delete_user = delete(User).where(User.id.__eq__(user_db.id))
+        logger.info(f"Deleting user {user_db.email}.")
+        database_session.execute(delete_user)
 
-    database_session.commit()
+        # delete user contract
+        delete_user_contract = delete(Contract).where(
+            Contract.id.__eq__(user_db.id_contract),
+        )
+        logger.info(f"Deleting user {user_db.email} contract.")
+        database_session.execute(delete_user_contract)
 
-    logger.info(f"User {user_email} deleted successfully.")
+        # commit all executed actions
+        database_session.commit()
+        logger.info(f"User {user_db.email} deleted successfully.")
+    except Exception as err:
+        logger.error(f"Fail to delete user: {user_db.email}")
+        logger.exception(err)
+        raise exceptions.UserDeletionFailed
 
 
 @router.put(
