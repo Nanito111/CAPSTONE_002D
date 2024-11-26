@@ -55,7 +55,10 @@ def str_id_to_int(v: str) -> int:
 CoercedIntId = Annotated[int, BeforeValidator(str_id_to_int)]
 
 
-def clean_and_upper_str(value: str) -> str:
+def clean_and_upper_str(value: str | None):
+    if value is None:
+        return value
+
     clean_value = value
     # remove spaces
     clean_value = clean_value.strip()
@@ -65,5 +68,8 @@ def clean_and_upper_str(value: str) -> str:
     return clean_value
 
 
-def strip_str(value: str) -> str:
+def strip_str(value: str | None):
+    if value is None:
+        return value
+
     return value.strip()
