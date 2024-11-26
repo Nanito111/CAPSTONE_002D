@@ -1,5 +1,4 @@
 import re
-from typing import Annotated
 from pydantic import (
     BaseModel,
     Field,
@@ -7,46 +6,9 @@ from pydantic import (
     EmailStr,
     SecretStr,
 )
-from pydantic.functional_validators import BeforeValidator, field_validator
+from pydantic.functional_validators import field_validator
+from dependencies import CoercedIntId, clean_and_upper_str
 from models import User as UserDB, Contract as ContractDB, Address as AddressDB
-
-
-def str_id_to_int(v: str) -> int:
-    if type(v) is not str:
-        raise TypeError(
-            "Input is not an string.",
-        )
-
-    v = v.strip()
-
-    # is value not numeric or below 0
-    if not v.isnumeric():
-        raise ValueError(
-            f"Input '{v}' contains non-numeric characters and cannot be converted to a number or number is negative.",
-        )
-
-    number = int(v)
-
-    # number is more than 20 digits
-    if len(v) > 20:
-        raise ValueError(
-            f"Input number had more than 20 digits. Number: {v}",
-        )
-
-    return number
-
-
-CoercedIntId = Annotated[int, BeforeValidator(str_id_to_int)]
-
-
-def clean_strings(value: str) -> str:
-    clean_value = value
-    # remove spaces
-    clean_value = clean_value.strip()
-    # transform to uppercase
-    clean_value = clean_value.upper()
-
-    return clean_value
 
 
 def validate_password(value: SecretStr) -> SecretStr:
@@ -116,7 +78,7 @@ class UserRegistro(BaseModel):
         "country_code",
         "email",
         mode="after",
-    )(clean_strings)
+    )(clean_and_upper_str)
 
 
 class AddressRegistro(BaseModel):
@@ -136,7 +98,7 @@ class AddressRegistro(BaseModel):
         "street_name",
         "street_number",
         mode="after",
-    )(clean_strings)
+    )(clean_and_upper_str)
 
 
 class ContractRegistro(BaseModel):
@@ -235,7 +197,7 @@ class UserModificar(BaseModel):
         "second_last_name",
         "country_code",
         mode="after",
-    )(clean_strings)
+    )(clean_and_upper_str)
 
 
 class AddressModificar(BaseModel):
@@ -264,7 +226,7 @@ class AddressModificar(BaseModel):
         "street_name",
         "street_number",
         mode="after",
-    )(clean_strings)
+    )(clean_and_upper_str)
 
 
 class ContractModificar(BaseModel):
@@ -334,4 +296,4 @@ class RecoverPassword(BaseModel):
     _clean_str = field_validator(
         "email",
         mode="after",
-    )(clean_strings)
+    )(clean_and_upper_str)

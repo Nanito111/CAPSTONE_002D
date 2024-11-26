@@ -1,10 +1,15 @@
 from logging import getLogger
-from fastapi import APIRouter
-from sqlalchemy import select
+from fastapi import APIRouter, status
+from fastapi.exceptions import HTTPException
+from gunicorn.workers.base import randint
+from sqlalchemy import insert, select
 
 from dependencies import SessionDataBase
-from models import Comuna, Country, ElectricityCompany, Region
+from models import Comuna, Country, Device, DeviceModel, ElectricityCompany, Region
 from utils import schemas
+
+from random import choice
+import string
 
 logger = getLogger("utils.router")
 
@@ -55,3 +60,71 @@ def get_empresas(
     empresas_as_obj = [empresa.__dict__ for empresa in rows]
 
     return schemas.GetNameAndIdList.model_validate(empresas_as_obj)
+
+
+@router.get("/get-device-models")
+def get_device_models(
+    database_session: SessionDataBase,
+) -> schemas.GetNameAndIdList:
+    statement = select(DeviceModel)
+    rows = database_session.execute(statement).scalars().all()
+    device_models_as_obj = [device_model.__dict__ for device_model in rows]
+
+    return schemas.GetNameAndIdList.model_validate(device_models_as_obj)
+
+
+def generate_random_serial_number():
+    # collect all letters and digits
+    characters = string.ascii_letters + string.digits
+    # choice characters
+    serial_number = "".join(choice(characters) for _ in range(20))
+
+    return serial_number.upper()
+
+
+@router.post(
+    "/create-random-device",
+    status_code=status.HTTP_201_CREATED,
+)
+def create_random_device(
+    database_session: SessionDataBase,
+):
+    try:
+        get_device_model = select(DeviceModel.id)
+        device_model_id = database_session.execute(get_device_model).scalars().first()
+        if device_model_id is None:
+            device_model_id = 1
+
+        # generate random serial number
+        serial_number = generate_random_serial_number()
+
+        device_already_exist = False
+        while device_already_exist:
+            get_device = select(Device.id).where(
+                Device.serial_number.__eq__(serial_number)
+            )
+            device_already_exist = (
+                database_session.execute(get_device).one_or_none() is not None
+            )
+            if not device_already_exist:
+                break
+            serial_number = generate_random_serial_number()
+
+        # create device
+        insert_device = insert(Device).values(
+            serial_number=serial_number,
+            id_device_model=device_model_id,
+        )
+
+        database_session.execute(insert_device)
+    except Exception as err:
+        database_session.rollback()
+        logger.exception(err)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Create random device has failed",
+        )
+
+    database_session.commit()
+    logger.info(f"Device created. serial number: {serial_number}")
+    return serial_number
