@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional
 from pydantic import (
     BaseModel,
@@ -5,8 +6,8 @@ from pydantic import (
     field_validator,
 )
 
-from dependencies import clean_and_upper_str, strip_str
-# from models import User as UserDB, Contract as ContractDB, Address as AddressDB
+from dependencies import strip_str
+from models import UserDevice
 
 NAME_PATTERN = r"^[a-zA-ZÀ-ÿ\s]+$"
 
@@ -15,7 +16,7 @@ class AddDevice(BaseModel):
     serial_number: str = Field(
         min_length=20,
         max_length=20,
-        pattern=r"^[A-Z0-9]{20}$",
+        pattern=r"^[a-z0-9]{20}$",
     )
     alias: Optional[str] = Field(
         default=None,
@@ -28,10 +29,47 @@ class AddDevice(BaseModel):
         max_length=50,
     )
 
-    _clean_upper_str = field_validator(
+    _strip_str = field_validator(
         "serial_number",
+        "alias",
         mode="after",
-    )(clean_and_upper_str)
+    )(strip_str)
+
+
+class GetUserDevice(BaseModel):
+    alias: Optional[str] = Field(
+        default=None,
+        description="Nombre personalizado del dispositivo.",
+    )
+    description: Optional[str] = Field(
+        default=None,
+    )
+    status: bool = Field(
+        default=False,
+        description="Estado de conexion del dispositivo, True para cuando esta conectado, False para cuando no.",
+    )
+    model: str = Field(
+        description="Nombre del modelo del dispositivo.",
+    )
+    creation_date: date
+    last_connection: date
+
+
+class ModifyUserDevice(BaseModel):
+    alias: Optional[str] = Field(
+        default=None,
+        strict=False,
+        max_length=15,
+        pattern=NAME_PATTERN,
+        description="Nombre personalizado del dispositivo.",
+        serialization_alias=UserDevice.alias.key,
+    )
+    description: Optional[str] = Field(
+        default=None,
+        strict=False,
+        max_length=50,
+        serialization_alias=UserDevice.description.key,
+    )
 
     _strip_str = field_validator(
         "alias",

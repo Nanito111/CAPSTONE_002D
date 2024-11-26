@@ -15,3 +15,19 @@ FailToAddDevice = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Fail to add device.",
 )
+UserDontOwnDevice = HTTPException(
+    status_code=status.HTTP_403_FORBIDDEN,
+    detail="Device is not registered by user.",
+)
+FailToRemoveDevice = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Fail to remove device.",
+)
+NoDeviceFieldsToSet = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST,
+    detail="No fields were set. Cannot modify device.",
+)
+FailToModifyDevice = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Fail to modify device.",
+)
