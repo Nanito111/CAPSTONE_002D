@@ -1,8 +1,9 @@
 from datetime import date
-from typing import Optional
+from typing import List, Optional
 from pydantic import (
     BaseModel,
     Field,
+    RootModel,
     field_validator,
 )
 
@@ -75,3 +76,7 @@ class ModifyUserDevice(BaseModel):
         "alias",
         mode="after",
     )(strip_str)
+
+
+class GetAllUserDevices(RootModel):
+    root: List[str]
