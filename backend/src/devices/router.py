@@ -11,6 +11,7 @@ from devices.exceptions import (
     DeviceAlreadyAdded,
     DeviceDoNotExist,
     FailToAddDevice,
+    FailToGetAllUserDevices,
     FailToModifyDevice,
     FailToRemoveDevice,
     NoDeviceFieldsToSet,
@@ -325,3 +326,40 @@ def modify_device(
 
     database_session.commit()
     logger.info(f"Device has been modified. User {user_email} | Device {serial_number}")
+
+
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+)
+def get_all_devices(
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    # check if user exist
+    user_email = get_user_email_from_token(token)
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        logger.exception(InvalidTokenException)
+        raise InvalidTokenException
+
+    get_user_id = select(User.id).where(User.email.__eq__(user_email))
+    user_id: int = database_session.execute(get_user_id).scalar_one()
+
+    try:
+        get_all_user_devices = (
+            select(Device.serial_number)
+            .join(UserDevice)
+            .where(UserDevice.id_user.__eq__(user_id))
+        )
+        user_devices = schemas.GetAllUserDevices.model_validate(
+            database_session.execute(get_all_user_devices).scalars().all()
+        )
+        return user_devices
+
+    except Exception as err:
+        logger.error(f"Fail to get all user devices. User {user_email}")
+        logger.exception(err)
+        raise FailToGetAllUserDevices

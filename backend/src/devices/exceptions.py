@@ -31,3 +31,7 @@ FailToModifyDevice = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Fail to modify device.",
 )
+FailToGetAllUserDevices = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Fail to get all user devices.",
+)
