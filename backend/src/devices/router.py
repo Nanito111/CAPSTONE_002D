@@ -1,7 +1,7 @@
 from datetime import date
 from logging import getLogger
 from fastapi import APIRouter, status
-from sqlalchemy import delete, insert, select
+from sqlalchemy import delete, insert, select, update
 
 from account.router import does_user_exist, get_user_email_from_token
 from account.exceptions import InvalidTokenException
@@ -11,7 +11,9 @@ from devices.exceptions import (
     DeviceAlreadyAdded,
     DeviceDoNotExist,
     FailToAddDevice,
+    FailToModifyDevice,
     FailToRemoveDevice,
+    NoDeviceFieldsToSet,
     UserDontOwnDevice,
 )
 from models import Device, DeviceModel, User, UserDevice
@@ -251,3 +253,75 @@ def remove_device(
         raise FailToRemoveDevice
 
     database_session.commit()
+
+
+@router.put(
+    "/{serial_number}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def modify_device(
+    serial_number: str,
+    payload: schemas.ModifyUserDevice,
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    # check if user exist
+    user_email = get_user_email_from_token(token)
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        logger.exception(InvalidTokenException)
+        raise InvalidTokenException
+
+    get_user_id = select(User.id).where(User.email.__eq__(user_email))
+    user_id: int = database_session.execute(get_user_id).scalar_one()
+
+    # check if payload is empty
+    if payload.model_fields_set.__len__() <= 0:
+        logger.exception(NoDeviceFieldsToSet)
+        raise NoDeviceFieldsToSet
+
+    modifications = payload.model_dump(
+        by_alias=True,
+        exclude_unset=True,
+    )
+
+    # check if device exist
+    if not do_device_exist(
+        serial_numer=serial_number,
+        database_session=database_session,
+    ):
+        logger.exception(DeviceDoNotExist)
+        raise DeviceDoNotExist
+
+    user_device = get_device_from_user(
+        user_id=user_id,
+        serial_number=serial_number,
+        database_session=database_session,
+    )
+
+    # check if user owns device
+    if user_device is None:
+        logger.exception(UserDontOwnDevice)
+        raise UserDontOwnDevice
+
+    try:
+        logger.info(f"Modifying device. User {user_email} | Device {serial_number}")
+        modify_user_device = (
+            update(UserDevice)
+            .where(UserDevice.id.__eq__(user_device.id))
+            .values(modifications)
+        )
+        database_session.execute(modify_user_device)
+
+    except Exception as err:
+        database_session.rollback()
+        logger.error(
+            f"Fail to modify device. User {user_email} | Device {serial_number}"
+        )
+        logger.exception(err)
+        raise FailToModifyDevice
+
+    database_session.commit()
+    logger.info(f"Device has been modified. User {user_email} | Device {serial_number}")

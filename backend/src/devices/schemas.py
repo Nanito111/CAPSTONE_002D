@@ -7,6 +7,7 @@ from pydantic import (
 )
 
 from dependencies import strip_str
+from models import UserDevice
 
 NAME_PATTERN = r"^[a-zA-ZÀ-ÿ\s]+$"
 
@@ -52,3 +53,25 @@ class GetUserDevice(BaseModel):
     )
     creation_date: date
     last_connection: date
+
+
+class ModifyUserDevice(BaseModel):
+    alias: Optional[str] = Field(
+        default=None,
+        strict=False,
+        max_length=15,
+        pattern=NAME_PATTERN,
+        description="Nombre personalizado del dispositivo.",
+        serialization_alias=UserDevice.alias.key,
+    )
+    description: Optional[str] = Field(
+        default=None,
+        strict=False,
+        max_length=50,
+        serialization_alias=UserDevice.description.key,
+    )
+
+    _strip_str = field_validator(
+        "alias",
+        mode="after",
+    )(strip_str)
