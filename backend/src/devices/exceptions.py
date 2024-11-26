@@ -15,3 +15,7 @@ FailToAddDevice = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Fail to add device.",
 )
+UserDontOwnDevice = HTTPException(
+    status_code=status.HTTP_403_FORBIDDEN,
+    detail="Device is not registered by user.",
+)

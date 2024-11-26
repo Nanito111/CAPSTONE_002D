@@ -74,12 +74,12 @@ def get_device_models(
 
 
 def generate_random_serial_number():
-    # collect all letters and digits
-    characters = string.ascii_letters + string.digits
+    # collect all lowercase letters and digits
+    characters = string.ascii_lowercase + string.digits
     # choice characters
     serial_number = "".join(choice(characters) for _ in range(20))
 
-    return serial_number.upper()
+    return serial_number.lower()
 
 
 @router.post(
