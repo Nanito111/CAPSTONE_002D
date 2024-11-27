@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from logging import getLogger
 from fastapi import APIRouter, status
 from sqlalchemy import delete, insert, select, update
@@ -118,7 +118,7 @@ def add_device(
     user_id = database_session.execute(get_user_id).scalar_one()
 
     try:
-        creation_date = date.today()
+        creation_date = datetime.utcnow()
         insert_device = insert(UserDevice).values(
             alias=new_device.alias,
             creation_date=creation_date,
