@@ -411,7 +411,7 @@ export function RegisterForm() {
             {/* Correo */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email*</Label>
                 <div className="relative">
                   <Input
                     id="email"
@@ -456,7 +456,7 @@ export function RegisterForm() {
             {/* Primer Nombre */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Nombre">Nombre</Label>
+                <Label htmlFor="Nombre">Nombre*</Label>
                 <div className="relative">
                   <Input
                     id="Nombre"
@@ -501,7 +501,7 @@ export function RegisterForm() {
             {/* Apellido */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Apellido">Apellido</Label>
+                <Label htmlFor="Apellido">Apellido*</Label>
                 <div className="relative">
                   <Input
                     id="Apellido"
@@ -546,7 +546,7 @@ export function RegisterForm() {
             {/* Segundo Apellido */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="SegundoApellido">Segundo apellido</Label>
+                <Label htmlFor="SegundoApellido">Segundo apellido*</Label>
                 <div className="relative">
                   <Input
                     id="SegundoApellido"
@@ -594,7 +594,7 @@ export function RegisterForm() {
             <TooltipProvider>
               <div className="grid gap-2">
                 <div className="relative">
-                  <Label htmlFor="Clave">Contraseña</Label>
+                  <Label htmlFor="Clave">Contraseña*</Label>
                   <div className="flex items-center">
                     <Input
                       id="Clave"
@@ -649,7 +649,7 @@ export function RegisterForm() {
             {/* Repetir contraseña */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="repeatpassword">Repetir contraseña</Label>
+                <Label htmlFor="repeatpassword">Repetir contraseña*</Label>
                 <div className="relative flex items-center">
                   <Input
                     id="repeatpassword"
@@ -703,7 +703,7 @@ export function RegisterForm() {
             {/* Telefono */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="numAddress">Teléfono</Label>
+                <Label htmlFor="numAddress">Teléfono*</Label>
                 <div className="relative">
                   <Input
                     id="numAddress"
@@ -747,7 +747,7 @@ export function RegisterForm() {
 
             {/* Pais */}
             <div className="grid gap-2">
-              <Label>País</Label>
+              <Label>País*</Label>
               <Select value={selectedPais} onValueChange={setSelectedPais}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona tu país" />
@@ -764,7 +764,7 @@ export function RegisterForm() {
 
             {/* Region */}
             <div className="grid gap-2">
-              <Label>Región</Label>
+              <Label>Región*</Label>
               <Select
                 value={selectedRegion}
                 onValueChange={setSelectedRegion}
@@ -791,7 +791,7 @@ export function RegisterForm() {
 
             {/* Comuna */}
             <div className="grid gap-2">
-              <Label>Comuna</Label>
+              <Label>Comuna*</Label>
               <Select
                 value={selectedComuna}
                 onValueChange={setSelectedComuna}
@@ -814,7 +814,7 @@ export function RegisterForm() {
             {/* Calle */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Calle">Calle</Label>
+                <Label htmlFor="Calle">Calle*</Label>
                 <div className="relative">
                   <Input
                     id="Calle"
@@ -860,7 +860,7 @@ export function RegisterForm() {
             {/* Numero de casa */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Numero">Número</Label>
+                <Label htmlFor="Numero">Número*</Label>
                 <div className="relative">
                   <Input
                     id="Numero"
@@ -910,7 +910,7 @@ export function RegisterForm() {
 
             {/* Empresa */}
             <div className="grid gap-2">
-              <Label>Empresa</Label>
+              <Label>Empresa*</Label>
               <Select value={selectedEmpresa} onValueChange={setSelectedEmpresa}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona tu empresa" />
@@ -929,7 +929,7 @@ export function RegisterForm() {
             <TooltipProvider>
               <div className="grid gap-2">
                 <Label htmlFor="CostoAdministración">
-                  Costo administración
+                  Costo administración*
                 </Label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
