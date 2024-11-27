@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from typing import List, Optional
 from pydantic import (
     BaseModel,
@@ -52,8 +52,8 @@ class GetUserDevice(BaseModel):
     model: str = Field(
         description="Nombre del modelo del dispositivo.",
     )
-    creation_date: date
-    last_connection: date
+    creation_date: datetime
+    last_connection: datetime
 
 
 class ModifyUserDevice(BaseModel):

@@ -1,5 +1,5 @@
-from datetime import date, datetime
-from sqlalchemy.dialects.oracle import DATE, NUMBER, VARCHAR2, RAW
+from datetime import datetime
+from sqlalchemy.dialects.oracle import NUMBER, VARCHAR2, RAW
 from sqlalchemy.orm import MappedColumn, mapped_column
 from sqlalchemy.orm.properties import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime
@@ -237,14 +237,14 @@ class UserDevice(Base):
         VARCHAR2(15),
         nullable=True,
     )
-    creation_date: MappedColumn[date] = MappedColumn(
+    creation_date: MappedColumn[datetime] = MappedColumn(
         "creationdate",
-        DATE,
+        DateTime(),
         nullable=False,
     )
-    last_connection: MappedColumn[date] = MappedColumn(
-        "lastconection",
-        DATE,
+    last_connection: MappedColumn[datetime] = MappedColumn(
+        "lastconnection",
+        DateTime(),
         nullable=False,
     )
     description: MappedColumn[str | None] = MappedColumn(
