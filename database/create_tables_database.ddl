@@ -103,13 +103,13 @@ CREATE TABLE result (
 ALTER TABLE result ADD CONSTRAINT result_pk PRIMARY KEY ( id );
 
 CREATE TABLE userdevice (
-    id            NUMBER(20) NOT NULL,
-    alias         VARCHAR2(15),
-    creationdate  DATE NOT NULL,
-    lastconection DATE NOT NULL,
-    description   VARCHAR2(50),
-    iduser        NUMBER(20) NOT NULL,
-    iddevice      NUMBER(20) NOT NULL
+    id             NUMBER(20) NOT NULL,
+    alias          VARCHAR2(15),
+    creationdate   DATE NOT NULL,
+    lastconnection DATE NOT NULL,
+    description    VARCHAR2(50),
+    iduser         NUMBER(20) NOT NULL,
+    iddevice       NUMBER(20) NOT NULL
 );
 
 ALTER TABLE userdevice ADD CONSTRAINT userdevice_pk PRIMARY KEY ( id );
@@ -285,3 +285,5 @@ BEGIN
     :new.id := userdevice_id_seq.nextval;
 END;
 /
+
+
