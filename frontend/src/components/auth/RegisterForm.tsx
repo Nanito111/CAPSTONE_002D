@@ -637,7 +637,7 @@ export function RegisterForm() {
                         <>
                           <p className="text-red-500 text-sm sm:hidden block">Contraseña inválida.</p>
                           {MensajesErrorContraseña.map((error, index) => (
-                            <p key={index} className="text-red-500 text-sm sm:hidden block">{error}</p>
+                            <p key={index} className="text-red-500 text-sm block">{error}</p>
                           ))}
                         </>
                       ) : null
@@ -684,6 +684,11 @@ export function RegisterForm() {
                     </Tooltip>
                   )}
                 </div>
+                {
+                  RepetirClaveInputIsValid === 2 ? (
+                    <p className="text-red-500 text-sm">Las contraseñas no coinciden.</p>
+                  ) : null
+                }
               </div>
             </TooltipProvider>
 
