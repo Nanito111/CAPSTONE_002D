@@ -648,9 +648,9 @@ export function RegisterForm() {
 
             {/* Repetir contraseña */}
             <TooltipProvider>
-              <div className="grid gap-2  z">
+              <div className="grid gap-2">
                 <Label htmlFor="repeatpassword">Repetir contraseña</Label>
-                <div className="flex items-center">
+                <div className="relative flex items-center">
                   <Input
                     id="repeatpassword"
                     type="password"
@@ -666,7 +666,7 @@ export function RegisterForm() {
                   {RepetirClaveInputIsValid !== 0 && (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="absolute right-3 top-[32px]">
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
                           {RepetirClaveInputIsValid === 1 ? (
                             <CheckCircle className="h-5 w-5 text-green-500" />
                           ) : (
@@ -686,11 +686,12 @@ export function RegisterForm() {
                 </div>
               </div>
             </TooltipProvider>
+
           </div>
 
           {/* Informacion contacto */}
           <div className="space-y-4">
-            <h3 className="text-lg   text-center font-semibold mb-4">
+            <h3 className="text-lg text-center font-semibold mb-4">
               Contacto
             </h3>
 
