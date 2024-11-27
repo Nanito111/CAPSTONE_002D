@@ -1,13 +1,3 @@
--- Generado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
---   en:        2024-11-18 20:30:52 CLST
---   sitio:      Oracle Database 11g
---   tipo:      Oracle Database 11g
-
-
-
--- predefined type, no DDL - MDSYS.SDO_GEOMETRY
-
--- predefined type, no DDL - XMLTYPE
 
 CREATE TABLE address (
     id           NUMBER(20) NOT NULL,
@@ -59,15 +49,21 @@ CREATE TABLE country (
 ALTER TABLE country ADD CONSTRAINT country_pk PRIMARY KEY ( id );
 
 CREATE TABLE device (
-    id           NUMBER(20) NOT NULL,
-    serialnumber VARCHAR2(20) NOT NULL,
-    name         VARCHAR2(15) NOT NULL,
-    model        VARCHAR2(20) NOT NULL
+    id            NUMBER(20) NOT NULL,
+    serialnumber  VARCHAR2(20) NOT NULL,
+    iddevicemodel NUMBER(20) NOT NULL
 );
 
 ALTER TABLE device ADD CONSTRAINT device_pk PRIMARY KEY ( id );
 
-ALTER TABLE device ADD CONSTRAINT uk_serialnumber UNIQUE ( serialnumber );
+ALTER TABLE device ADD CONSTRAINT serialnumber_un UNIQUE ( serialnumber );
+
+CREATE TABLE devicemodel (
+    id   NUMBER(20) NOT NULL,
+    name VARCHAR2(30) NOT NULL
+);
+
+ALTER TABLE devicemodel ADD CONSTRAINT devicemodel_pk PRIMARY KEY ( id );
 
 CREATE TABLE electricitycompany (
     id   NUMBER(20) NOT NULL,
@@ -85,7 +81,7 @@ CREATE TABLE passrecoverrequest (
 
 ALTER TABLE passrecoverrequest ADD CONSTRAINT passrecoverrequest_pk PRIMARY KEY ( id );
 
-ALTER TABLE passrecoverrequest ADD CONSTRAINT uk_passrecoverrequest UNIQUE ( request );
+ALTER TABLE passrecoverrequest ADD CONSTRAINT request_un UNIQUE ( request );
 
 CREATE TABLE region (
     id        NUMBER(20) NOT NULL,
@@ -107,53 +103,56 @@ CREATE TABLE result (
 ALTER TABLE result ADD CONSTRAINT result_pk PRIMARY KEY ( id );
 
 CREATE TABLE userdevice (
-    id            NUMBER(20) NOT NULL,
-    alias         VARCHAR2(20),
-    status        CHAR(1) NOT NULL,
-    creationdate  DATE NOT NULL,
-    lastconection DATE NOT NULL,
-    description   VARCHAR2(30),
-    iduser        NUMBER(20) NOT NULL,
-    iddevice      NUMBER(20) NOT NULL
+    id             NUMBER(20) NOT NULL,
+    alias          VARCHAR2(15),
+    creationdate   DATE NOT NULL,
+    lastconnection DATE NOT NULL,
+    description    VARCHAR2(50),
+    iduser         NUMBER(20) NOT NULL,
+    iddevice       NUMBER(20) NOT NULL
 );
 
 ALTER TABLE userdevice ADD CONSTRAINT userdevice_pk PRIMARY KEY ( id );
 
+ALTER TABLE appuser
+    ADD CONSTRAINT address_fk FOREIGN KEY ( idaddress )
+        REFERENCES address ( id );
+
+ALTER TABLE userdevice
+    ADD CONSTRAINT appuser_fk FOREIGN KEY ( iduser )
+        REFERENCES appuser ( id );
+
 ALTER TABLE address
-    ADD CONSTRAINT address_comuna_fk FOREIGN KEY ( idcomuna )
+    ADD CONSTRAINT comuna_fk FOREIGN KEY ( idcomuna )
         REFERENCES comuna ( id );
 
 ALTER TABLE appuser
-    ADD CONSTRAINT appuser_address_fk FOREIGN KEY ( idaddress )
-        REFERENCES address ( id );
-
-ALTER TABLE appuser
-    ADD CONSTRAINT appuser_contract_fk FOREIGN KEY ( idcontract )
+    ADD CONSTRAINT contract_fk FOREIGN KEY ( idcontract )
         REFERENCES contract ( id );
 
-ALTER TABLE comuna
-    ADD CONSTRAINT comuna_region_fk FOREIGN KEY ( idregion )
-        REFERENCES region ( id );
-
-ALTER TABLE contract
-    ADD CONSTRAINT contract_electricitycompany_fk FOREIGN KEY ( idelectricitycompany )
-        REFERENCES electricitycompany ( id );
-
 ALTER TABLE region
-    ADD CONSTRAINT region_country_fk FOREIGN KEY ( idcountry )
+    ADD CONSTRAINT country_fk FOREIGN KEY ( idcountry )
         REFERENCES country ( id );
 
-ALTER TABLE result
-    ADD CONSTRAINT result_userdevice_fk FOREIGN KEY ( iduserdevice )
-        REFERENCES userdevice ( id );
-
 ALTER TABLE userdevice
-    ADD CONSTRAINT userdevice_appuser_fk FOREIGN KEY ( iduser )
-        REFERENCES appuser ( id );
-
-ALTER TABLE userdevice
-    ADD CONSTRAINT userdevice_device_fk FOREIGN KEY ( iddevice )
+    ADD CONSTRAINT device_fk FOREIGN KEY ( iddevice )
         REFERENCES device ( id );
+
+ALTER TABLE device
+    ADD CONSTRAINT devicemodel_fk FOREIGN KEY ( iddevicemodel )
+        REFERENCES devicemodel ( id );
+
+ALTER TABLE contract
+    ADD CONSTRAINT electricitycompany_fk FOREIGN KEY ( idelectricitycompany )
+        REFERENCES electricitycompany ( id );
+
+ALTER TABLE comuna
+    ADD CONSTRAINT region_fk FOREIGN KEY ( idregion )
+        REFERENCES region ( id );
+
+ALTER TABLE result
+    ADD CONSTRAINT userdevice_fk FOREIGN KEY ( iduserdevice )
+        REFERENCES userdevice ( id );
 
 CREATE SEQUENCE address_id_seq START WITH 1 NOCACHE ORDER;
 
@@ -218,6 +217,17 @@ CREATE OR REPLACE TRIGGER device_id_trg BEFORE
     WHEN ( new.id IS NULL )
 BEGIN
     :new.id := device_id_seq.nextval;
+END;
+/
+
+CREATE SEQUENCE devicemodel_id_seq START WITH 1 NOCACHE ORDER;
+
+CREATE OR REPLACE TRIGGER devicemodel_id_trg BEFORE
+    INSERT ON devicemodel
+    FOR EACH ROW
+    WHEN ( new.id IS NULL )
+BEGIN
+    :new.id := devicemodel_id_seq.nextval;
 END;
 /
 
