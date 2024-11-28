@@ -73,6 +73,107 @@ def get_device_model_from_device(
     return model_name
 
 
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+)
+def get_all_devices(
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+):
+    # check if user exist
+    user_email = get_user_email_from_token(token)
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        logger.exception(InvalidTokenException)
+        raise InvalidTokenException
+
+    get_user_id = select(User.id).where(User.email.__eq__(user_email))
+    user_id: int = database_session.execute(get_user_id).scalar_one()
+
+    try:
+        get_all_user_devices = (
+            select(Device.serial_number)
+            .join(UserDevice)
+            .where(UserDevice.id_user.__eq__(user_id))
+        )
+        user_devices = schemas.GetAllUserDevices.model_validate(
+            database_session.execute(get_all_user_devices).scalars().all()
+        )
+        return user_devices
+
+    except Exception as err:
+        logger.error(f"Fail to get all user devices. User {user_email}")
+        logger.exception(err)
+        raise FailToGetAllUserDevices
+
+
+@router.get(
+    "/consumption",
+    status_code=status.HTTP_200_OK,
+)
+def get_all_devices_consumption(
+    filter: Annotated[schemas.ConsumptionFilter, Query()],
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+) -> schemas.ConsumptionInTimeRange:
+    # check if user exist
+    user_email = get_user_email_from_token(token)
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        logger.exception(InvalidTokenException)
+        raise InvalidTokenException
+
+    get_user_id = select(User.id).where(User.email.__eq__(user_email))
+    user_id: int = database_session.execute(get_user_id).scalar_one()
+
+    try:
+        # get range time
+        current_time = datetime.now(timezone.utc)
+        if filter.type == schemas.RangeTypes.HOUR:
+            old_time = current_time - timedelta(hours=filter.range)
+        else:
+            old_time = current_time - relativedelta(months=filter.range)
+
+        logger.info(
+            f"Getting consumption data from {old_time} to {current_time}. User {user_email}"
+        )
+
+        extract_expression = extract(
+            filter.type.value, ResultConsumption.measure_time
+        ).label("time")
+        get_consumption_data = (
+            select(
+                # extract type of range (hour or month)
+                extract_expression,
+                func.sum(ResultConsumption.kws).label("total"),
+                func.avg(ResultConsumption.kws).label("avg"),
+                func.min(ResultConsumption.kws).label("min"),
+                func.max(ResultConsumption.kws).label("max"),
+            )
+            .join(UserDevice)
+            .where(
+                UserDevice.id_user.__eq__(user_id),
+                ResultConsumption.id_user_device.__eq__(UserDevice.id),
+                ResultConsumption.measure_time.between(old_time, current_time),
+            )
+            .group_by(extract_expression)
+            .order_by(extract_expression.asc())
+        )
+        result_query = database_session.execute(get_consumption_data).scalars().all()
+
+    except Exception as err:
+        logger.error("Fail to get consumption data.")
+        logger.exception(err)
+        raise FailToGetConsumptionData
+
+    return schemas.ConsumptionInTimeRange(result_query)
+
+
 @router.post(
     "/add",
     status_code=status.HTTP_201_CREATED,
@@ -329,43 +430,6 @@ def modify_device(
 
     database_session.commit()
     logger.info(f"Device has been modified. User {user_email} | Device {serial_number}")
-
-
-@router.get(
-    "/",
-    status_code=status.HTTP_200_OK,
-)
-def get_all_devices(
-    token: TokenOAuth2,
-    database_session: SessionDataBase,
-):
-    # check if user exist
-    user_email = get_user_email_from_token(token)
-    if not does_user_exist(
-        user_email=user_email,
-        database_session=database_session,
-    ):
-        logger.exception(InvalidTokenException)
-        raise InvalidTokenException
-
-    get_user_id = select(User.id).where(User.email.__eq__(user_email))
-    user_id: int = database_session.execute(get_user_id).scalar_one()
-
-    try:
-        get_all_user_devices = (
-            select(Device.serial_number)
-            .join(UserDevice)
-            .where(UserDevice.id_user.__eq__(user_id))
-        )
-        user_devices = schemas.GetAllUserDevices.model_validate(
-            database_session.execute(get_all_user_devices).scalars().all()
-        )
-        return user_devices
-
-    except Exception as err:
-        logger.error(f"Fail to get all user devices. User {user_email}")
-        logger.exception(err)
-        raise FailToGetAllUserDevices
 
 
 @router.get(
