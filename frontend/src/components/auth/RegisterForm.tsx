@@ -30,6 +30,8 @@ import {
   CheckCircle,
   Loader2,
   CircleDollarSign,
+  EyeIcon,
+  EyeOffIcon,
   Zap,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -48,6 +50,8 @@ export function RegisterForm() {
   const [ClaveInputIsValid, setClaveInputIsValid] = useState(0);
   const [RepetirClaveInputIsValid, setRepetirClaveInputIsValid] = useState(0);
   const [MensajesErrorContraseña, setMensajesErrorContraseña] = useState<string[]>([]);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   // Contacto
   const [TelefonoInputIsValid, setTelefonoInputIsValid] = useState(0);
   const [paises, setPaises] = useState<Pais[]>([]);
@@ -70,6 +74,7 @@ export function RegisterForm() {
   const [CostoTransporteElectrico, setCostoTransporteElectrico] = useState<string | null>(null);
   const [totalCostkWh, setTotalCostkWh] = useState<number | null>(null);
   const [totalCostTransport, setTotalCostTransport] = useState<number | null>(null);
+
 
   const { toast } = useToast()
 
@@ -202,6 +207,15 @@ export function RegisterForm() {
       setClaveInputIsValid(errors.length === 0 ? 1 : 2);
     setMensajesErrorContraseña(errors);
   };
+
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleRepetirClaveBlur = (
     event: React.FocusEvent<HTMLInputElement>
   ) => {
@@ -371,7 +385,7 @@ export function RegisterForm() {
       const kWhConsumidos = Number(kWhConsumidosUltimoMes);
       if (CostoElectricidad !== null && kWhConsumidos !== null && kWhConsumidos !== 0) {
         const cost = CostoElectricidad / kWhConsumidos;
-        setTotalCostkWh(Number(cost.toFixed(2)));
+        setTotalCostkWh(Math.round(Number(cost.toFixed(2))));
       } else {
         setTotalCostkWh(0);
       }
@@ -381,7 +395,7 @@ export function RegisterForm() {
       const kWhConsumidos = Number(kWhConsumidosUltimoMes);
         if (CostoTransporte !== null && kWhConsumidos !== null && kWhConsumidos !== 0){
         const cost = CostoTransporte / kWhConsumidos;
-        setTotalCostTransport(Number(cost.toFixed(2)));
+        setTotalCostTransport(Math.round(Number(cost.toFixed(2))));
       } else {
         setTotalCostTransport(0);
       }
@@ -601,7 +615,7 @@ export function RegisterForm() {
                   <div className="flex items-center">
                     <Input
                       id="Clave"
-                      type="password"
+                      type={showNewPassword ? "text" : "password"}
                       placeholder="******** (letras y números)"
                       required={true}
                       onBlur={handleClaveBlur}
@@ -609,10 +623,23 @@ export function RegisterForm() {
                         ClaveInputIsValid === 2 ? "pr-10 border-red-500" : ""
                       }
                     />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0"
+                      onClick={toggleNewPasswordVisibility}
+                    >
+                      {showNewPassword ? (
+                        <EyeOffIcon className="h-4 w-4" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4" />
+                      )}
+                    </Button>
                     {ClaveInputIsValid !== 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <div className="absolute right-3">
+                          <div className="absolute right-10">
                             {ClaveInputIsValid === 1 ? (
                               <CheckCircle className="h-5 w-5 text-green-500" />
                             ) : (
@@ -656,7 +683,7 @@ export function RegisterForm() {
                 <div className="relative flex items-center">
                   <Input
                     id="repeatpassword"
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="******** (letras y números)"
                     required
                     onBlur={handleRepetirClaveBlur}
@@ -666,10 +693,23 @@ export function RegisterForm() {
                         : ""
                     }
                   />
+                  <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0"
+                      onClick={toggleConfirmPasswordVisibility}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOffIcon className="h-4 w-4" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4" />
+                      )}
+                    </Button>
                   {RepetirClaveInputIsValid !== 0 && (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                        <div className="absolute right-10 top-1/2 -translate-y-1/2">
                           {RepetirClaveInputIsValid === 1 ? (
                             <CheckCircle className="h-5 w-5 text-green-500" />
                           ) : (
