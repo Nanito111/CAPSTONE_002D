@@ -146,7 +146,7 @@ def generate_access_token(sub: str, expiration: datetime):
 
 @router.post(
     path="/authenticate",
-    status_code=status.HTTP_202_ACCEPTED,
+    status_code=status.HTTP_200_OK,
 )
 def authenticate(
     form_data: AuthFormData,

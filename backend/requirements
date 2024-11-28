@@ -13,6 +13,7 @@ pytz
 psutil
 furl
 python-multipart
+python-dateutil
 
 # Base de Datos
 sqlalchemy

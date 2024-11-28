@@ -35,3 +35,7 @@ FailToGetAllUserDevices = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail="Fail to get all user devices.",
 )
+FailToGetConsumptionData = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Fail to get consumption data.",
+)

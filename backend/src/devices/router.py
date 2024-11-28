@@ -1,7 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+from dateutil.relativedelta import relativedelta
 from logging import getLogger
-from fastapi import APIRouter, status
-from sqlalchemy import delete, insert, select, update
+from typing import Annotated
+from fastapi import APIRouter, Query, status
+from sqlalchemy import delete, extract, insert, select, update, func
 
 from account.router import does_user_exist, get_user_email_from_token
 from account.exceptions import InvalidTokenException
@@ -12,12 +14,13 @@ from devices.exceptions import (
     DeviceDoNotExist,
     FailToAddDevice,
     FailToGetAllUserDevices,
+    FailToGetConsumptionData,
     FailToModifyDevice,
     FailToRemoveDevice,
     NoDeviceFieldsToSet,
     UserDontOwnDevice,
 )
-from models import Device, DeviceModel, User, UserDevice
+from models import Device, DeviceModel, ResultConsumption, User, UserDevice
 
 logger = getLogger("devices.router")
 
@@ -25,10 +28,10 @@ router = APIRouter(prefix="/devices", tags=["devices"])
 
 
 def do_device_exist(
-    serial_numer: str,
+    serial_number: str,
     database_session: SessionDataBase,
 ):
-    statement = select(Device).where(Device.serial_number.__eq__(serial_numer))
+    statement = select(Device).where(Device.serial_number.__eq__(serial_number))
     return database_session.execute(statement).one_or_none() is not None
 
 
@@ -90,7 +93,7 @@ def add_device(
 
     # check if device exist
     if not do_device_exist(
-        serial_numer=new_device.serial_number,
+        serial_number=new_device.serial_number,
         database_session=database_session,
     ):
         logger.exception(DeviceDoNotExist)
@@ -118,7 +121,7 @@ def add_device(
     user_id = database_session.execute(get_user_id).scalar_one()
 
     try:
-        creation_date = datetime.utcnow()
+        creation_date = datetime.now(timezone.utc)
         insert_device = insert(UserDevice).values(
             alias=new_device.alias,
             creation_date=creation_date,
@@ -161,7 +164,7 @@ def get_device(
 
     # check if device exist
     if not do_device_exist(
-        serial_numer=serial_number,
+        serial_number=serial_number,
         database_session=database_session,
     ):
         logger.exception(DeviceDoNotExist)
@@ -222,7 +225,7 @@ def remove_device(
 
     # check if device exist
     if not do_device_exist(
-        serial_numer=serial_number,
+        serial_number=serial_number,
         database_session=database_session,
     ):
         logger.exception(DeviceDoNotExist)
@@ -290,7 +293,7 @@ def modify_device(
 
     # check if device exist
     if not do_device_exist(
-        serial_numer=serial_number,
+        serial_number=serial_number,
         database_session=database_session,
     ):
         logger.exception(DeviceDoNotExist)
@@ -363,3 +366,85 @@ def get_all_devices(
         logger.error(f"Fail to get all user devices. User {user_email}")
         logger.exception(err)
         raise FailToGetAllUserDevices
+
+
+@router.get(
+    "/{serial_number}/consumption",
+    status_code=status.HTTP_200_OK,
+)
+def get_device_consumption(
+    serial_number: str,
+    filter: Annotated[schemas.ConsumptionFilter, Query()],
+    token: TokenOAuth2,
+    database_session: SessionDataBase,
+) -> schemas.ConsumptionInTimeRange:
+    # check if user exist
+    user_email = get_user_email_from_token(token)
+    if not does_user_exist(
+        user_email=user_email,
+        database_session=database_session,
+    ):
+        logger.exception(InvalidTokenException)
+        raise InvalidTokenException
+
+    get_user_id = select(User.id).where(User.email.__eq__(user_email))
+    user_id: int = database_session.execute(get_user_id).scalar_one()
+
+    # check if device exist
+    if not do_device_exist(
+        serial_number=serial_number,
+        database_session=database_session,
+    ):
+        logger.exception(DeviceDoNotExist)
+        raise DeviceDoNotExist
+
+    user_device = get_device_from_user(
+        user_id=user_id,
+        serial_number=serial_number,
+        database_session=database_session,
+    )
+
+    # check if user owns device
+    if user_device is None:
+        logger.exception(UserDontOwnDevice)
+        raise UserDontOwnDevice
+
+    # get result consumption
+    try:
+        current_time = datetime.now(timezone.utc)
+        if filter.type == schemas.RangeTypes.HOUR:
+            old_time = current_time - timedelta(hours=filter.range)
+        else:
+            old_time = current_time - relativedelta(months=filter.range)
+
+        logger.info(
+            f"Getting consumption data from {old_time} to {current_time} | device: {serial_number}"
+        )
+
+        extract_expression = extract(
+            filter.type.value, ResultConsumption.measure_time
+        ).label("time")
+        get_consumption_data = (
+            select(
+                # extract type of range (hour or month)
+                extract_expression,
+                func.sum(ResultConsumption.kws).label("total"),
+                func.avg(ResultConsumption.kws).label("avg"),
+                func.min(ResultConsumption.kws).label("min"),
+                func.max(ResultConsumption.kws).label("max"),
+            )
+            .where(
+                ResultConsumption.id_user_device.__eq__(user_device.id),
+                ResultConsumption.measure_time.between(old_time, current_time),
+            )
+            .group_by(extract_expression)
+            .order_by(extract_expression.asc())
+        )
+        result_query = database_session.execute(get_consumption_data).scalars().all()
+
+    except Exception as err:
+        logger.error("Fail to get consumption data.")
+        logger.exception(err)
+        raise FailToGetConsumptionData
+
+    return schemas.ConsumptionInTimeRange(result_query)
