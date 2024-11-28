@@ -1,5 +1,6 @@
+from enum import StrEnum
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Sequence
 from pydantic import (
     BaseModel,
     Field,
@@ -80,3 +81,54 @@ class ModifyUserDevice(BaseModel):
 
 class GetAllUserDevices(RootModel):
     root: List[str]
+
+
+class RangeTypes(StrEnum):
+    HOUR = "hour"
+    MONTH = "month"
+
+
+class ConsumptionFilter(BaseModel):
+    type: RangeTypes
+    range: int
+
+    @field_validator("range", mode="after")
+    @classmethod
+    def validate_range(cls, value: int, info):
+        detail: str = (
+            "Range value must be beetween {valid_range}. Input value: {input_range}"
+        )
+
+        type_value = info.data.get("type")
+
+        if type_value == RangeTypes.HOUR and (value < 1 or value > 24):
+            detail = detail.format(valid_range="1-24", input_range=value)
+            raise ValueError(detail)
+
+        elif type_value == RangeTypes.MONTH and (value < 1 or value > 12):
+            detail = detail.format(valid_range="1-12", input_range=value)
+            raise ValueError(detail)
+        else:
+            return value
+
+
+class ConsumptionInTimeUnit(BaseModel):
+    time: int = Field(
+        description="Campo que señala la hora o mes (en número) del registro de consumo."
+    )
+    total: float = Field(
+        description="Total de consumo del dispositivo en Kilo watts/Horas"
+    )
+    avg: float = Field(
+        description="Promedio de consumo del dispositivo en Kilo watts/Horas"
+    )
+    min: float = Field(
+        description="Valor minimo de consumo del dispositivo en Kilo watts/Horas"
+    )
+    max: float = Field(
+        description="Valor maximo de consumo del dispositivo en Kilo watts/Horas"
+    )
+
+
+class ConsumptionInTimeRange(RootModel):
+    root: Sequence[ConsumptionInTimeUnit]

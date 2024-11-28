@@ -1,8 +1,7 @@
 from datetime import datetime
-from sqlalchemy.dialects.oracle import NUMBER, VARCHAR2, RAW
+from sqlalchemy.dialects.oracle.types import NUMBER, TIMESTAMP, VARCHAR2, RAW
 from sqlalchemy.orm import MappedColumn, mapped_column
 from sqlalchemy.orm.properties import ForeignKey
-from sqlalchemy.sql.sqltypes import DateTime
 from database import Base
 
 
@@ -219,7 +218,7 @@ class PassRecoverRequest(Base):
     )
     expire_datetime: MappedColumn[datetime] = mapped_column(
         "expiredatetime",
-        DateTime(),
+        TIMESTAMP,
         nullable=False,
     )
 
@@ -239,12 +238,12 @@ class UserDevice(Base):
     )
     creation_date: MappedColumn[datetime] = MappedColumn(
         "creationdate",
-        DateTime(),
+        TIMESTAMP,
         nullable=False,
     )
     last_connection: MappedColumn[datetime] = MappedColumn(
         "lastconnection",
-        DateTime(),
+        TIMESTAMP,
         nullable=False,
     )
     description: MappedColumn[str | None] = MappedColumn(
@@ -300,5 +299,32 @@ class DeviceModel(Base):
     name: MappedColumn[str] = mapped_column(
         "name",
         VARCHAR2(30),
+        nullable=False,
+    )
+
+
+class ResultConsumption(Base):
+    __tablename__ = "result"
+
+    id: MappedColumn[int] = mapped_column(
+        "id",
+        NUMBER(20),
+        nullable=False,
+        primary_key=True,
+    )
+    kws: MappedColumn[float] = mapped_column(
+        "kws",
+        NUMBER(10, 3),
+        nullable=True,
+    )
+    measure_time: MappedColumn[datetime] = mapped_column(
+        "measuretime",
+        TIMESTAMP,
+        nullable=True,
+    )
+    id_user_device: MappedColumn[int] = mapped_column(
+        "iduserdevice",
+        NUMBER(20),
+        ForeignKey("userdevice.id"),
         nullable=False,
     )
