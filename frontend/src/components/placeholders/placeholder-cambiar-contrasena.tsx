@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 
 export default function PasswordChangeForm() {
   const [currentPassword, setCurrentPassword] = useState("")
-  const [email,setEmail] = useState("")
+  const [email, setEmail] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
@@ -22,6 +22,29 @@ export default function PasswordChangeForm() {
   const [newPasswordErrors, setNewPasswordErrors] = useState<string[]>([])
   const [confirmPasswordError, setConfirmPasswordError] = useState("")
   const [isFormValid, setIsFormValid] = useState(false)
+
+  useEffect(() => {
+    fetchUserEmail()
+  }, [])
+
+  const fetchUserEmail = async () => {
+    try {
+      const apiUrlUserData = `/api/utils/get-user-data`
+      const responseUserData = await fetch(apiUrlUserData, {
+        method: 'GET'
+      })
+      if (responseUserData.ok) {
+        const data = await responseUserData.json()
+        setEmail(data.user.email)
+      } else {
+        console.error("API User data no ha respondido correctamente")
+        throw new Error("API User data no ha respondido correctamente")
+      }
+    } catch (err) {
+      console.error("Error obteniendo user email:", err)
+      setError("Error obteniendo user data. Por favor intente nuevamente.")
+    }
+  }
 
   const validatePassword = (password: string) => {
     const errors: string[] = []
@@ -62,31 +85,14 @@ export default function PasswordChangeForm() {
     setError("")
 
     try {
-      // conseguir email del usuario
-      // obtener currentPassword del input
-      // hacer peticion a iniciar sesion para validar que estas sean las credenciales correctas, si no, error
-      // si son correctas, hacer peticion a cambiar contraseña con contraseña nueva y cookie de sesion
-      // si la contraseña se cambia con exito, mostrar mensaje de exito
-
-      // conseguir email del usuario
-      const apiUrlUserData = `/api/utils/get-user-data`
-      const responseUserData = await fetch(apiUrlUserData, {
-        method: 'GET'
-      })
-      if (responseUserData.ok) {
-        const data = await responseUserData.json()
-        console.log(data)
-        setEmail(data.user.email)
-      } else {
-        console.error("API user data response not OK")
-        throw new Error("API user data response not OK")
+      if (!email) {
+        throw new Error("Error obteniendo el email del usuario. Por favor, intenta de nuevo.")
       }
 
-      // hacer peticion para iniciar sesión
+      // hacer peticion para iniciar sesión y validar que las credenciales sean correctas
       const apiUrlLogin = `/api/account/authenticate`
-      console.log(email)
-      const responseLogin = await fetch(apiUrlLogin,{
-        method : 'POST',
+      const responseLogin = await fetch(apiUrlLogin, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -96,13 +102,13 @@ export default function PasswordChangeForm() {
           "grant_type": "password"
         })
       })
-      if(!responseLogin.ok){
-        console.error("API login response not OK")
-        throw new Error("API login response not OK")
+      if (!responseLogin.ok) {
+        throw new Error("Contraseña actual incorrecta")
       }
+
       // hacer peticion para cambiar contraseña
       const apiUrlChangePassword = '/api/account/change-password'
-      const responseChangePassword = await fetch(apiUrlChangePassword,{
+      const responseChangePassword = await fetch(apiUrlChangePassword, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -112,10 +118,8 @@ export default function PasswordChangeForm() {
         })
       })
       if (!responseChangePassword.ok) {
-        console.error("API change password response not OK")
-        throw new Error("API change password response not OK")
+        throw new Error("Failed to change password")
       }
-
 
       // Cambio exitoso
       setSuccess("Tu contraseña ha sido cambiada exitosamente")
@@ -125,7 +129,7 @@ export default function PasswordChangeForm() {
       setNewPasswordErrors([])
       setConfirmPasswordError("")
     } catch (err) {
-      setError("Hubo un error al cambiar la contraseña. Por favor, intenta de nuevo.")
+      setError(err instanceof Error ? err.message : "Hubo un error al cambiar la contraseña. Por favor, intenta de nuevo.")
     } finally {
       setLoading(false)
     }
@@ -240,3 +244,4 @@ export default function PasswordChangeForm() {
     </Card>
   )
 }
+
