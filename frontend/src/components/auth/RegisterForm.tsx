@@ -187,16 +187,21 @@ export function RegisterForm() {
     setClaveInputIsValid(regexClave.test(password) ? 1 : 2);
 
     const errors: string[] = [];
-    if (password.length < 8)
+    if (password.length <= 8) {
       errors.push("La contraseña debe tener al menos 8 caracteres");
-    if (!/\d/g.test(password))
+    }
+    if (!/\d/g.test(password)) {
       errors.push("La contraseña debe tener al menos un número");
-    if (!/[a-z]/.test(password))
+    }
+    if (!/[a-z]/.test(password)) {
       errors.push("La contraseña debe tener al menos una letra minúscula");
-    if (!/[A-Z]/.test(password))
+    }
+    if (!/[A-Z]/.test(password)) {
       errors.push("La contraseña debe tener al menos una letra mayúscula");
-    if (!/[^a-zA-Z0-9]/g.test(password))
+    }
+    if (!/[^a-zA-Z0-9]/g.test(password)) {
       errors.push("La contraseña debe tener al menos un símbolo");
+    }
     setMensajesErrorContraseña(errors);
   };
   const handleRepetirClaveBlur = (
