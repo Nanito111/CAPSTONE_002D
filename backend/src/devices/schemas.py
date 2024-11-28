@@ -1,4 +1,4 @@
-from enum import StrEnum
+from enum import Enum
 from datetime import datetime
 from typing import List, Optional, Sequence
 from pydantic import (
@@ -83,7 +83,7 @@ class GetAllUserDevices(RootModel):
     root: List[str]
 
 
-class RangeTypes(StrEnum):
+class RangeTypes(str, Enum):
     HOUR = "hour"
     MONTH = "month"
 
