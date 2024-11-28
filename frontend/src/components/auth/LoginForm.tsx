@@ -13,10 +13,12 @@ import FooterButtons from "@/components/auth/FooterButtons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, EyeIcon, EyeOffIcon } from "lucide-react";
 import { Loader } from "@/components/loader";
 import Image from "next/image";
 import { LoaderCircleIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 
 export function LoginForm() {
   const [cargando, setCargando] = useState(false);
@@ -24,6 +26,7 @@ export function LoginForm() {
   const [logged, setLogged] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const clasesInputError = "border-red-500 focus:ring-red-500 focus:border-red-500";
   const router = useRouter();
 
@@ -85,6 +88,10 @@ export function LoginForm() {
     }
     setCargando(false);
   }
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };  
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -116,16 +123,29 @@ export function LoginForm() {
                 className={errorLogin ? clasesInputError : ""}
               />
             </div>
-            <div className="grid gap-2">
+            <div className="relative grid gap-2">
               <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="********"
                 required
                 className={errorLogin ? clasesInputError : ""}
               />
+               <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-[1.4rem]"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? (
+                    <EyeOffIcon className="h-4 w-4" />
+                  ) : (
+                    <EyeIcon className="h-4 w-4" />
+                  )}
+              </Button>
             </div>
             <Link href="/forgot-password">
               <p className="underline text-sm">¿Olvidaste tu contraseña?</p>
