@@ -1,4 +1,5 @@
 
+
 CREATE TABLE address (
     id           NUMBER(20) NOT NULL,
     streetname   VARCHAR2(100) NOT NULL,
@@ -76,7 +77,7 @@ CREATE TABLE passrecoverrequest (
     id             NUMBER(20) NOT NULL,
     request        RAW(255) NOT NULL,
     email          VARCHAR2(500) NOT NULL,
-    expiredatetime DATE NOT NULL
+    expiredatetime TIMESTAMP NOT NULL
 );
 
 ALTER TABLE passrecoverrequest ADD CONSTRAINT passrecoverrequest_pk PRIMARY KEY ( id );
@@ -93,10 +94,8 @@ ALTER TABLE region ADD CONSTRAINT region_pk PRIMARY KEY ( id );
 
 CREATE TABLE result (
     id           NUMBER(20) NOT NULL,
-    kwh          NUMBER(10, 3),
-    "date"       DATE,
-    power        NUMBER(10, 3),
-    ampere       NUMBER(10, 3),
+    kws          NUMBER(10, 3),
+    measuretime  TIMESTAMP,
     iduserdevice NUMBER(20) NOT NULL
 );
 
@@ -105,8 +104,8 @@ ALTER TABLE result ADD CONSTRAINT result_pk PRIMARY KEY ( id );
 CREATE TABLE userdevice (
     id             NUMBER(20) NOT NULL,
     alias          VARCHAR2(15),
-    creationdate   DATE NOT NULL,
-    lastconnection DATE NOT NULL,
+    creationdate   TIMESTAMP NOT NULL,
+    lastconnection TIMESTAMP NOT NULL,
     description    VARCHAR2(50),
     iduser         NUMBER(20) NOT NULL,
     iddevice       NUMBER(20) NOT NULL
