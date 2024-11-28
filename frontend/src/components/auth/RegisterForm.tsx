@@ -76,8 +76,6 @@ export function RegisterForm() {
   // regex
   const regexNombres = /^[a-zA-ZñÑ]+$/;
   const regexCorreo = /\S+@\S+\.\S+/;
-  //const regexClave = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-  const regexClave = /[\w+\s+\d+\W+]{8,40}/
   const regexNumerosEnteros = /^[0-9]+$/;
   const regexNumerosDecimales = /^[0-9]+(\.[0-9]+)?$/;
 
@@ -184,19 +182,24 @@ export function RegisterForm() {
   };
   const handleClaveBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const password = event.target.value;
-    setClaveInputIsValid(regexClave.test(password) ? 1 : 2);
 
     const errors: string[] = [];
-    if (password.length < 8)
+    if (password.length < 8){
       errors.push("La contraseña debe tener al menos 8 caracteres");
-    if (!/\d/g.test(password))
+    }
+    if (!/\d/g.test(password)){
       errors.push("La contraseña debe tener al menos un número");
-    if (!/[a-z]/.test(password))
+    }
+      if (!/[a-z]/.test(password)){
       errors.push("La contraseña debe tener al menos una letra minúscula");
-    if (!/[A-Z]/.test(password))
+    }
+    if (!/[A-Z]/.test(password)){
       errors.push("La contraseña debe tener al menos una letra mayúscula");
-    if (!/[^a-zA-Z0-9]/g.test(password))
+    }
+    if (!/[^a-zA-Z0-9]/g.test(password)){
       errors.push("La contraseña debe tener al menos un símbolo");
+    }
+      setClaveInputIsValid(errors.length === 0 ? 1 : 2);
     setMensajesErrorContraseña(errors);
   };
   const handleRepetirClaveBlur = (
@@ -411,7 +414,7 @@ export function RegisterForm() {
             {/* Correo */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Email*</Label>
                 <div className="relative">
                   <Input
                     id="email"
@@ -456,7 +459,7 @@ export function RegisterForm() {
             {/* Primer Nombre */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Nombre">Nombre</Label>
+                <Label htmlFor="Nombre">Nombre*</Label>
                 <div className="relative">
                   <Input
                     id="Nombre"
@@ -501,7 +504,7 @@ export function RegisterForm() {
             {/* Apellido */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Apellido">Apellido</Label>
+                <Label htmlFor="Apellido">Apellido*</Label>
                 <div className="relative">
                   <Input
                     id="Apellido"
@@ -546,7 +549,7 @@ export function RegisterForm() {
             {/* Segundo Apellido */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="SegundoApellido">Segundo apellido</Label>
+                <Label htmlFor="SegundoApellido">Segundo apellido*</Label>
                 <div className="relative">
                   <Input
                     id="SegundoApellido"
@@ -594,7 +597,7 @@ export function RegisterForm() {
             <TooltipProvider>
               <div className="grid gap-2">
                 <div className="relative">
-                  <Label htmlFor="Clave">Contraseña</Label>
+                  <Label htmlFor="Clave">Contraseña*</Label>
                   <div className="flex items-center">
                     <Input
                       id="Clave"
@@ -637,7 +640,7 @@ export function RegisterForm() {
                         <>
                           <p className="text-red-500 text-sm sm:hidden block">Contraseña inválida.</p>
                           {MensajesErrorContraseña.map((error, index) => (
-                            <p key={index} className="text-red-500 text-sm sm:hidden block">{error}</p>
+                            <p key={index} className="text-red-500 text-sm block">{error}</p>
                           ))}
                         </>
                       ) : null
@@ -648,9 +651,9 @@ export function RegisterForm() {
 
             {/* Repetir contraseña */}
             <TooltipProvider>
-              <div className="grid gap-2  z">
-                <Label htmlFor="repeatpassword">Repetir contraseña</Label>
-                <div className="flex items-center">
+              <div className="grid gap-2">
+                <Label htmlFor="repeatpassword">Repetir contraseña*</Label>
+                <div className="relative flex items-center">
                   <Input
                     id="repeatpassword"
                     type="password"
@@ -666,7 +669,7 @@ export function RegisterForm() {
                   {RepetirClaveInputIsValid !== 0 && (
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <div className="absolute right-3 top-[32px]">
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
                           {RepetirClaveInputIsValid === 1 ? (
                             <CheckCircle className="h-5 w-5 text-green-500" />
                           ) : (
@@ -684,20 +687,26 @@ export function RegisterForm() {
                     </Tooltip>
                   )}
                 </div>
+                {
+                  RepetirClaveInputIsValid === 2 ? (
+                    <p className="text-red-500 text-sm">Las contraseñas no coinciden.</p>
+                  ) : null
+                }
               </div>
             </TooltipProvider>
+
           </div>
 
           {/* Informacion contacto */}
           <div className="space-y-4">
-            <h3 className="text-lg   text-center font-semibold mb-4">
+            <h3 className="text-lg text-center font-semibold mb-4">
               Contacto
             </h3>
 
             {/* Telefono */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="numAddress">Teléfono</Label>
+                <Label htmlFor="numAddress">Teléfono*</Label>
                 <div className="relative">
                   <Input
                     id="numAddress"
@@ -741,7 +750,7 @@ export function RegisterForm() {
 
             {/* Pais */}
             <div className="grid gap-2">
-              <Label>País</Label>
+              <Label>País*</Label>
               <Select value={selectedPais} onValueChange={setSelectedPais}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona tu país" />
@@ -758,7 +767,7 @@ export function RegisterForm() {
 
             {/* Region */}
             <div className="grid gap-2">
-              <Label>Región</Label>
+              <Label>Región*</Label>
               <Select
                 value={selectedRegion}
                 onValueChange={setSelectedRegion}
@@ -785,7 +794,7 @@ export function RegisterForm() {
 
             {/* Comuna */}
             <div className="grid gap-2">
-              <Label>Comuna</Label>
+              <Label>Comuna*</Label>
               <Select
                 value={selectedComuna}
                 onValueChange={setSelectedComuna}
@@ -808,7 +817,7 @@ export function RegisterForm() {
             {/* Calle */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Calle">Calle</Label>
+                <Label htmlFor="Calle">Calle*</Label>
                 <div className="relative">
                   <Input
                     id="Calle"
@@ -854,7 +863,7 @@ export function RegisterForm() {
             {/* Numero de casa */}
             <TooltipProvider>
               <div className="grid gap-2">
-                <Label htmlFor="Numero">Número</Label>
+                <Label htmlFor="Numero">Número*</Label>
                 <div className="relative">
                   <Input
                     id="Numero"
@@ -904,7 +913,7 @@ export function RegisterForm() {
 
             {/* Empresa */}
             <div className="grid gap-2">
-              <Label>Empresa</Label>
+              <Label>Empresa*</Label>
               <Select value={selectedEmpresa} onValueChange={setSelectedEmpresa}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona tu empresa" />
@@ -923,7 +932,7 @@ export function RegisterForm() {
             <TooltipProvider>
               <div className="grid gap-2">
                 <Label htmlFor="CostoAdministración">
-                  Costo administración
+                  Costo administración*
                 </Label>
                 <div className="relative">
                   <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
