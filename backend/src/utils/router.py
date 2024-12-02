@@ -1,11 +1,18 @@
 from logging import getLogger
 from fastapi import APIRouter, status
 from fastapi.exceptions import HTTPException
-from gunicorn.workers.base import randint
 from sqlalchemy import insert, select
 
 from dependencies import SessionDataBase
-from models import Comuna, Country, Device, DeviceModel, ElectricityCompany, Region
+from models import (
+    Comuna,
+    Country,
+    Device,
+    DeviceModel,
+    ElectricityCompany,
+    Region,
+    UserDevice,
+)
 from utils import schemas
 
 from random import choice
@@ -128,3 +135,26 @@ def create_random_device(
     database_session.commit()
     logger.info(f"Device created. serial number: {serial_number}")
     return serial_number
+
+
+@router.get(
+    "/is-device-registered/{serial_number}",
+    status_code=status.HTTP_200_OK,
+)
+def is_device_registered(
+    serial_number: str,
+    database_session: SessionDataBase,
+):
+    try:
+        get_device_registered = (
+            select(UserDevice.id)
+            .join(Device)
+            .where(Device.serial_number.__eq__(serial_number))
+        )
+        return database_session.execute(get_device_registered).one_or_none() is not None
+    except Exception as err:
+        logger.exception(err)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Something wrong happend...",
+        )
