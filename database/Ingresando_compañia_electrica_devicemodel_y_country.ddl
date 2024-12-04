@@ -9,3 +9,5 @@ INSERT INTO electricitycompany (NAME) VALUES('GRUPO SAESA');
 INSERT INTO electricitycompany (NAME) VALUES('EEPA');
 
 INSERT INTO country (NAME) VALUES('CHILE');
+
+INSERT INTO devicemodel (NAME) VALUES('VOLT_WISE');
