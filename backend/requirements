@@ -1,4 +1,4 @@
-python-dotenv
+python - dotenv
 
 # API
 fastapi
@@ -9,6 +9,8 @@ pytz
 # utils
 psutil
 furl
+python - multipart
+python - dateutil
 
 # Base de Datos
 sqlalchemy
