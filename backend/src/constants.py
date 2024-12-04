@@ -1,3 +1,4 @@
+from datetime import timedelta
 import os
 from dotenv import load_dotenv
 import pathlib
@@ -19,7 +20,8 @@ API_HOST_IP: str = os.environ["API_HOST_IP"]
 API_BIND_IP: str = os.environ["API_BIND_IP"]
 API_PORT: int = int(os.environ["API_PORT"])
 API_WORKERS: int = int(os.environ["API_WORKERS"])
-API_ENCRYPTION_KEY: SecretStr = SecretStr(os.environ["API_ENCRYPTION_KEY"])
+API_SECRET_KEY: SecretStr = SecretStr(os.environ["API_SECRET_KEY"])
+API_ALGORITHM: str = os.environ["API_ALGORITHM"]
 
 # SQL Database variables
 DB_HOST: str = os.environ["DB_HOST"]

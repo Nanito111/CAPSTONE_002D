@@ -1,10 +1,10 @@
-import constants
-from account.router import router as account_router
-from devices.router import router as devices_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import constants
 from health_check.router import router as health_check_router
 from utils.router import router as utils_router
+from account.router import router as account_router
+from devices.router import router as devices_router
 
 app = FastAPI(
     title=constants.PROJECT_NAME,
