@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DeviceData" load_steps=3 format=3 uid="uid://c02cvhkx1vctg"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_to6bb"]
+
+[sub_resource type="Curve" id="Curve_iv3ch"]
+min_value = 50.0
+max_value = 500.0
+_data = [Vector2(0, 50), 0.0, 0.0, 0, 0, Vector2(0.5, 95), 268.611, 268.611, 0, 0, Vector2(0.75, 207.5), 103.884, 84.4068, 0, 0, Vector2(0.9, 320), 83.6924, 0.0, 0, 0, Vector2(1, 500), 0.0, 0.0, 0, 0]
+point_count = 5
+metadata/_snap_enabled = true
+metadata/_snap_count = 20
+
+[resource]
+script = ExtResource("1_to6bb")
+name = "Computadora"
+consumption_in_use_curve = SubResource("Curve_iv3ch")
+jitter_percentage_in_use = 0.1
+consumption_in_idle = 2.5
+jitter_percentage_in_idle = 0.1
+has_battery = false
+battery_capacity_Ah = 0.0
+battery_nominal_voltage = 0.0

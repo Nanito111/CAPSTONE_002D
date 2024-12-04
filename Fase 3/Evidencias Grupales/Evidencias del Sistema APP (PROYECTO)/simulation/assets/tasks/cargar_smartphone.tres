@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Task" load_steps=4 format=3 uid="uid://bvbr4ooj44k1x"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_kef0a"]
+[ext_resource type="Resource" uid="uid://cgdft6ohl7mc8" path="res://assets/devices/data/Smartphone.tres" id="2_b0sor"]
+[ext_resource type="Script" path="res://code/task.gd" id="3_6d74y"]
+
+[resource]
+script = ExtResource("3_6d74y")
+task_duration_range_in_minutes = Vector2(0, 0)
+devices = Array[ExtResource("1_kef0a")]([ExtResource("2_b0sor")])
+task_type = 2

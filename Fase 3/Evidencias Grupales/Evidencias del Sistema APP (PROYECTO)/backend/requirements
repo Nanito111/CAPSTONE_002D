@@ -1,0 +1,20 @@
+python-dotenv
+
+# API
+fastapi
+uvicorn[standard]
+gunicorn
+pyjwt
+passlib[bcrypt]
+pydantic[email]
+
+# utils
+pytz
+psutil
+furl
+python-multipart
+python-dateutil
+
+# Base de Datos
+sqlalchemy
+oracledb

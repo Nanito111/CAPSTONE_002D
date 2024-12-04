@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DeviceData" load_steps=3 format=3 uid="uid://cq1lcjtv80rw3"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_u8q0i"]
+
+[sub_resource type="Curve" id="Curve_xtjl2"]
+_data = [Vector2(0, 0.5), 0.0, 0.0, 0, 1, Vector2(1, 0.5), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[resource]
+script = ExtResource("1_u8q0i")
+name = "CargadorLaptop"
+consumption_in_use_curve = SubResource("Curve_xtjl2")
+jitter_percentage_in_use = 0.1
+consumption_in_idle = 0.3
+jitter_percentage_in_idle = 0.1
+has_battery = false
+battery_capacity_Ah = 0.0
+battery_nominal_voltage = 0.0

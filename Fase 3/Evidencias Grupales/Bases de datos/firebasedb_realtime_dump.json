@@ -1,0 +1,12 @@
+{
+    "measures": {
+      {
+        "device-serial-number": {
+          "consumption-item-id": {
+            "kws": 123.000,
+            "timestamp": " 2024-12-01T18:25:43.511Z"
+          }
+        }
+      },
+    }
+  }
