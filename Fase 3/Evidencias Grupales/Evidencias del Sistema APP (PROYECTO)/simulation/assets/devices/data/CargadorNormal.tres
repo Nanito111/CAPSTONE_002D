@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DeviceData" load_steps=3 format=3 uid="uid://b42em41bco7yu"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_yytea"]
+
+[sub_resource type="Curve" id="Curve_xtjl2"]
+max_value = 15.0
+_data = [Vector2(0, 15), 0.0, 0.0, 0, 1, Vector2(1, 15), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[resource]
+script = ExtResource("1_yytea")
+name = "CargadorNormal"
+consumption_in_use_curve = SubResource("Curve_xtjl2")
+jitter_percentage_in_use = 0.05
+consumption_in_idle = 0.3
+jitter_percentage_in_idle = 0.1
+has_battery = false
+battery_capacity_Ah = 0.0
+battery_nominal_voltage = 0.0

@@ -1,0 +1,98 @@
+[gd_scene load_steps=24 format=3 uid="uid://c0p2606t482qo"]
+
+[ext_resource type="Script" path="res://code/task.gd" id="2_3b2gm"]
+[ext_resource type="PackedScene" uid="uid://dc62genfs1a50" path="res://assets/user.tscn" id="2_lha1j"]
+[ext_resource type="BoxMesh" uid="uid://cnyr3swhbacdr" path="res://assets/objects/room.tres" id="3_2oa2n"]
+[ext_resource type="Resource" uid="uid://eeiikld5w6md" path="res://assets/tasks/usar_computador.tres" id="3_5j3mu"]
+[ext_resource type="PackedScene" uid="uid://ch8iug0w1fvbt" path="res://assets/objects/escritorio_mesa.glb" id="3_wwk6j"]
+[ext_resource type="Resource" uid="uid://df34kbmsr5ndc" path="res://assets/tasks/usar_smartphone.tres" id="4_pumi2"]
+[ext_resource type="PackedScene" uid="uid://ct7756mcqewaw" path="res://assets/devices/meshes/computador.glb" id="5_ahrtx"]
+[ext_resource type="PackedScene" uid="uid://bmh5e73oemxs6" path="res://assets/devices/meshes/monitor.glb" id="6_5qyi0"]
+[ext_resource type="Script" path="res://code/device.gd" id="8_a06ne"]
+[ext_resource type="Resource" uid="uid://c02cvhkx1vctg" path="res://assets/devices/data/Computador.tres" id="9_stj1p"]
+[ext_resource type="Resource" uid="uid://ch5jkawki57nx" path="res://assets/devices/data/MonitorNormal.tres" id="11_xevnh"]
+[ext_resource type="PackedScene" uid="uid://bucp6fspmhoue" path="res://assets/devices/meshes/tablet.glb" id="12_5hypy"]
+[ext_resource type="Script" path="res://code/device_charger.gd" id="13_6dnoo"]
+[ext_resource type="Script" path="res://code/device_with_battery.gd" id="13_cs70i"]
+[ext_resource type="PackedScene" uid="uid://dfs2ejo7t205w" path="res://assets/devices/meshes/cargador.glb" id="13_xm3uv"]
+[ext_resource type="Resource" uid="uid://cgdft6ohl7mc8" path="res://assets/devices/data/Smartphone.tres" id="14_kq0un"]
+[ext_resource type="Resource" uid="uid://bvbr4ooj44k1x" path="res://assets/tasks/cargar_smartphone.tres" id="14_syk3u"]
+[ext_resource type="Resource" uid="uid://bfrllu8nic84m" path="res://assets/tasks/desconectar_cargador_smarthphone.tres" id="16_cxxlp"]
+[ext_resource type="Resource" uid="uid://b42em41bco7yu" path="res://assets/devices/data/CargadorNormal.tres" id="17_xxdxl"]
+[ext_resource type="Script" path="res://code/lightroom.gd" id="20_mkby8"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_jidpr"]
+vertices = PackedVector3Array(-2, 0.499678, -2, -2, 0.499678, -1.25, -1.25, 0.499678, -1, 1.25, 0.499678, -0.75, 1.25, 0.499678, -2, -1.25, 0.499678, 1, -2, 0.499678, 1.25, -2, 0.499678, 2, 2.25, 0.499678, 2, 2.25, 0.499678, -0.5)
+polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 4), PackedInt32Array(2, 4, 3), PackedInt32Array(7, 6, 5), PackedInt32Array(9, 8, 3), PackedInt32Array(3, 8, 5), PackedInt32Array(5, 8, 7), PackedInt32Array(5, 2, 3)]
+sample_partition_type = 2
+agent_height = 1.75
+agent_radius = 0.25
+edge_max_error = 1.0
+detail_sample_distance = 5.0
+detail_sample_max_error = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bhh3h"]
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_iwhn7"]
+material = SubResource("StandardMaterial3D_bhh3h")
+size = Vector3(5, 2, 5)
+
+[node name="RoomA" type="Node3D"]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_jidpr")
+
+[node name="EscritorioMesa" parent="NavigationRegion3D" instance=ExtResource("3_wwk6j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.97865, 0, 0.00566284)
+
+[node name="EscritorioMesa2" parent="NavigationRegion3D" instance=ExtResource("3_wwk6j")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.6, 2.0249, 0, -1.29434)
+
+[node name="Room" type="MeshInstance3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = ExtResource("3_2oa2n")
+skeleton = NodePath("../..")
+
+[node name="Room2" type="MeshInstance3D" parent="NavigationRegion3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+cast_shadow = 3
+mesh = SubResource("BoxMesh_iwhn7")
+skeleton = NodePath("../..")
+
+[node name="Devices" type="Node" parent="NavigationRegion3D"]
+unique_name_in_owner = true
+
+[node name="computador" parent="NavigationRegion3D/Devices" instance=ExtResource("5_ahrtx")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.1495, 0.749598, 0.141187)
+script = ExtResource("8_a06ne")
+device_data = ExtResource("9_stj1p")
+
+[node name="monitor" parent="NavigationRegion3D/Devices" instance=ExtResource("6_5qyi0")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.15841, 0.85558, 0.115364)
+script = ExtResource("8_a06ne")
+device_data = ExtResource("11_xevnh")
+
+[node name="smartphone" parent="NavigationRegion3D/Devices" node_paths=PackedStringArray("device_charger") instance=ExtResource("12_5hypy")]
+transform = Transform3D(-0.247481, 0, 0.580699, 0, 1, 0, -0.41679, 0, -0.344807, 1.84567, 0.756241, -1.22869)
+script = ExtResource("13_cs70i")
+device_charger = NodePath("../cargador")
+charge_device_task = ExtResource("14_syk3u")
+disconnect_device_task = ExtResource("16_cxxlp")
+device_data = ExtResource("14_kq0un")
+
+[node name="cargador" parent="NavigationRegion3D/Devices" instance=ExtResource("13_xm3uv")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.45033, 0.749703, -0.559631)
+script = ExtResource("13_6dnoo")
+device_data = ExtResource("17_xxdxl")
+
+[node name="User" parent="." instance=ExtResource("2_lha1j")]
+tasks = Array[ExtResource("2_3b2gm")]([ExtResource("3_5j3mu"), ExtResource("4_pumi2")])
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+omni_range = 7.17734
+script = ExtResource("20_mkby8")

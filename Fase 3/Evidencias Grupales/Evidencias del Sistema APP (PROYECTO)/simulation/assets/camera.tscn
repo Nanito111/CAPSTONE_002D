@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://588lvjfcpona"]
+
+[ext_resource type="Script" path="res://code/camera.gd" id="1_7r1ct"]
+
+[node name="Camera" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+current = true
+script = ExtResource("1_7r1ct")
+camera_min_distance = 0.5
+orbit_limit_x_min = 0.00174533
+orbit_limit_x_max = 1.22173
+zoom_sensitivity = 0.5
+pan_sensitivity = 1.0
+orbit_sensitivity = 1.0

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DeviceData" load_steps=3 format=3 uid="uid://cgdft6ohl7mc8"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_xmvyo"]
+
+[sub_resource type="Curve" id="Curve_ltcc7"]
+min_value = 1.0
+max_value = 14.0
+_data = [Vector2(0, 1), 0.0, 0.456089, 0, 0, Vector2(0.5, 3), 10.1024, 1.10531, 0, 0, Vector2(0.9, 5.005), 20.4537, 99.9, 0, 1, Vector2(0.95, 10), 99.9, -99.9, 1, 1, Vector2(1, 5.005), -99.9, 0.0, 1, 0]
+point_count = 5
+metadata/_snap_enabled = true
+metadata/_snap_count = 20
+
+[resource]
+script = ExtResource("1_xmvyo")
+name = "Smartphone"
+consumption_in_use_curve = SubResource("Curve_ltcc7")
+jitter_percentage_in_use = 0.4
+consumption_in_idle = 0.5
+jitter_percentage_in_idle = 0.2
+has_battery = true
+battery_capacity_Ah = 5.0
+battery_nominal_voltage = 3.88

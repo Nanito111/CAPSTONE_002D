@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://dc62genfs1a50"]
+
+[ext_resource type="Material" uid="uid://dnj8c88n2c8fu" path="res://assets/materials/user_mat.tres" id="1_jvqtk"]
+[ext_resource type="Script" path="res://code/user.gd" id="1_y4sd6"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hwjqw"]
+material = ExtResource("1_jvqtk")
+top_radius = 0.01
+bottom_radius = 0.2
+height = 1.35
+radial_segments = 16
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="SphereMesh" id="SphereMesh_cg6j0"]
+material = ExtResource("1_jvqtk")
+radius = 0.2
+height = 0.4
+radial_segments = 8
+rings = 4
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1rx8m"]
+radius = 0.2
+height = 1.7
+
+[node name="User" type="CharacterBody3D"]
+script = ExtResource("1_y4sd6")
+destination_stop_range = 0.1
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+unique_name_in_owner = true
+radius = 0.25
+
+[node name="torso" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.179731, 0)
+mesh = SubResource("CylinderMesh_hwjqw")
+
+[node name="head" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00036, 0)
+mesh = SubResource("SphereMesh_cg6j0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+shape = SubResource("CapsuleShape3D_1rx8m")

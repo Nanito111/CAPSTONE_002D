@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dg5gebigmlhg0"]
+
+[resource]
+specular_mode = 2
+disable_fog = true
+albedo_color = Color(0.60933, 0.60933, 0.60933, 1)

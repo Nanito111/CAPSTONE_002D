@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Task" load_steps=5 format=3 uid="uid://eeiikld5w6md"]
+
+[ext_resource type="Script" path="res://code/device_data.gd" id="1_pi3jp"]
+[ext_resource type="Script" path="res://code/task.gd" id="2_gjjwq"]
+[ext_resource type="Resource" uid="uid://c02cvhkx1vctg" path="res://assets/devices/data/Computador.tres" id="2_mcrgo"]
+[ext_resource type="Resource" uid="uid://ch5jkawki57nx" path="res://assets/devices/data/MonitorNormal.tres" id="3_v6uw1"]
+
+[resource]
+script = ExtResource("2_gjjwq")
+task_duration_range_in_minutes = Vector2(30, 60)
+devices = Array[ExtResource("1_pi3jp")]([ExtResource("2_mcrgo"), ExtResource("3_v6uw1")])
+task_type = 0
