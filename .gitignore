@@ -24,6 +24,9 @@ frontend/yarn-debug.log*
 yarn-error.log*
 
 # [FRONTEND] local env files
+./frontend/.env
+./frontend/.env*.local
+frontend/.env
 frontend/.env*.local
 
 frontend/# [FRONTEND] vercel
@@ -67,3 +70,6 @@ Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/.next
 Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/*.tsbuildinfo
 Fase 2/Evidencias Proyecto/Evidencias de sistema/Aplicación/next-env.d.ts
 
+# [Fake json webserver]
+./frontend/db.json
+frontend/db.json

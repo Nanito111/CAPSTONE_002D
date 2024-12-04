@@ -9,7 +9,7 @@ export default function Login() {
             <Link href={"/"}>
                 <Button className="m-5">Volver</Button>
             </Link>
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="flex items-center justify-center min-h-screen flex-col">
                 <LoginForm />
             </div>
         </>

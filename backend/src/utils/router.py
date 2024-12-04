@@ -1,9 +1,10 @@
+import string
 from logging import getLogger
-from fastapi import APIRouter, status
-from fastapi.exceptions import HTTPException
-from sqlalchemy import insert, select
+from random import choice
 
 from dependencies import SessionDataBase
+from fastapi import APIRouter, status
+from fastapi.exceptions import HTTPException
 from models import (
     Comuna,
     Country,
@@ -13,10 +14,8 @@ from models import (
     Region,
     UserDevice,
 )
+from sqlalchemy import insert, select
 from utils import schemas
-
-from random import choice
-import string
 
 logger = getLogger("utils.router")
 

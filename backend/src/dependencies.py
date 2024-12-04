@@ -1,12 +1,14 @@
-from typing import Annotated
-from fastapi import Depends
-from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
-import database
 from datetime import datetime
-from pydantic import WrapSerializer
+from typing import Annotated
+
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+from pydantic import WrapSerializer
 from pydantic.functional_validators import BeforeValidator
+from sqlalchemy.orm import Session
+
+import database
 
 SessionDataBase = Annotated[Session, Depends(database.get_session)]
 DatabaseConnectionCheck = Annotated[bool, Depends(database.check_database_connection)]

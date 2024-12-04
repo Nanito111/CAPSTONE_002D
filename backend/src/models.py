@@ -5,195 +5,44 @@ from sqlalchemy.orm.properties import ForeignKey
 from database import Base
 
 
-class User(Base):
-    __tablename__ = "appuser"
+class Usuario(Base):
+    __tablename__ = "Usuario"
 
     id: MappedColumn[int] = mapped_column(
-        "id",
+        "ID",
         NUMBER(20),
         nullable=False,
         primary_key=True,
     )
-    first_name: MappedColumn[str] = mapped_column(
-        "firstname",
-        VARCHAR2(20),
+    nombre: MappedColumn[str] = mapped_column(
+        "Nombre",
+        VARCHAR(255),
         nullable=True,
     )
-    last_name: MappedColumn[str] = mapped_column(
-        "lastname",
-        VARCHAR2(12),
+    apellido: MappedColumn[str] = mapped_column(
+        "Apellido",
+        VARCHAR(255),
         nullable=True,
     )
-    second_last_name: MappedColumn[str] = mapped_column(
-        "secondlastname",
-        VARCHAR2(12),
+    numero_telefono: MappedColumn[int] = mapped_column(
+        "TelefonoContacto",
+        NUMBER(10),
         nullable=True,
     )
-    phone_number: MappedColumn[int] = mapped_column(
-        "numberphone",
-        NUMBER(9),
+    codigo_telefono: MappedColumn[str] = mapped_column(
+        "CodigoTelefono",
+        VARCHAR(10),
         nullable=True,
     )
-    country_code: MappedColumn[str] = mapped_column(
-        "countrycode",
-        VARCHAR2(3),
+    correo: MappedColumn[str] = mapped_column(
+        "Correo",
+        VARCHAR(500),
         nullable=True,
-    )
-    email: MappedColumn[str] = mapped_column(
-        "email",
-        VARCHAR2(500),
-        nullable=False,
     )
     password: MappedColumn[bytes] = mapped_column(
-        "password",
+        "Password",
         RAW(255),
-        nullable=False,
-    )
-    id_address: MappedColumn[int] = mapped_column(
-        "idaddress",
-        NUMBER(20),
-        ForeignKey("address.id"),
-        nullable=False,
-    )
-    id_contract: MappedColumn[int] = mapped_column(
-        "idcontract",
-        NUMBER(20),
-        ForeignKey("contract.id"),
-        nullable=False,
-    )
-
-
-class Address(Base):
-    __tablename__ = "address"
-
-    id: MappedColumn[int] = mapped_column(
-        "id",
-        NUMBER(20),
-        nullable=False,
-        primary_key=True,
-    )
-    street_name: MappedColumn[str] = mapped_column(
-        "streetname",
-        VARCHAR2(100),
-        nullable=False,
-    )
-    street_number: MappedColumn[str] = mapped_column(
-        "streetnumber",
-        VARCHAR2(50),
-        nullable=False,
-    )
-    id_comuna: MappedColumn[int] = mapped_column(
-        "idcomuna",
-        NUMBER(20),
-        ForeignKey("comuna.id"),
-        nullable=False,
-    )
-
-
-class Comuna(Base):
-    __tablename__ = "comuna"
-
-    id: MappedColumn[int] = mapped_column(
-        "id",
-        NUMBER(20),
-        nullable=False,
-        primary_key=True,
-    )
-    name: MappedColumn[str] = mapped_column(
-        "name",
-        VARCHAR2(20),
-        nullable=False,
-    )
-    id_region: MappedColumn[int] = mapped_column(
-        "idregion",
-        NUMBER(20),
-        ForeignKey("region.id"),
-        nullable=False,
-    )
-
-
-class Region(Base):
-    __tablename__ = "region"
-    id: MappedColumn[int] = mapped_column(
-        "id",
-        NUMBER(20),
-        nullable=False,
-        primary_key=True,
-    )
-    name: MappedColumn[str] = mapped_column(
-        "name",
-        VARCHAR2(20),
-        nullable=False,
-    )
-    id_country: MappedColumn[int] = mapped_column(
-        "idcountry",
-        NUMBER(20),
-        ForeignKey("country.id"),
-        nullable=False,
-    )
-
-
-class Country(Base):
-    __tablename__ = "country"
-
-    id: MappedColumn[int] = mapped_column(
-        "id",
-        NUMBER(20),
-        nullable=False,
-        primary_key=True,
-    )
-    name: MappedColumn[str] = mapped_column(
-        "name",
-        VARCHAR2(20),
-        nullable=False,
-    )
-
-
-class Contract(Base):
-    __tablename__ = "contract"
-
-    id: MappedColumn[int] = mapped_column(
-        "id",
-        NUMBER(20),
-        nullable=False,
-        primary_key=True,
-    )
-    service_admin_cost: MappedColumn[int] = mapped_column(
-        "serviceadmincost",
-        NUMBER(10),
-        nullable=False,
-    )
-    transport_cost: MappedColumn[int] = mapped_column(
-        "transportcost",
-        NUMBER(10),
-        nullable=False,
-    )
-    electricity_cost: MappedColumn[int] = mapped_column(
-        "electricitycost",
-        NUMBER(10),
-        nullable=False,
-    )
-    id_electricity_company: MappedColumn[int] = mapped_column(
-        "idelectricitycompany",
-        NUMBER(20),
-        ForeignKey("electricitycompany.id"),
-        nullable=False,
-    )
-
-
-class ElectricityCompany(Base):
-    __tablename__ = "electricitycompany"
-
-    id: MappedColumn[int] = mapped_column(
-        "id",
-        NUMBER(20),
-        nullable=False,
-        primary_key=True,
-    )
-    name: MappedColumn[str] = mapped_column(
-        "name",
-        VARCHAR2(40),
-        nullable=False,
+        nullable=True,
     )
 
 

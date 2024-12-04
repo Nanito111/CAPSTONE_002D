@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://h7ux4wiw82fs"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_jidpr"]
+vertices = PackedVector3Array(-2, 0.5, -2, -2, 0.5, 2, 2.25, 0.5, 2, 2.25, 0.5, -2)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+sample_partition_type = 2
+agent_height = 1.75
+agent_radius = 0.25
+edge_max_error = 1.0
+detail_sample_distance = 5.0
+detail_sample_max_error = 0.5
+
+[node name="Room" type="NavigationRegion3D"]
+navigation_mesh = SubResource("NavigationMesh_jidpr")

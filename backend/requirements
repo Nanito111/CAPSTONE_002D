@@ -1,19 +1,16 @@
-python-dotenv
+python - dotenv
 
 # API
 fastapi
 uvicorn[standard]
 gunicorn
-pyjwt
-passlib[bcrypt]
-pydantic[email]
+pytz
 
 # utils
-pytz
 psutil
 furl
-python-multipart
-python-dateutil
+python - multipart
+python - dateutil
 
 # Base de Datos
 sqlalchemy

@@ -1,5 +1,4 @@
-import FormCuenta from "@/components/form-cuenta";
-import { Command } from "@/components/ui/command";
+import FormCuenta from "@/components/form-editar-cuenta";
 import { Card, CardContent } from "@/components/ui/card";
 
 
@@ -13,7 +12,6 @@ export default function PlaceholderContent() {
             <FormCuenta/>
         </div>
       </CardContent>
-    <Command/>
     </Card>
 
   );
