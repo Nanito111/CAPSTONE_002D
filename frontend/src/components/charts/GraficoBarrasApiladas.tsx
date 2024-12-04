@@ -1,6 +1,9 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
+import {
+  TrendingUp,
+  TrendingDown,
+ } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import {
@@ -22,15 +25,6 @@ import {
 
 export const description = "A stacked bar chart with a legend"
 
-const chartData = [
-  { month: "Enero", dispositivo1: 186, dispositivo2: 80 },
-  { month: "Febrero", dispositivo1: 305, dispositivo2: 200 },
-  { month: "Marzo", dispositivo1: 237, dispositivo2: 120 },
-  { month: "Abril", dispositivo1: 73, dispositivo2: 190 },
-  { month: "Mayo", dispositivo1: 209, dispositivo2: 130 },
-  { month: "Junio", dispositivo1: 214, dispositivo2: 140 },
-]
-
 const chartConfig = {
   dispositivo1: {
     label: "Dispositivo 1",
@@ -40,18 +34,57 @@ const chartConfig = {
     label: "Dispositivo 2",
     color: "hsl(var(--chart-2))",
   },
+  consumoTotal: {
+    label: "Consumo total",
+    color: "hsl(var(--chart-1))",
+  },
 } satisfies ChartConfig
 
-export default function BarrasApiladas() {
+interface BarrasApiladasProps {
+  data: Array<{
+      month: string;
+      consumoTotal: number;
+      dispositivo1: number;
+      dispositivo2: number;
+      dispositivo3: number;
+      dispositivo4: number;
+      dispositivo5: number;
+      dispositivo6: number;
+    }>
+  className?: string
+}
+
+export default function BarrasApiladas({ data, className }: BarrasApiladasProps) {
+  const consumoUltimoMes = data[0].consumoTotal
+  const consumoPenultimoMes = data[1].consumoTotal
+
+  const mensajeFooter = () => {
+    const diferencia =  ((consumoUltimoMes - consumoPenultimoMes) / consumoPenultimoMes) * 100
+    if (diferencia > 0) {
+      return `Tu consumo aumento un ${diferencia.toFixed(1)}% a comparación del mes pasado`
+    } else {
+      return `Tu consumo disminuyo un ${Math.abs(diferencia).toFixed(1)}% a comparación del mes pasado`
+    }
+  }
+
+  const IconoConsumo = () => {
+    const diferencia = ((consumoUltimoMes - consumoPenultimoMes) / consumoPenultimoMes) * 100
+    if (diferencia > 0) {
+      return <TrendingUp className="h-4 w-4" />
+    } else {
+      return <TrendingDown className="h-4 w-4" />
+    }
+  }
+
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Desglose del consumo </CardTitle>
-        <CardDescription>Junio - Noviembre 2024</CardDescription>
+        <CardDescription>{data[0].month} - {data[5].month} {new Date().getFullYear()}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
@@ -63,23 +96,18 @@ export default function BarrasApiladas() {
             <ChartTooltip content={<ChartTooltipContent hideLabel />} />
             <ChartLegend content={<ChartLegendContent />} />
             <Bar
-              dataKey="dispositivo1"
+              dataKey="consumoTotal"
               stackId="a"
               fill="hsl(var(--chart-1))"
               radius={[0, 0, 4, 4]}
-            />
-            <Bar
-              dataKey="dispositivo2"
-              stackId="a"
-              fill="hsl(var(--chart-2))"
-              radius={[4, 4, 0, 0]}
             />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-        Tu consumo aumento un 5.2% este mes <TrendingUp className="h-4 w-4" />
+          {mensajeFooter()}
+          <IconoConsumo />
         </div>
         <div className="leading-none text-muted-foreground">
           Junio - Noviembre 2024
